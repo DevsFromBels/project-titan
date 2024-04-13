@@ -13,7 +13,7 @@ jobs:
         node-version: [20.10.0]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install dependencies and build Next.js project
         run: |
