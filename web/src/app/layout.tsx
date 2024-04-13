@@ -3,6 +3,8 @@ import { Inter as FontSans } from "next/font/google"
 import "./globals.css"
 
 import { cn } from "@/shared/lib/utils"
+import { ThemeProvider } from "@/shared/components/Themes/theme-provider"
+import { ModeToggle } from "@/shared/components/mode-toggle/mode-toggle"
 import NextTopLoader from "nextjs-toploader"
 
 const fontSans = FontSans({
@@ -11,9 +13,9 @@ const fontSans = FontSans({
 })
 
 export const metadata: Metadata = {
-  title: "Titan Advertisiment",
-  description: "Advertisiment",
-};
+	title: "Titan Advertisiment",
+	description: "Advertisiment",
+}
 
 export default function RootLayout({
 	children,
@@ -28,12 +30,20 @@ export default function RootLayout({
 					fontSans.variable
 				)}
 			>
-				<NextTopLoader
-					color='#00AA00'
-					initialPosition={0.6}
-					showSpinner={false}
-				/>
-				{children}
+				<ThemeProvider
+					attribute='class'
+					defaultTheme='system'
+					enableSystem
+					disableTransitionOnChange
+				>
+					<NextTopLoader
+						color='#00AA00'
+						initialPosition={0.6}
+						showSpinner={false}
+					/>
+					{children}
+					<ModeToggle />
+				</ThemeProvider>
 			</body>
 		</html>
 	)
