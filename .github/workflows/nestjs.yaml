@@ -1,0 +1,28 @@
+name: Core Build A NestJS
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+
+  build:
+    runs-on: self-hosted
+    
+    strategy:
+      matrix:
+        node-version: [20.10.0]
+        
+    steps:
+    - uses: actions/checkout@v4
+        
+    - name: Install dependencies and build NestJS microservices
+      run: |
+        cd core
+        npm install
+        npm run build
+        
+    - name: Restart PM2 ecosystem
+      run: |
+        cd core
+        pm2 restart ecosystem.config.js
