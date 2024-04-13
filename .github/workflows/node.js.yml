@@ -21,5 +21,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
 
+      - name: Navigate to web directory
+        run: cd web
+
       - run: npm ci
       - run: npm run build --if-present
