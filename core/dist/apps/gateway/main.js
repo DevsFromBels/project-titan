@@ -1,14 +1,11 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ([
-/* 0 */,
-/* 1 */
-/***/ ((module) => {
+/******/ 	var __webpack_modules__ = ({
 
-module.exports = require("@nestjs/core");
-
-/***/ }),
-/* 2 */
+/***/ "./apps/gateway/src/app.module.ts":
+/*!****************************************!*\
+  !*** ./apps/gateway/src/app.module.ts ***!
+  \****************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -20,11 +17,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AppModule = void 0;
-const common_1 = __webpack_require__(3);
-const app_service_1 = __webpack_require__(4);
-const graphql_1 = __webpack_require__(5);
-const apollo_1 = __webpack_require__(6);
-const gateway_1 = __webpack_require__(7);
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const app_service_1 = __webpack_require__(/*! ./app.service */ "./apps/gateway/src/app.service.ts");
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+const apollo_1 = __webpack_require__(/*! @nestjs/apollo */ "@nestjs/apollo");
+const gateway_1 = __webpack_require__(/*! @apollo/gateway */ "@apollo/gateway");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -70,13 +67,11 @@ exports.AppModule = AppModule = __decorate([
 
 
 /***/ }),
-/* 3 */
-/***/ ((module) => {
 
-module.exports = require("@nestjs/common");
-
-/***/ }),
-/* 4 */
+/***/ "./apps/gateway/src/app.service.ts":
+/*!*****************************************!*\
+  !*** ./apps/gateway/src/app.service.ts ***!
+  \*****************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -88,7 +83,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AppService = void 0;
-const common_1 = __webpack_require__(3);
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
 let AppService = class AppService {
     getHello() {
         return 'Hello World!';
@@ -101,25 +96,58 @@ exports.AppService = AppService = __decorate([
 
 
 /***/ }),
-/* 5 */
+
+/***/ "@apollo/gateway":
+/*!**********************************!*\
+  !*** external "@apollo/gateway" ***!
+  \**********************************/
 /***/ ((module) => {
 
-module.exports = require("@nestjs/graphql");
+module.exports = require("@apollo/gateway");
 
 /***/ }),
-/* 6 */
+
+/***/ "@nestjs/apollo":
+/*!*********************************!*\
+  !*** external "@nestjs/apollo" ***!
+  \*********************************/
 /***/ ((module) => {
 
 module.exports = require("@nestjs/apollo");
 
 /***/ }),
-/* 7 */
+
+/***/ "@nestjs/common":
+/*!*********************************!*\
+  !*** external "@nestjs/common" ***!
+  \*********************************/
 /***/ ((module) => {
 
-module.exports = require("@apollo/gateway");
+module.exports = require("@nestjs/common");
+
+/***/ }),
+
+/***/ "@nestjs/core":
+/*!*******************************!*\
+  !*** external "@nestjs/core" ***!
+  \*******************************/
+/***/ ((module) => {
+
+module.exports = require("@nestjs/core");
+
+/***/ }),
+
+/***/ "@nestjs/graphql":
+/*!**********************************!*\
+  !*** external "@nestjs/graphql" ***!
+  \**********************************/
+/***/ ((module) => {
+
+module.exports = require("@nestjs/graphql");
 
 /***/ })
-/******/ 	]);
+
+/******/ 	});
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -150,10 +178,13 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 var exports = __webpack_exports__;
+/*!**********************************!*\
+  !*** ./apps/gateway/src/main.ts ***!
+  \**********************************/
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core_1 = __webpack_require__(1);
-const app_module_1 = __webpack_require__(2);
+const core_1 = __webpack_require__(/*! @nestjs/core */ "@nestjs/core");
+const app_module_1 = __webpack_require__(/*! ./app.module */ "./apps/gateway/src/app.module.ts");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.enableCors({

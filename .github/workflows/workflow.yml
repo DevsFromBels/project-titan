@@ -5,7 +5,7 @@ on:
     branches: ["main"]
 
 jobs:
-  build:
+  clinet-build:
     runs-on: self-hosted
 
     strategy:
@@ -15,11 +15,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install dependencies and build NestJS microservices
+        run: |
+          cd core
+          npm install
+          npm run build
+
       - name: Install dependencies and build Next.js project
         run: |
           cd web
           npm install
           npm run build --if-present
-      
-      - name: Restart pm2
-        run: pm2 restart 1 2 3
+
+      - name: Restart all pm2
+        run: pm2 restart all
+        
