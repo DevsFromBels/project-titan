@@ -12,7 +12,6 @@ const Header = () => {
     return <TabsMobile/>
   }
   
-
   return (
     <header className="w-[95%] h-[3rem] m-auto flex justify-between items-center">
       <div>
