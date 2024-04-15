@@ -10,14 +10,15 @@ const httpLink = createHttpLink({
 	uri: process.env.NEXT_PUBLIC_SERVER_URI,
 })
 
-const accessToken = !!Cookies.get("access_token")
-const refreshToken = !!Cookies.get("access_token")
+const accessToken = Cookies.get("access_token")
+const refreshToken = Cookies.get("refresh_token")
+
 
 const authMiddleware = new ApolloLink((operation, forward) => {
 	operation.setContext({
 		headers: {
-			accessToken: Cookies.get("access_token"),
-			refreshToken: Cookies.get("refresh_token"),
+			accessToken: accessToken,
+			refreshToken: refreshToken,
 		},
 	})
 
@@ -26,7 +27,7 @@ const authMiddleware = new ApolloLink((operation, forward) => {
 
 export const graphqlClient = new ApolloClient({
 	link:
-		accessToken && refreshToken
+		!!accessToken && !!refreshToken
 			? authMiddleware.concat(httpLink)
 			: httpLink,
 	cache: new InMemoryCache(),
