@@ -6,7 +6,6 @@ import { ActivationDto, LoginDto, RegisterDto } from "./dto/user.dto";
 import { EmailService } from "./email/email.service";
 import * as bcrypt from "bcrypt";
 import { TokenSender } from "./utils/sendToken";
-import { data } from "autoprefixer";
 
 interface UserData {
   name: string;
