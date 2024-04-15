@@ -1,16 +1,12 @@
 'use client'
-import useIsMobile from "@/shared/hooks/is-mobile-hook";
 import Link from "next/link";
 import React from "react";
-import TabsMobile from "./tabs-mobile";
+
 import { ModeToggle } from "../../maleculas/mode-toggle";
 
 const Header = () => {
-  const isMobile = useIsMobile();
 
-  if (isMobile) {
-    return <TabsMobile/>
-  }
+
   
   return (
     <header className="w-[95%] h-[3rem] m-auto flex justify-between items-center">
