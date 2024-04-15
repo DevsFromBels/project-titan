@@ -33,7 +33,7 @@ const WannaMobile = () => {
   return (
     <div
       ref={componentRef}
-      className="fixed bottom-0 left-0 right-0 w-[95%] h-[200px] flex flex-col bg-black m-auto rounded-lg text-white p-2 z-[999] justify-center"
+      className="fixed bottom-2 left-0 right-0 w-[95%] h-[200px] flex flex-col bg-black m-auto rounded-lg text-white p-2 z-[999] justify-center"
     >
       <h2 className="text-center">Do you wanna use a mobile app?</h2>
       <div className="flex flex-col gap-2 p-2">
