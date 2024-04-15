@@ -434,7 +434,7 @@ async function bootstrap() {
         origin: "*",
         credentials: true,
     });
-    await app.listen(4002, (err, appURL) => {
+    await app.listen(4002, '127.0.0.1', (err, appURL) => {
         if (err) {
             console.log(err);
             return;
