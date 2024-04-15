@@ -17,7 +17,7 @@ import { Directive, Field, ObjectType } from "@nestjs/graphql";
 // }
 
 @ObjectType()
-@Directive('@key(fields: "id")') 
+@Directive('@key(fields: "id")')
 export class Profile {
   @Field()
   id: string;
@@ -49,5 +49,11 @@ export class UserProfile {
 
   @Field({nullable: true})
   isPublic: boolean;
+}
+
+@ObjectType()
+export class UserProfileSearch {
+  @Field(() => [Profile], { nullable: true })
+  users?: Profile[];
 }
 

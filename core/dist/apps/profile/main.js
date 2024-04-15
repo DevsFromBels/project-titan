@@ -20,7 +20,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UserProfile = exports.Profile = void 0;
+exports.UserProfileSearch = exports.UserProfile = exports.Profile = void 0;
 const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 let Profile = class Profile {
 };
@@ -71,6 +71,16 @@ __decorate([
 exports.UserProfile = UserProfile = __decorate([
     (0, graphql_1.ObjectType)()
 ], UserProfile);
+let UserProfileSearch = class UserProfileSearch {
+};
+exports.UserProfileSearch = UserProfileSearch;
+__decorate([
+    (0, graphql_1.Field)(() => [Profile], { nullable: true }),
+    __metadata("design:type", Array)
+], UserProfileSearch.prototype, "users", void 0);
+exports.UserProfileSearch = UserProfileSearch = __decorate([
+    (0, graphql_1.ObjectType)()
+], UserProfileSearch);
 
 
 /***/ }),
@@ -154,11 +164,16 @@ const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 const profile_service_1 = __webpack_require__(/*! ./profile.service */ "./apps/profile/src/profile.service.ts");
 const profile_entitie_1 = __webpack_require__(/*! ./entities/profile.entitie */ "./apps/profile/src/entities/profile.entitie.ts");
 let ProfileResolver = class ProfileResolver {
-    constructor(profileServie) {
-        this.profileServie = profileServie;
+    constructor(profileService) {
+        this.profileService = profileService;
     }
     async profile(userName) {
-        return await this.profileServie.getProfile(userName);
+        return await this.profileService.getProfile(userName);
+    }
+    async searchProfile(userName, limit) {
+        const { users, isPublic } = await this.profileService.searchUserProfile(userName, limit);
+        const publicUsers = users.filter((_, index) => isPublic[index]);
+        return { users: publicUsers, isPublic: isPublic };
     }
 };
 exports.ProfileResolver = ProfileResolver;
@@ -169,6 +184,14 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ProfileResolver.prototype, "profile", null);
+__decorate([
+    (0, graphql_1.Query)(() => profile_entitie_1.UserProfileSearch),
+    __param(0, (0, graphql_1.Args)("userName")),
+    __param(1, (0, graphql_1.Args)("limit", { defaultValue: 5 })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Number]),
+    __metadata("design:returntype", Promise)
+], ProfileResolver.prototype, "searchProfile", null);
 exports.ProfileResolver = ProfileResolver = __decorate([
     (0, graphql_1.Resolver)("Profile"),
     __metadata("design:paramtypes", [typeof (_a = typeof profile_service_1.ProfileService !== "undefined" && profile_service_1.ProfileService) === "function" ? _a : Object])
@@ -205,16 +228,16 @@ let ProfileService = class ProfileService {
     async getProfile(userId) {
         const user = await this.prisma.user.findUnique({
             where: {
-                id: userId
-            }
+                id: userId,
+            },
         });
         if (!user) {
-            throw new common_1.BadGatewayException('User not found');
+            throw new common_1.BadGatewayException("User not found");
         }
         const profile = await this.prisma.profile.findUnique({
             where: {
-                userId: user.id
-            }
+                userId: user.id,
+            },
         });
         return {
             user: user,
@@ -222,8 +245,28 @@ let ProfileService = class ProfileService {
             isPublic: profile.isPublic,
         };
     }
-    async getSettings(userName) {
+    async searchUserProfile(userName, limit) {
+        const profiles = await this.prisma.profile.findMany({
+            where: {
+                user: {
+                    name: {
+                        contains: userName,
+                        mode: 'insensitive',
+                    },
+                },
+                isPublic: true,
+            },
+            take: limit || 5,
+            include: {
+                user: true,
+            },
+        });
+        return {
+            users: profiles.map((profile) => profile.user),
+            isPublic: profiles.map((profile) => profile.isPublic),
+        };
     }
+    async getSettings(userName) { }
     async updateSettings(settings) { }
 };
 exports.ProfileService = ProfileService;
