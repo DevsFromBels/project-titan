@@ -14,6 +14,6 @@ async function bootstrap() {
     origin: "http://localhost:3000",
     credentials: true,
   });
-  await app.listen(4000, '127.0.0.1');
+  await app.listen(4000, '0.0.0.0');
 }
 bootstrap();

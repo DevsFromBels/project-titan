@@ -20,7 +20,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UserProfileSearch = exports.UserProfileSearch = exports.UserProfile = exports.Profile = void 0;
+exports.UserProfileSearch = exports.UserProfile = exports.Profile = void 0;
 const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 let Profile = class Profile {
 };
@@ -184,6 +184,14 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ProfileResolver.prototype, "profile", null);
+__decorate([
+    (0, graphql_1.Query)(() => profile_entitie_1.UserProfileSearch),
+    __param(0, (0, graphql_1.Args)("userName")),
+    __param(1, (0, graphql_1.Args)("limit", { defaultValue: 5 })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Number]),
+    __metadata("design:returntype", Promise)
+], ProfileResolver.prototype, "searchProfile", null);
 exports.ProfileResolver = ProfileResolver = __decorate([
     (0, graphql_1.Resolver)("Profile"),
     __metadata("design:paramtypes", [typeof (_a = typeof profile_service_1.ProfileService !== "undefined" && profile_service_1.ProfileService) === "function" ? _a : Object])
@@ -237,8 +245,28 @@ let ProfileService = class ProfileService {
             isPublic: profile.isPublic,
         };
     }
-    async getSettings(userName) {
+    async searchUserProfile(userName, limit) {
+        const profiles = await this.prisma.profile.findMany({
+            where: {
+                user: {
+                    name: {
+                        contains: userName,
+                        mode: 'insensitive',
+                    },
+                },
+                isPublic: true,
+            },
+            take: limit || 5,
+            include: {
+                user: true,
+            },
+        });
+        return {
+            users: profiles.map((profile) => profile.user),
+            isPublic: profiles.map((profile) => profile.isPublic),
+        };
     }
+    async getSettings(userName) { }
     async updateSettings(settings) { }
 };
 exports.ProfileService = ProfileService;
@@ -350,16 +378,6 @@ module.exports = require("@nestjs/platform-fastify");
 
 /***/ }),
 
-/***/ "@nestjs/platform-fastify":
-/*!*******************************************!*\
-  !*** external "@nestjs/platform-fastify" ***!
-  \*******************************************/
-/***/ ((module) => {
-
-module.exports = require("@nestjs/platform-fastify");
-
-/***/ }),
-
 /***/ "@prisma/client":
 /*!*********************************!*\
   !*** external "@prisma/client" ***!
@@ -416,7 +434,15 @@ async function bootstrap() {
         origin: "*",
         credentials: true,
     });
-    await app.listen(4002);
+    await app.listen(4002, '0.0.0.0', (err, appURL) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        const logger = new common_1.Logger();
+        logger.log(`Server started at ${appURL}`);
+        logger.log(`GraphQL URL ${appURL + '/graphql'}`);
+    });
 }
 bootstrap();
 
