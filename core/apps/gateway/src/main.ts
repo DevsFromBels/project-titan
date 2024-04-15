@@ -11,7 +11,7 @@ async function bootstrap() {
     new FastifyAdapter()
   );
   app.enableCors({
-    origin: "http://localhost:3000",
+    origin: "titanproject.top",
     credentials: true,
   });
   await app.listen(4000, '0.0.0.0');
