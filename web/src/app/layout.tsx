@@ -6,6 +6,8 @@ import { cn } from "@/shared/lib/utils";
 import { ThemeProvider } from "@/shared/components/Themes/theme-provider";
 import NextTopLoader from "nextjs-toploader";
 import Header from "@/shared/components/organisms/header/header";
+import MainLayout from "@/shared/components/maleculas/main-layout";
+import WannaMobile from "@/shared/components/organisms/wanna-mobile/wanna-mobile";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -23,9 +25,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true}>
       <body
-        suppressHydrationWarning={true}
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
           fontSans.variable
@@ -43,7 +44,8 @@ export default function RootLayout({
             showSpinner={false}
           />
           <Header />
-          {children}
+          <MainLayout>{children}</MainLayout>
+          <WannaMobile />
         </ThemeProvider>
       </body>
     </html>

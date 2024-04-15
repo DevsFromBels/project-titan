@@ -3,32 +3,55 @@ import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import useIsMobile from "@/shared/hooks/is-mobile-phone-hooks";
 import { Button } from "../../ui/button";
+import { useRouter } from "next/navigation";
 
 const WannaMobile = () => {
   const isMobile = useIsMobile();
-  const componentRef = useRef(null);
+  const componentRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (sessionStorage.getItem("mobileForWeb")) {
       document.body.style.overflow = "auto";
+      hideComponent();
     } else {
       document.body.style.overflow = "hidden";
-      gsap.fromTo(
-        componentRef.current,
-        { y: "100%" },
-        { y: 0, duration: 0.5, ease: "easeOut" }
-      );
+      if (componentRef.current) {
+        gsap.fromTo(
+          componentRef.current,
+          { y: "100%" },
+          { y: 0, duration: 0.5, ease: "easeOut" }
+        );
+      }
     }
   }, []);
 
-  if (!isMobile) {
-    return null;
-  }
+  const hideComponent = () => {
+    if (componentRef.current) {
+      gsap.to(componentRef.current, {
+        y: "100%",
+        duration: 0.5,
+        ease: "easeIn",
+        onComplete: () => {
+          componentRef.current?.remove();
+        },
+      });
+    }
+  };
 
   const handleContinueWithWeb = () => {
     sessionStorage.setItem("mobileForWeb", "true");
     document.body.style.overflow = "auto";
+    hideComponent();
   };
+
+  const handleContinueWithMobile = () => {
+    router.push("/download");
+  };
+
+  if (!isMobile) {
+    return null;
+  }
 
   return (
     <div
@@ -39,7 +62,7 @@ const WannaMobile = () => {
       <div className="flex flex-col gap-2 p-2">
         <Button onClick={handleContinueWithWeb}>Continue with web</Button>
         <p className="text-center">OR</p>
-        <Button>Continue with mobile</Button>
+        <Button onClick={handleContinueWithMobile}>Continue with mobile</Button>
       </div>
     </div>
   );
