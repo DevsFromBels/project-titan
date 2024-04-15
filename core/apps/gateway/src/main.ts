@@ -1,13 +1,19 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
+import { NestFactory } from "@nestjs/core";
+import { AppModule } from "./app.module";
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from "@nestjs/platform-fastify";
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter()
+  );
   app.enableCors({
-    origin: 'http://localhost:3000', 
-    credentials: true 
+    origin: "http://localhost:3000",
+    credentials: true,
   });
-  await app.listen(4000);
+  await app.listen(4000, '127.0.0.1');
 }
 bootstrap();

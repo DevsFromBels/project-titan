@@ -199,10 +199,10 @@ const platform_fastify_1 = __webpack_require__(/*! @nestjs/platform-fastify */ "
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule, new platform_fastify_1.FastifyAdapter());
     app.enableCors({
-        origin: 'http://localhost:3000',
-        credentials: true
+        origin: "http://localhost:3000",
+        credentials: true,
     });
-    await app.listen(4000);
+    await app.listen(4000, 'localhost');
 }
 bootstrap();
 
