@@ -13,7 +13,7 @@ async function bootstrap() {
   app.enableCors({
     origin: 'https://titanproject.top',
     credentials: true,
-    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'accesstoken', 'refreshtoken'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   });
 
