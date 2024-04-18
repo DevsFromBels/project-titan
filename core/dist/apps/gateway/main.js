@@ -40,9 +40,19 @@ exports.AppModule = AppModule = __decorate([
                         return new gateway_1.RemoteGraphQLDataSource({
                             url,
                             willSendRequest({ request, context }) {
-                                request.http.headers.set('accesstoken', context.headers ? context.headers?.accesstoken : null);
-                                request.http.headers.set('refreshtoken', context.headers ? context.headers?.refreshtoken : null);
-                            }
+                                const req = context && context.req;
+                                if (!req) {
+                                    return;
+                                }
+                                const accessToken = req.headers["accesstoken"];
+                                const refreshToken = req.headers["refreshtoken"];
+                                if (accessToken) {
+                                    request.http.headers.set("accesstoken", accessToken);
+                                }
+                                if (refreshToken) {
+                                    request.http.headers.set("refreshtoken", refreshToken);
+                                }
+                            },
                         });
                     },
                     supergraphSdl: new gateway_1.IntrospectAndCompose({
@@ -199,10 +209,10 @@ const platform_fastify_1 = __webpack_require__(/*! @nestjs/platform-fastify */ "
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule, new platform_fastify_1.FastifyAdapter());
     app.enableCors({
-        origin: "http://localhost:3000",
+        origin: "titanproject.top",
         credentials: true,
     });
-    await app.listen(4000, 'localhost');
+    await app.listen(4000, '0.0.0.0');
 }
 bootstrap();
 
