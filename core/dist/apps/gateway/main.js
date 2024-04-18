@@ -1,11 +1,14 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({
+/******/ 	var __webpack_modules__ = ([
+/* 0 */,
+/* 1 */
+/***/ ((module) => {
 
-/***/ "./apps/gateway/src/app.module.ts":
-/*!****************************************!*\
-  !*** ./apps/gateway/src/app.module.ts ***!
-  \****************************************/
+module.exports = require("@nestjs/core");
+
+/***/ }),
+/* 2 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -17,11 +20,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AppModule = void 0;
-const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
-const app_service_1 = __webpack_require__(/*! ./app.service */ "./apps/gateway/src/app.service.ts");
-const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
-const apollo_1 = __webpack_require__(/*! @nestjs/apollo */ "@nestjs/apollo");
-const gateway_1 = __webpack_require__(/*! @apollo/gateway */ "@apollo/gateway");
+const common_1 = __webpack_require__(3);
+const app_service_1 = __webpack_require__(4);
+const graphql_1 = __webpack_require__(5);
+const apollo_1 = __webpack_require__(6);
+const gateway_1 = __webpack_require__(7);
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -40,8 +43,8 @@ exports.AppModule = AppModule = __decorate([
                         return new gateway_1.RemoteGraphQLDataSource({
                             url,
                             willSendRequest({ request, context }) {
-                                request.http.headers.set('accesstoken', context.headers ? context.headers?.accesstoken : null);
-                                request.http.headers.set('refreshtoken', context.headers ? context.headers?.refreshtoken : null);
+                                request.http.headers.set('accesstoken', context.headers ? context.headers?.accessToken : null);
+                                request.http.headers.set('refreshtoken', context.headers ? context.headers?.refreshToken : null);
                             }
                         });
                     },
@@ -67,11 +70,13 @@ exports.AppModule = AppModule = __decorate([
 
 
 /***/ }),
+/* 3 */
+/***/ ((module) => {
 
-/***/ "./apps/gateway/src/app.service.ts":
-/*!*****************************************!*\
-  !*** ./apps/gateway/src/app.service.ts ***!
-  \*****************************************/
+module.exports = require("@nestjs/common");
+
+/***/ }),
+/* 4 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -83,7 +88,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AppService = void 0;
-const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const common_1 = __webpack_require__(3);
 let AppService = class AppService {
     getHello() {
         return 'Hello World!';
@@ -96,68 +101,31 @@ exports.AppService = AppService = __decorate([
 
 
 /***/ }),
-
-/***/ "@apollo/gateway":
-/*!**********************************!*\
-  !*** external "@apollo/gateway" ***!
-  \**********************************/
-/***/ ((module) => {
-
-module.exports = require("@apollo/gateway");
-
-/***/ }),
-
-/***/ "@nestjs/apollo":
-/*!*********************************!*\
-  !*** external "@nestjs/apollo" ***!
-  \*********************************/
-/***/ ((module) => {
-
-module.exports = require("@nestjs/apollo");
-
-/***/ }),
-
-/***/ "@nestjs/common":
-/*!*********************************!*\
-  !*** external "@nestjs/common" ***!
-  \*********************************/
-/***/ ((module) => {
-
-module.exports = require("@nestjs/common");
-
-/***/ }),
-
-/***/ "@nestjs/core":
-/*!*******************************!*\
-  !*** external "@nestjs/core" ***!
-  \*******************************/
-/***/ ((module) => {
-
-module.exports = require("@nestjs/core");
-
-/***/ }),
-
-/***/ "@nestjs/graphql":
-/*!**********************************!*\
-  !*** external "@nestjs/graphql" ***!
-  \**********************************/
+/* 5 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/graphql");
 
 /***/ }),
+/* 6 */
+/***/ ((module) => {
 
-/***/ "@nestjs/platform-fastify":
-/*!*******************************************!*\
-  !*** external "@nestjs/platform-fastify" ***!
-  \*******************************************/
+module.exports = require("@nestjs/apollo");
+
+/***/ }),
+/* 7 */
+/***/ ((module) => {
+
+module.exports = require("@apollo/gateway");
+
+/***/ }),
+/* 8 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/platform-fastify");
 
 /***/ })
-
-/******/ 	});
+/******/ 	]);
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -188,14 +156,11 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 var exports = __webpack_exports__;
-/*!**********************************!*\
-  !*** ./apps/gateway/src/main.ts ***!
-  \**********************************/
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core_1 = __webpack_require__(/*! @nestjs/core */ "@nestjs/core");
-const app_module_1 = __webpack_require__(/*! ./app.module */ "./apps/gateway/src/app.module.ts");
-const platform_fastify_1 = __webpack_require__(/*! @nestjs/platform-fastify */ "@nestjs/platform-fastify");
+const core_1 = __webpack_require__(1);
+const app_module_1 = __webpack_require__(2);
+const platform_fastify_1 = __webpack_require__(8);
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule, new platform_fastify_1.FastifyAdapter());
     app.enableCors({
