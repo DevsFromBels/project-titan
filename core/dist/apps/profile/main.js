@@ -368,6 +368,16 @@ module.exports = require("@nestjs/jwt");
 
 /***/ }),
 
+/***/ "@nestjs/platform-fastify":
+/*!*******************************************!*\
+  !*** external "@nestjs/platform-fastify" ***!
+  \*******************************************/
+/***/ ((module) => {
+
+module.exports = require("@nestjs/platform-fastify");
+
+/***/ }),
+
 /***/ "@prisma/client":
 /*!*********************************!*\
   !*** external "@prisma/client" ***!
@@ -416,13 +426,23 @@ var exports = __webpack_exports__;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __webpack_require__(/*! @nestjs/core */ "@nestjs/core");
 const profile_module_1 = __webpack_require__(/*! ./profile.module */ "./apps/profile/src/profile.module.ts");
+const platform_fastify_1 = __webpack_require__(/*! @nestjs/platform-fastify */ "@nestjs/platform-fastify");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
 async function bootstrap() {
-    const app = await core_1.NestFactory.create(profile_module_1.ProfileModule);
+    const app = await core_1.NestFactory.create(profile_module_1.ProfileModule, new platform_fastify_1.FastifyAdapter());
     app.enableCors({
-        origin: '*',
-        credentials: true
+        origin: "*",
+        credentials: true,
     });
-    await app.listen(4002);
+    await app.listen(4002, '0.0.0.0', (err, appURL) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        const logger = new common_1.Logger();
+        logger.log(`Server started at ${appURL}`);
+        logger.log(`GraphQL URL ${appURL + '/graphql'}`);
+    });
 }
 bootstrap();
 

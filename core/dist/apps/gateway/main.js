@@ -40,9 +40,19 @@ exports.AppModule = AppModule = __decorate([
                         return new gateway_1.RemoteGraphQLDataSource({
                             url,
                             willSendRequest({ request, context }) {
-                                request.http.headers.set('accesstoken', context.headers ? context.headers?.accesstoken : null);
-                                request.http.headers.set('refreshtoken', context.headers ? context.headers?.refreshtoken : null);
-                            }
+                                const req = context && context.req;
+                                if (!req) {
+                                    return;
+                                }
+                                const accessToken = req.headers["accesstoken"];
+                                const refreshToken = req.headers["refreshtoken"];
+                                if (accessToken) {
+                                    request.http.headers.set("accesstoken", accessToken);
+                                }
+                                if (refreshToken) {
+                                    request.http.headers.set("refreshtoken", refreshToken);
+                                }
+                            },
                         });
                     },
                     supergraphSdl: new gateway_1.IntrospectAndCompose({
@@ -145,6 +155,16 @@ module.exports = require("@nestjs/core");
 
 module.exports = require("@nestjs/graphql");
 
+/***/ }),
+
+/***/ "@nestjs/platform-fastify":
+/*!*******************************************!*\
+  !*** external "@nestjs/platform-fastify" ***!
+  \*******************************************/
+/***/ ((module) => {
+
+module.exports = require("@nestjs/platform-fastify");
+
 /***/ })
 
 /******/ 	});
@@ -185,13 +205,16 @@ var exports = __webpack_exports__;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __webpack_require__(/*! @nestjs/core */ "@nestjs/core");
 const app_module_1 = __webpack_require__(/*! ./app.module */ "./apps/gateway/src/app.module.ts");
+const platform_fastify_1 = __webpack_require__(/*! @nestjs/platform-fastify */ "@nestjs/platform-fastify");
 async function bootstrap() {
-    const app = await core_1.NestFactory.create(app_module_1.AppModule);
+    const app = await core_1.NestFactory.create(app_module_1.AppModule, new platform_fastify_1.FastifyAdapter());
     app.enableCors({
-        origin: 'http://localhost:3000',
-        credentials: true
+        origin: 'https://titanproject.top',
+        credentials: true,
+        allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     });
-    await app.listen(4000);
+    await app.listen(4000, '0.0.0.0');
 }
 bootstrap();
 
