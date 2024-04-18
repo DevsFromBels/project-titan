@@ -209,8 +209,10 @@ const platform_fastify_1 = __webpack_require__(/*! @nestjs/platform-fastify */ "
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule, new platform_fastify_1.FastifyAdapter());
     app.enableCors({
-        origin: "titanproject.top",
+        origin: 'https://titanproject.top',
         credentials: true,
+        allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     });
     await app.listen(4000, '0.0.0.0');
 }

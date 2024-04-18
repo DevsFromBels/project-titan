@@ -1005,7 +1005,12 @@ async function bootstrap() {
     app.useStaticAssets((0, path_1.join)(__dirname, "..", "public"));
     app.setBaseViewsDir((0, path_1.join)(__dirname, "..", "servers/email-templates"));
     app.setViewEngine("ejs");
-    app.enableCors();
+    app.enableCors({
+        origin: 'https://core.titanproject.com/graphql',
+        credentials: true,
+        allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    });
     await app.listen(4001);
 }
 bootstrap();
