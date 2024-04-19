@@ -53,10 +53,6 @@ const WannaMobile = () => {
   
     if (isAndroid || isIOS) {
       window.location.href = appLink;
-  
-      setTimeout(() => {
-        router.push("/download");
-      }, 2000);
     } else {
       router.push("/download");
     }
