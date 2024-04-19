@@ -18,6 +18,11 @@ const fontSans = FontSans({
 export const metadata: Metadata = {
   title: "Titan Advertisiment",
   description: "Advertisiment",
+  openGraph: {
+    title: "Titan Advertisiment",
+    directors: "Социальная сеть с уклоном на рекламу, и зарботок в интернете.",
+    images: "https://titanproject.com/cat.jpeg",
+  }
 };
 
 export default function RootLayout({
