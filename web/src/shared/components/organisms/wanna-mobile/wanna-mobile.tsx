@@ -46,7 +46,20 @@ const WannaMobile = () => {
   };
 
   const handleContinueWithMobile = () => {
-    router.push("/download");
+    const appLink = "mobile-app://";
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isAndroid = userAgent.indexOf("android") > -1;
+    const isIOS = userAgent.indexOf("iphone") > -1 || userAgent.indexOf("ipad") > -1;
+  
+    if (isAndroid || isIOS) {
+      window.location.href = appLink;
+  
+      setTimeout(() => {
+        router.push("/download");
+      }, 2000);
+    } else {
+      router.push("/download");
+    }
   };
 
   if (!isMobile) {
