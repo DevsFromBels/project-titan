@@ -1,4 +1,4 @@
-export const theme = {
+const theme = {
 	light: {
 		background: "hsl(0, 0%, 100%)",
 		foreground: "hsl(222.2, 47.4%, 11.2%)",
@@ -8,3 +8,5 @@ export const theme = {
 		foreground: "hsl(213, 31% 91%)",
 	},
 }
+
+export default theme
