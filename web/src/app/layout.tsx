@@ -20,8 +20,8 @@ export const metadata: Metadata = {
   description: "Advertisiment",
   openGraph: {
     title: "Titan Advertisiment",
-    directors: "Социальная сеть с уклоном на рекламу, и зарботок в интернете.",
-    images: "https://titanproject.com/cat.jpeg",
+    description: "Социальная сеть с уклоном на рекламу, и зарботок в интернете.",
+    images: "https://titanproject.top/cat.jpeg",
   }
 };
 
