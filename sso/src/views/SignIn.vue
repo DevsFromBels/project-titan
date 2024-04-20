@@ -38,7 +38,7 @@
           />
         </div>
         <button
-          class="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-600"
+          class="w-full bg-blue-800 text-white p-2 rounded-lg hover:bg-blue-700"
         >
           Sign In
         </button>
@@ -61,7 +61,6 @@ export default {
     const { mutate, onDone } = useMutation(LOGIN_MUTATION);
 
     const login = async () => {
-
       const res = await mutate({
         email: email.value,
         password: password.value,
@@ -84,9 +83,7 @@ export default {
       });
 
       if (redirect_url && refreshToken && accessToken) {
-        setTimeout(() => {
-          window.location.href = redirect_url;
-        }, 2000)
+        window.location.href = redirect_url;
       }
     });
 
@@ -98,3 +95,4 @@ export default {
   },
 };
 </script>
+
