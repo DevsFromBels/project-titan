@@ -20,7 +20,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UserProfileSearch = exports.UserProfile = exports.Profile = void 0;
+exports.AllUsersProfiles = exports.UserProfileSearch = exports.UserProfile = exports.Profile = void 0;
 const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 let Profile = class Profile {
 };
@@ -81,6 +81,16 @@ __decorate([
 exports.UserProfileSearch = UserProfileSearch = __decorate([
     (0, graphql_1.ObjectType)()
 ], UserProfileSearch);
+let AllUsersProfiles = class AllUsersProfiles {
+};
+exports.AllUsersProfiles = AllUsersProfiles;
+__decorate([
+    (0, graphql_1.Field)(() => [Profile], { nullable: true }),
+    __metadata("design:type", Array)
+], AllUsersProfiles.prototype, "users", void 0);
+exports.AllUsersProfiles = AllUsersProfiles = __decorate([
+    (0, graphql_1.ObjectType)()
+], AllUsersProfiles);
 
 
 /***/ }),
@@ -175,6 +185,10 @@ let ProfileResolver = class ProfileResolver {
         const publicUsers = users.filter((_, index) => isPublic[index]);
         return { users: publicUsers, isPublic: isPublic };
     }
+    async getAllUsersProfiles(limit, page) {
+        const result = await this.profileService.getAllUsersProfiles(limit, page);
+        return { users: result.users };
+    }
 };
 exports.ProfileResolver = ProfileResolver;
 __decorate([
@@ -192,6 +206,14 @@ __decorate([
     __metadata("design:paramtypes", [String, Number]),
     __metadata("design:returntype", Promise)
 ], ProfileResolver.prototype, "searchProfile", null);
+__decorate([
+    (0, graphql_1.Query)(() => profile_entitie_1.AllUsersProfiles),
+    __param(0, (0, graphql_1.Args)("limit")),
+    __param(1, (0, graphql_1.Args)("page")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Number]),
+    __metadata("design:returntype", Promise)
+], ProfileResolver.prototype, "getAllUsersProfiles", null);
 exports.ProfileResolver = ProfileResolver = __decorate([
     (0, graphql_1.Resolver)("Profile"),
     __metadata("design:paramtypes", [typeof (_a = typeof profile_service_1.ProfileService !== "undefined" && profile_service_1.ProfileService) === "function" ? _a : Object])
@@ -251,7 +273,7 @@ let ProfileService = class ProfileService {
                 user: {
                     name: {
                         contains: userName,
-                        mode: 'insensitive',
+                        mode: "insensitive",
                     },
                 },
                 isPublic: true,
@@ -265,6 +287,16 @@ let ProfileService = class ProfileService {
             users: profiles.map((profile) => profile.user),
             isPublic: profiles.map((profile) => profile.isPublic),
         };
+    }
+    async getAllUsersProfiles(limit, page) {
+        const users = await this.prisma.user.findMany({
+            take: Number(limit),
+            skip: page ? Number(page) * Number(limit) : undefined,
+            include: {
+                profile: true,
+            },
+        });
+        return { users };
     }
     async getSettings(userName) { }
     async updateSettings(settings) { }

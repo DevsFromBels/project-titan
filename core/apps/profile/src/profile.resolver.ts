@@ -1,8 +1,10 @@
 import { Args, Query, Resolver } from "@nestjs/graphql";
 import { ProfileService } from "./profile.service";
-import { UserProfile, UserProfileSearch } from "./entities/profile.entitie";
-import { ProfileDTO } from "./dto/profile.dto";
-import { UseGuards } from "@nestjs/common";
+import {
+  AllUsersProfiles,
+  UserProfile,
+  UserProfileSearch,
+} from "./entities/profile.entitie";
 
 @Resolver("Profile")
 export class ProfileResolver {
@@ -18,11 +20,20 @@ export class ProfileResolver {
     @Args("userName") userName: string,
     @Args("limit", { defaultValue: 5 }) limit?: number
   ) {
-    const { users, isPublic } = await this.profileService.searchUserProfile(userName, limit);
+    const { users, isPublic } = await this.profileService.searchUserProfile(
+      userName,
+      limit
+    );
     const publicUsers = users.filter((_, index) => isPublic[index]);
     return { users: publicUsers, isPublic: isPublic };
   }
 
+@Query(() => AllUsersProfiles)
+async getAllUsersProfiles(@Args("limit") limit: string, @Args("page") page: number) {
+  const result = await this.profileService.getAllUsersProfiles(limit, page);
+  
+  return { users: result.users };
+}
   // @UseGuards(AuthGuard)
   // async getSettings(@Args('userName') userName: string) {
   //   return await this.profileServie.getSettings(userName);
