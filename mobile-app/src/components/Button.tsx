@@ -1,4 +1,4 @@
-import { type VariantProps, cva } from "class-variance-authority"
+import { cva, type VariantProps } from "class-variance-authority"
 import { Text, TouchableOpacity } from "react-native"
 
 import { cn } from "../lib/utils"
@@ -82,4 +82,5 @@ function Button({
 	)
 }
 
-export { Button, buttonVariants, buttonTextVariants }
+export { Button, buttonTextVariants, buttonVariants }
+

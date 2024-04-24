@@ -4,4 +4,4 @@ const { withNativeWind } = require("nativewind/metro")
 /** @type {import('expo/metro-config').MetroConfig} */
 const config = getDefaultConfig(__dirname)
 
-module.exports = withNativeWind(config, { input: "./styles/globals.css" })
+module.exports = withNativeWind(config, { input: "./src/styles/globals.css" })

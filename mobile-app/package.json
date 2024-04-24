@@ -9,10 +9,15 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@apollo/client": "^3.9.11",
+    "@dev-plugins/apollo-client": "^0.0.6",
+    "@react-native-async-storage/async-storage": "1.21.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "expo": "~50.0.6",
+    "expo-auth-session": "~5.4.0",
     "expo-constants": "~15.4.5",
+    "expo-crypto": "~12.8.1",
     "expo-image": "~1.10.6",
     "expo-linking": "~6.2.2",
     "expo-router": "~3.4.8",
@@ -28,6 +33,7 @@
     "react-native-svg": "^14.1.0",
     "react-native-web": "~0.19.6",
     "react-navigation": "^5.0.0",
+    "rxjs": "^7.8.1",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7"
   },

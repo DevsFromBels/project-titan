@@ -1,0 +1,13 @@
+[
+    {
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.dev1siwoo.mobileapp",
+        "sha256_cert_fingerprints": [
+          "C2:B1:58:57:2B:AB:4D:4E:C6:FA:CE:39:04:F5:A2:B6:6C:E7:28:22:90:59:EC:D8:9B:D2:DF:D2:B4:27:A0:AD"
+        ]
+      }
+    }
+  ]
+  
