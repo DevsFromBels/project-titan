@@ -1,0 +1,18 @@
+<!-- <button class="flex bg-gray-900 m-auto text-slate-50 px-4 py-2 rounded-lg">
+  <ng-content></ng-content>
+</button> -->
+
+@if (!link) {
+<button
+  class="w-[120px] flex items-center justify-center bg-gray-900 m-auto text-slate-50 px-4 py-2 rounded-lg shadow"
+>
+  {{ text }}
+</button>
+} @else {
+<a
+  routerLink="{{ link }}"
+  class="w-[120px] flex bg-gray-900 m-auto text-slate-50 px-4 py-2 rounded-lg"
+>
+  {{ text }}
+</a>
+}
