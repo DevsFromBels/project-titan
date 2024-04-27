@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import useIsMobile from "@/shared/hooks/is-mobile-phone-hooks";
-import { Button } from "../../ui/button";
+import { Button } from "../../shared/components/ui/button";
 import { useRouter } from "next/navigation";
 
 const WannaMobile = () => {

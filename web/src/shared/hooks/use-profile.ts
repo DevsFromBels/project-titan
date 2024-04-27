@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { GET_PROFILE } from "@/shared/graphql/actions/profile/getProfile.action";
+import { GET_PROFILE } from "@/features/graphql/actions/profile/getProfile.action";
 
 const useProfile = ({ name } : { name: string }) => {
   const { loading,  data, error } = useQuery<IUseProfile>(GET_PROFILE, {

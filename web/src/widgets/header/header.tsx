@@ -2,8 +2,8 @@
 import Link from "next/link";
 import React from "react";
 
-import { ModeToggle } from "../../maleculas/mode-toggle";
-import { Button } from "../../ui/button";
+import { ModeToggle } from "../../shared/components/maleculas/mode-toggle";
+import { Button } from "../../shared/components/ui/button";
 
 const Header = () => {
   return (
