@@ -5,9 +5,9 @@ import "./globals.css";
 import { cn } from "@/shared/lib/utils";
 import { ThemeProvider } from "@/shared/components/Themes/theme-provider";
 import NextTopLoader from "nextjs-toploader";
-import Header from "@/shared/components/organisms/header/header";
+import Header from "@/widgets/header/header";
 import MainLayout from "@/shared/components/maleculas/main-layout";
-import WannaMobile from "@/shared/components/organisms/wanna-mobile/wanna-mobile";
+import WannaMobile from "@/widgets/wanna-mobile/wanna-mobile";
 import ApolloProviderClient from "@/shared/Providers/ApolloProvider";
 
 const fontSans = FontSans({
@@ -16,13 +16,28 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: "Titan Advertisiment",
-  description: "Advertisiment",
+  title: "Titan Advertisement",
+  applicationName: "Titan Advertisement",
+  description: "Advertisement social network",
+  keywords: [
+    "Advertisement",
+    "Advertisement Titan",
+    "Titan Advertisement",
+    "Project Titan",
+    "Titan",
+  ],
+  authors: [{ name: "Nikita Yatsun", url: "https://sh1woo.vercel.app/" }],
+  creator: "Nikita Yatsun",
+  publisher: "Titan",
   openGraph: {
-    title: "Titan Advertisiment",
-    description: "Социальная сеть с уклоном на рекламу, и зарботок в интернете.",
+    title: "Titan Advertisement",
+    description:
+      "Social network with a bias on advertising, and zarbotok in the Internet.",
     images: "https://titanproject.top/cat.jpeg",
-  }
+    creators: ["Nikita Yatsun", "Titan Project"],
+    url: "https://titanproject.top/",
+
+  },
 };
 
 export default function RootLayout({
