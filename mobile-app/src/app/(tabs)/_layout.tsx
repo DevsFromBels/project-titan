@@ -1,11 +1,10 @@
-import React from "react"
-import FontAwesome from "@expo/vector-icons/FontAwesome"
 import { Tabs } from "expo-router"
-import { SafeAreaView } from "react-native-safe-area-context"
+import { SafeAreaView } from "react-native"
+import FontAwesome from "@expo/vector-icons/FontAwesome"
 
-export default function TabLayout() {
+const TabsLayout = () => {
 	return (
-		<SafeAreaView>
+		<SafeAreaView className='h-screen w-screen absolute flex justify-end'>
 			<Tabs screenOptions={{ tabBarActiveTintColor: "blue" }}>
 				<Tabs.Screen
 					name='index'
@@ -21,13 +20,26 @@ export default function TabLayout() {
 					}}
 				/>
 				<Tabs.Screen
-					name='settings'
+					name='search'
 					options={{
-						title: "Settings",
+						title: "Search",
 						tabBarIcon: ({ color }) => (
 							<FontAwesome
 								size={28}
-								name='cog'
+								name='search'
+								color={color}
+							/>
+						),
+					}}
+				/>
+				<Tabs.Screen
+					name='profile'
+					options={{
+						title: "Profile",
+						tabBarIcon: ({ color }) => (
+							<FontAwesome
+								size={28}
+								name='user'
 								color={color}
 							/>
 						),
@@ -37,3 +49,5 @@ export default function TabLayout() {
 		</SafeAreaView>
 	)
 }
+
+export default TabsLayout

@@ -13,19 +13,12 @@ const Input = forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
 	({ className, label, labelClasses, inputClasses, ...props }, ref) => (
 		<View className={cn("flex flex-col gap-1.5", className)}>
 			{label && (
-				<Text
-					className={cn(
-						"text-base dark: text-gray-300",
-						labelClasses
-					)}
-				>
-					{label}
-				</Text>
+				<Text className={cn("text-base", labelClasses)}>{label}</Text>
 			)}
 			<TextInput
 				className={cn(
 					inputClasses,
-					"border border-input py-2.5 px-4 rounded-lg dark: text-white"
+					"border border-input py-2.5 px-4 rounded-lg text-dark dark:text-white h-[60]"
 				)}
 				placeholderTextColor={"gray"}
 				{...props}
