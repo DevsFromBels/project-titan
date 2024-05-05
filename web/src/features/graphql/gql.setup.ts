@@ -30,5 +30,4 @@ export const graphqlClient = new ApolloClient({
 			? authMiddleware.concat(httpLink)
 			: httpLink,
 	cache: new InMemoryCache(),
-	ssrMode: true,
 })
