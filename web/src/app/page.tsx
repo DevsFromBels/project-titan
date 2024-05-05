@@ -1,17 +1,20 @@
 'use client'
 
 import useUser from "@/shared/hooks/use-user";
+import CenterLoader from "@/widgets/center-loader/center-loader";
+import dynamic from "next/dynamic";
+const GlobalPage = dynamic(() => import("@/pages/global/global"));
 
 export default function Home() {
   const user = useUser();
 
-  if(user.user?.name) {
-    return `Welcome ${user.user?.name}`
+  if(user.loading) {
+    return <CenterLoader/>
   }
 
-  return (
-    <main>
-      <h2>Hello, world</h2>
-    </main>
-  );
+  if(user.user?.name) {
+    return <GlobalPage />
+  }
+
+  return <h1>Hello, world!</h1>
 }

@@ -28,9 +28,11 @@ const handleAuth = () => {
 
     Cookies.set("refresh_token", res.data.login.refreshToken, {
       domain: ".titanproject.top",
+      // domain: "localhost",
     });
     Cookies.set("access_token", res.data.login.accessToken, {
       domain: ".titanproject.top",
+      // domain: "localhost",
     });
 
     updateTokens();
@@ -60,7 +62,7 @@ const handleAuth = () => {
       },
     });
 
-    console.log(data);
+    // console.log(data);
 
     if (!data.activateUser.user.name && !data.activateUser.user.email) return;
 

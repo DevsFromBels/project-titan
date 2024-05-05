@@ -1,15 +1,15 @@
 "use client";
-import { REGISTER_USER } from "@/features/graphql/actions/register.action";
-import { Button } from "@/shared/components/ui/button";
-import { Input } from "@/shared/components/ui/input";
-import Loader from "@/shared/components/ui/loader/loader";
-import { useMutation } from "@apollo/client";
-import Image from "next/image";
-import React from "react";
-import { redirect } from "next/navigation";
-import { ACTIVATE_USER } from "@/features/graphql/actions/activation.action";
-import { useRegistrationStore } from "@/features/store/register.store";
-import useUser from "@/shared/hooks/use-user";
+
+import CenterLoader from '@/widgets/center-loader/center-loader'
+import Image from 'next/image'
+import Loader from '@/shared/components/ui/loader/loader'
+import React from 'react'
+import useUser from '@/shared/hooks/use-user'
+import { Button } from '@/shared/components/ui/button'
+import { handleAuth } from '@/features/auth/auth'
+import { Input } from '@/shared/components/ui/input'
+import { redirect } from 'next/navigation'
+import { useRegistrationStore } from '@/features/store/register.store'
 
 import {
   Dialog,
@@ -24,15 +24,6 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/shared/components/ui/input-otp";
-import { handleAuth } from "@/features/auth/auth";
-
-const SignUpLoader = () => {
-  return (
-    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
-      <Loader />
-    </div>
-  );
-};
 
 const SignUpPage = () => {
   const { register, signUpLoading, confirmRegister, OTPLoading } = handleAuth();
@@ -51,7 +42,7 @@ const SignUpPage = () => {
   } = useRegistrationStore();
 
   if (user.loading || OTPLoading || signUpLoading) {
-    return <SignUpLoader />;
+    return <CenterLoader />;
   }
 
   if (user.user?.name) {

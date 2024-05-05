@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import useIsMobile from "@/shared/hooks/is-mobile-phone-hooks";
 import { Button } from "../../shared/components/ui/button";
 import { useRouter } from "next/navigation";
+import {Cross1Icon} from '@radix-ui/react-icons'
 
 const WannaMobile = () => {
   const isMobile = useIsMobile();
@@ -56,7 +57,7 @@ const WannaMobile = () => {
      
       router.push("/download");
     } else {
-      router.push("/download");
+      router.push("/");
     }
   };
 
@@ -67,13 +68,14 @@ const WannaMobile = () => {
   return (
     <div
       ref={componentRef}
-      className="fixed bottom-2 left-0 right-0 w-[95%] h-[200px] flex flex-col bg-black m-auto rounded-lg text-white p-2 z-[999] justify-center"
+      className="fixed bottom-0 left-0 right-0 w-full h-[110px] flex flex-col bg-primary m-auto rounded-t-2xl text-primary-foreground p-2 z-[999] justify-center"
     >
+      <Button size="icon" className="absolute top-2 right-2 flex rounded-full" variant="ghost" onClick={handleContinueWithWeb}>
+        <Cross1Icon />
+      </Button>
       <h2 className="text-center">Do you wanna use a mobile app?</h2>
       <div className="flex flex-col gap-2 p-2">
-        <Button onClick={handleContinueWithWeb}>Continue with web</Button>
-        <p className="text-center">OR</p>
-        <Button onClick={handleContinueWithMobile}>Continue with mobile</Button>
+        <Button variant="secondary" onClick={handleContinueWithMobile}>Continue with mobile</Button>
       </div>
     </div>
   );

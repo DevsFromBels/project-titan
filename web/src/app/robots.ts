@@ -17,7 +17,6 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: ['Applebot', 'Bingbot'],
         allow: ['/'],
       },
-    ],
-    sitemap: 'https://acme.com/sitemap.xml',
+    ]
   }
 }

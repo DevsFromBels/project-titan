@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
+import { Suspense } from 'react'
 import "./globals.css";
 
 import { cn } from "@/shared/lib/utils";
@@ -16,27 +17,20 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: "Titan Advertisement",
-  applicationName: "Titan Advertisement",
-  description: "Advertisement social network",
-  keywords: [
-    "Advertisement",
-    "Advertisement Titan",
-    "Titan Advertisement",
-    "Project Titan",
-    "Titan",
-  ],
-  authors: [{ name: "Nikita Yatsun", url: "https://sh1woo.vercel.app/" }],
-  creator: "Nikita Yatsun",
+  title: "Titan - Advertisement Social Network",
+  description:
+    "Discover the premier advertising social network for connecting businesses and customers.",
+  keywords: ["Advertising", "Social Network", "Titan", "Online Marketing"],
+  authors: [{ name: "Titan" }],
+  creator: "Titan",
   publisher: "Titan",
+  robots: "index, follow",
   openGraph: {
-    title: "Titan Advertisement",
-    description:
-      "Social network with a bias on advertising, and zarbotok in the Internet.",
+    title: "Titan",
+    description: "Titan - The leading advertisement social network.",
     images: "https://titanproject.top/cat.jpeg",
-    creators: ["Nikita Yatsun", "Titan Project"],
+    creators: ["Titan"],
     url: "https://titanproject.top/",
-
   },
 };
 
@@ -53,6 +47,7 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
+        <Suspense fallback="loading...">
         <ApolloProviderClient>
           <ThemeProvider
             attribute="class"
@@ -70,6 +65,7 @@ export default function RootLayout({
             <WannaMobile />
           </ThemeProvider>
         </ApolloProviderClient>
+        </Suspense>
       </body>
     </html>
   );

@@ -1,33 +1,26 @@
 "use client";
 
-import { Input } from "@/shared/components/ui/input";
-import { useState } from "react";
-import { Button } from "@/shared/components/ui/button";
-import useUser from "@/shared/hooks/use-user";
-import { redirect } from "next/navigation";
-import Loader from "@/shared/components/ui/loader/loader";
-import { QRCode } from "react-qrcode-logo";
-import Logo from "../../../app/favicon.ico";
-import { useTheme } from "next-themes";
-import { handleAuth } from "@/features/auth/auth";
+import CenterLoader from '@/widgets/center-loader/center-loader'
+import QRCodeSignIn from '@/shared/components/maleculas/qr-code-sign-in'
+import useUser from '@/shared/hooks/use-user'
+import { Button } from '@/shared/components/ui/button'
+import { handleAuth } from '@/features/auth/auth'
+import { Input } from '@/shared/components/ui/input'
+import { redirect } from 'next/navigation'
+import { useState } from 'react'
+import { useTheme } from 'next-themes'
 
-const SignInLoader = () => {
-  return (
-    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
-      <Loader />
-    </div>
-  );
-};
 
 const SignInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login, signInLoading } = handleAuth();
   const { theme } = useTheme();
+  const qrcode_url = '12345'
   const user = useUser();
   
   if (user.loading || signInLoading) {
-    return <SignInLoader />;
+    return <CenterLoader />;
   }
 
   if (user.user?.name) {
@@ -63,21 +56,7 @@ const SignInPage = () => {
           />
           <Button type="submit">Sign In</Button>
         </form>
-        <div className="lg:flex lg:flex-col lg:text-center lg:gap-5 hidden">
-          <QRCode
-            value="https://github.com/gcoro/react-qrcode-logo"
-            bgColor={theme === "dark" ? "#020817" : "#ffffff"}
-            fgColor={theme === "dark" ? "#ffffff" : "#020817"}
-            logoPadding={0.1}
-            logoWidth={40}
-            logoHeight={40}
-            logoOpacity={1}
-            qrStyle="dots"
-            eyeRadius={[3, 3, 3, 3]}
-            logoImage={Logo.src}
-          />
-          <h1>SignIn With Mobile QRCode</h1>
-        </div>
+        <QRCodeSignIn url={qrcode_url} theme={theme}/>
       </div>
     </div>
   );
