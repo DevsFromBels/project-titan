@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
-import { Suspense } from 'react'
 import "./globals.css";
 
 import { cn } from "@/shared/lib/utils";
@@ -47,7 +46,6 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <Suspense fallback="loading...">
         <ApolloProviderClient>
           <ThemeProvider
             attribute="class"
@@ -65,7 +63,6 @@ export default function RootLayout({
             <WannaMobile />
           </ThemeProvider>
         </ApolloProviderClient>
-        </Suspense>
       </body>
     </html>
   );
