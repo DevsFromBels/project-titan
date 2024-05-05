@@ -1,10 +1,14 @@
-import type { Config } from "tailwindcss"
-const { fontFamily } = require("tailwindcss/defaultTheme")
+const { hairlineWidth } = require("nativewind/theme")
 
-const config = {
-	darkMode: ["class"],
-	content: ["./src/**/*.{ts,tsx}"],
-	prefix: "",
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+	darkMode: "class",
+	content: [
+		"./src/app/*.{js,jsx,ts,tsx}",
+		"./src/components/**/*.{js,jsx,ts,tsx}",
+		"./src/app/**/*.{js,jsx,ts,tsx}",
+	],
+	presets: [require("nativewind/preset")],
 	theme: {
 		container: {
 			center: true,
@@ -14,9 +18,6 @@ const config = {
 			},
 		},
 		extend: {
-			fontFamily: {
-				sans: ["var(--font-sans)", ...fontFamily.sans],
-			},
 			colors: {
 				border: "hsl(var(--border))",
 				input: "hsl(var(--input))",
@@ -52,10 +53,8 @@ const config = {
 					foreground: "hsl(var(--card-foreground))",
 				},
 			},
-			borderRadius: {
-				lg: "var(--radius)",
-				md: "calc(var(--radius) - 2px)",
-				sm: "calc(var(--radius) - 4px)",
+			borderWidth: {
+				hairline: hairlineWidth(),
 			},
 			keyframes: {
 				"accordion-down": {
@@ -74,6 +73,4 @@ const config = {
 		},
 	},
 	plugins: [require("tailwindcss-animate")],
-} satisfies Config
-
-export default config
+}
