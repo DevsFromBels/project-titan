@@ -52,7 +52,7 @@ const SignInPage = () => {
 					"refresh_token",
 					data.login.refreshToken
 				)
-				router.replace('/home')
+				router.replace('/(tabs)')
 				setIsLoading(false)
 			} catch (err) {
 				setErrorNot("An error occurred. Please try again.")

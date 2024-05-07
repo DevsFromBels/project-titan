@@ -2,7 +2,7 @@
 	"expo": {
 		"scheme": "Titan Advertisiment",
 		"name": "Titan Advertisiment",
-		"slug": "Titan Advertisiment",
+		"slug": "mobile-app",
 		"userInterfaceStyle": "automatic",
 		"version": "1.0.0",
 		"orientation": "portrait",
