@@ -1,10 +1,16 @@
 import { GET_PROFILE } from "@/features/graphql/client/actions/profile/getProfile.action";
 import { getClient } from "@/features/graphql/server/client";
 import { IUseProfile } from "@/shared/hooks/use-profile";
-import { notFound } from 'next/navigation'
+import { notFound } from "next/navigation";
 import Image from "next/image";
 
 const client = getClient();
+
+export function generateViewport() {
+  return {
+    themeColor: "#b284be",
+  };
+}
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const id = params.id.toLowerCase();
@@ -17,18 +23,22 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
       },
     });
 
-    if (!data.profile.user.id) {
-      return notFound();
-    }
-
     const userId = data.profile.user.id;
 
+    const title = userId
+      ? `${data.profile.user.name}'s profile`
+      : "User not found";
+
+    const url = userId
+      ? `https://titanproject.top/${userId}`
+      : "https://titanproject.top/";
+
     return {
-      title: `${data.profile.user.name}'s profile`,
+      title,
       openGraph: {
         description: data.profile.info,
         images: "https://titanproject.top/cat.jpeg",
-        url: `https://titanproject.top/${userId}`,
+        url,
       },
     };
   } catch (error) {
@@ -52,6 +62,11 @@ export default async function Page({ params }: { params: { id: string } }) {
       return notFound();
     }
 
+    const image =
+      id === "sh1woo"
+        ? "https://titanproject.top/sh1woo.jpeg"
+        : "https://titanproject.top/cat.jpeg";
+
     return (
       <>
         <div className="w-[100vw]">
@@ -59,7 +74,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             <div className="blur-[50px] w-[80px] h-[80px] bg-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0"></div>
             <div className="relative relative z-10 select-none">
               <Image
-                src="https://titanproject.top/cat.jpeg"
+                src={image}
                 className="rounded-full shadow-lg shadow-cyan-500/10 border border-slate-100"
                 width={100}
                 height={100}
