@@ -733,7 +733,7 @@ let UsersService = class UsersService {
                 email,
             },
         });
-        if (user && (await this.compaprePassword(password, user.password))) {
+        if (user && (await this.comparePassword(password, user.password))) {
             const tokeSender = new sendToken_1.TokenSender(this.configService, this.jwtService);
             return tokeSender.sendToken(user);
         }
@@ -743,7 +743,7 @@ let UsersService = class UsersService {
                 accessToken: null,
                 refreshToken: null,
                 error: {
-                    message: "Inavlid email or password",
+                    message: "Invalid email or password",
                 },
             };
         }
@@ -764,7 +764,7 @@ let UsersService = class UsersService {
             message: "Logged out successfully!",
         };
     }
-    async compaprePassword(password, hashedPassword) {
+    async comparePassword(password, hashedPassword) {
         return await bcrypt.compare(password, hashedPassword);
     }
 };

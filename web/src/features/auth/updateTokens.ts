@@ -1,6 +1,6 @@
 import { ApolloLink } from '@apollo/client';
 import Cookies from 'js-cookie';
-import { graphqlClient } from '@/features/graphql/gql.setup';
+import { graphqlClient } from '@/features/graphql/client/gql.setup';
 
 const authMiddleware = new ApolloLink((operation, forward) => {
   const accessToken = Cookies.get('access_token');

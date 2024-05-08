@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { GET_USER } from "@/features/graphql/actions/get-user.action";
+import { GET_USER } from "@/features/graphql/client/actions/get-user.action";
 import { IGetUser } from "../types/auth.types";
 
 const useUser = () => {
