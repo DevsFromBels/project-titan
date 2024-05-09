@@ -11,6 +11,12 @@ import { Input } from '@/shared/components/ui/input'
 import { redirect } from 'next/navigation'
 import { useRegistrationStore } from '@/features/store/register.store'
 
+export const metadata: Metadata = {
+  title: 'Sign Up - Titan Advertisement',
+  description: 'Create a Titan account',
+}
+
+
 import {
   Dialog,
   DialogContent,
@@ -24,6 +30,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/shared/components/ui/input-otp";
+import { Metadata } from 'next';
 
 const SignUpPage = () => {
   const { register, signUpLoading, confirmRegister, OTPLoading } = handleAuth();

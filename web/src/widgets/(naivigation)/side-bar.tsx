@@ -5,6 +5,7 @@ import Image from "next/image";
 import logo from '@/../public/Logo.svg'
 
 const SideBar = () => {
+
   return (
     <aside className="absoulte top-0 left-0 max-w-[250px] flex flex-col h-auto border-r p-2">
       <div>

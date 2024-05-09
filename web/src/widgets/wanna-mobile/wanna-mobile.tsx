@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import {Cross1Icon} from '@radix-ui/react-icons'
 
 const WannaMobile = () => {
-  const isMobile = useIsMobile();
+  const {isMobile } = useIsMobile();
   const componentRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -52,18 +52,19 @@ const WannaMobile = () => {
     const isAndroid = userAgent.indexOf("android") > -1;
     const isIOS = userAgent.indexOf("iphone") > -1 || userAgent.indexOf("ipad") > -1;
   
+    
     if (isAndroid || isIOS) {
       window.location.href = appLink;
-     
+      
       router.push("/download");
     } else {
       router.push("/");
     }
   };
-
+  
   if (!isMobile) {
     return null;
-  }
+  }  
 
   return (
     <div

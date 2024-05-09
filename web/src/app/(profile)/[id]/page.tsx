@@ -2,6 +2,7 @@ import { GET_PROFILE } from "@/features/graphql/client/actions/profile/getProfil
 import { getClient } from "@/features/graphql/server/client";
 import { IUseProfile } from "@/shared/hooks/use-profile";
 import { notFound } from "next/navigation";
+import SideBar from "@/widgets/(naivigation)/side-bar";
 import Image from "next/image";
 
 const client = getClient();
@@ -69,6 +70,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
     return (
       <>
+        {/* <DetectNavigation/> */}
         <div className="w-[100vw]">
           <div className="relative flex flex-col justify-center items-center h-[200px] gap-2 bg-[#b284be]">
             <div className="blur-[50px] w-[80px] h-[80px] bg-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0"></div>

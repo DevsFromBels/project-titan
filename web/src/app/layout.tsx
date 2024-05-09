@@ -9,6 +9,7 @@ import Header from "@/widgets/header/header";
 import MainLayout from "@/shared/components/maleculas/main-layout";
 import WannaMobile from "@/widgets/wanna-mobile/wanna-mobile";
 import ApolloProviderClient from "@/shared/Providers/ApolloProvider";
+import DetectNavigation from "@/widgets/(naivigation)/detect-navigation";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -59,7 +60,11 @@ export default function RootLayout({
               showSpinner={false}
             />
             <Header />
-            <MainLayout>{children}</MainLayout>
+            <MainLayout>
+              <DetectNavigation />
+              {children}
+            </MainLayout>
+
             <WannaMobile />
           </ThemeProvider>
         </ApolloProviderClient>
