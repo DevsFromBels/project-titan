@@ -9,12 +9,7 @@ import { Input } from '@/shared/components/ui/input'
 import { redirect } from 'next/navigation'
 import { useState } from 'react'
 import { useTheme } from 'next-themes'
-import { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Sign In - Titan Advertisement',
-  description: 'Sign in to the Titan account',
-}
 
 const SignInPage = () => {
   const [email, setEmail] = useState("");
