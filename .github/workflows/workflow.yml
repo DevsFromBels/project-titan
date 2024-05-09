@@ -39,7 +39,8 @@ jobs:
           cd core
           npm install
           npm run build
-          pm2 restart 1 2 3 
+      - name: Restart pm2
+        run: pm2 restart 1 2 3 
 
   client-build:
     needs: server-build
@@ -55,5 +56,21 @@ jobs:
           npm install
           npm run build --if-present
       - name: Restart pm2
-        run: pm2 restart 0
+        run: pm2 restart titan-web
+
+  admin-build:
+    needs: server-build
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        node-version: [20.10.0]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies and build Next.js project
+        run: |
+          cd admin
+          npm install
+          npm run build --if-present
+      - name: Restart pm2
+        run: pm2 restart admin
 
