@@ -13,11 +13,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Install dependencies and build NestJS microservices
-        run: |
-          cd core
-          npm install
-          npm run build
       - name: Create .env file
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
@@ -39,6 +34,12 @@ jobs:
           echo "SMTP_PASSWORD=$SMTP_PASSWORD" >> .env
           echo "ACCESS_TOKEN_SECRET=$ACCESS_TOKEN_SECRET" >> .env
           echo "REFRESH_TOKEN_SECRET=$REFRESH_TOKEN_SECRET" >> .env
+      - name: Install dependencies and build NestJS microservices
+        run: |
+          cd core
+          npm install
+          npm run build
+          pm2 restart 1 2 3 
 
   client-build:
     needs: server-build
@@ -53,25 +54,6 @@ jobs:
           cd web
           npm install
           npm run build --if-present
-      # - name: Restart all pm2
-      #   run: pm2 restart all
+      - name: Restart pm2
+        run: pm2 restart 0
 
-  install-deps-and-restart-pm2:
-    needs: client-build
-    runs-on: self-hosted
-    strategy:
-      matrix:
-        node-version: [20.10.0]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install dependencies nestjs
-        run: |
-          cd core
-          npm install
-      - name: Install dependencies nextjs
-        run: |
-          cd core
-          npm install
-      - name: restart pm2
-        run: |
-          pm2 restart all
