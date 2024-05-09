@@ -11,7 +11,7 @@ interface IMobileTabs extends User {}
 
 const MobileTabs = (user: IMobileTabs) => {
   return (
-    <div className="fixed bottom-0 left-0 w-full h-[58px] border-t flex gap-4 justify-between items-center p-4">
+    <div className="fixed bottom-0 left-0 w-full h-[58px] border-t flex gap-4 justify-between items-center background p-4">
       <Link href={"/"} className="flex flex-col items-center text-sm gap-1">
         <GlobeIcon className="w-[30px] h-[30px]" />
         <p>General</p>
