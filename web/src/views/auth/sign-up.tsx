@@ -11,11 +11,6 @@ import { Input } from '@/shared/components/ui/input'
 import { redirect } from 'next/navigation'
 import { useRegistrationStore } from '@/features/store/register.store'
 
-export const metadata: Metadata = {
-  title: 'Sign Up - Titan Advertisement',
-  description: 'Create a Titan account',
-}
-
 
 import {
   Dialog,
@@ -30,7 +25,6 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/shared/components/ui/input-otp";
-import { Metadata } from 'next';
 
 const SignUpPage = () => {
   const { register, signUpLoading, confirmRegister, OTPLoading } = handleAuth();
@@ -57,7 +51,7 @@ const SignUpPage = () => {
   }
 
   return (
-    <div className="h-[calc(100vh-3rem)] w-full flex items-center justify-center">
+    <div className="h-[calc(100vh-3rem)] w-full m-2 flex items-center justify-center">
       <div className="flex border lg:p-4 sm:p-2 rounded-lg lg:gap-[20px] items-center shadow">
         <form
           onSubmit={register}
