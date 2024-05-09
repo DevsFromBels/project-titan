@@ -2,8 +2,8 @@ const express = require('express');
 const path = require('path');
 
 const app = express();
-const PORT = 5000;
-const DIST_FOLDER = path.join(__dirname, '/');
+const PORT = 5001;
+const DIST_FOLDER = path.join(__dirname, './dist/admin/browser');
 
 app.use(express.static(DIST_FOLDER));
 
