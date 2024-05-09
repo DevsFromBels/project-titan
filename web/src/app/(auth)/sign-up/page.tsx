@@ -1,5 +1,6 @@
 import React from 'react'
 import dynamic from "next/dynamic";
+import { Metadata } from 'next/dist/lib/metadata/types/metadata-interface';
 
 const SignUp = dynamic(() => import("@/views/auth/sign-up"));
 

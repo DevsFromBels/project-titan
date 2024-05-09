@@ -1,3 +1,4 @@
+import { Metadata } from "next/dist/lib/metadata/types/metadata-interface";
 import dynamic from "next/dynamic";
 import React from "react";
 
