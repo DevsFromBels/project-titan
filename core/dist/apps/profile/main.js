@@ -2,6 +2,202 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./apps/profile/src/avatars/avatars.module.ts":
+/*!****************************************************!*\
+  !*** ./apps/profile/src/avatars/avatars.module.ts ***!
+  \****************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AvatarsModule = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const avatars_service_1 = __webpack_require__(/*! ./avatars.service */ "./apps/profile/src/avatars/avatars.service.ts");
+const avatars_resolver_1 = __webpack_require__(/*! ./avatars.resolver */ "./apps/profile/src/avatars/avatars.resolver.ts");
+let AvatarsModule = class AvatarsModule {
+};
+exports.AvatarsModule = AvatarsModule;
+exports.AvatarsModule = AvatarsModule = __decorate([
+    (0, common_1.Module)({
+        providers: [avatars_resolver_1.AvatarsResolver, avatars_service_1.AvatarsService],
+    })
+], AvatarsModule);
+
+
+/***/ }),
+
+/***/ "./apps/profile/src/avatars/avatars.resolver.ts":
+/*!******************************************************!*\
+  !*** ./apps/profile/src/avatars/avatars.resolver.ts ***!
+  \******************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a, _b, _c, _d;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AvatarsResolver = void 0;
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+const avatars_service_1 = __webpack_require__(/*! ./avatars.service */ "./apps/profile/src/avatars/avatars.service.ts");
+const avatar_entity_1 = __webpack_require__(/*! ./entities/avatar.entity */ "./apps/profile/src/avatars/entities/avatar.entity.ts");
+const create_avatar_input_1 = __webpack_require__(/*! ./dto/create-avatar.input */ "./apps/profile/src/avatars/dto/create-avatar.input.ts");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const platform_express_1 = __webpack_require__(/*! @nestjs/platform-express */ "@nestjs/platform-express");
+let AvatarsResolver = class AvatarsResolver {
+    constructor(avatarsService) {
+        this.avatarsService = avatarsService;
+    }
+    async createAvatar(createAvatarInput, file) {
+        await this.avatarsService.upload(file.originalname, file.buffer);
+    }
+};
+exports.AvatarsResolver = AvatarsResolver;
+__decorate([
+    (0, graphql_1.Mutation)(() => avatar_entity_1.Avatar),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)("file")),
+    __param(0, (0, graphql_1.Args)("createAvatarInput")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_b = typeof create_avatar_input_1.CreateAvatarInput !== "undefined" && create_avatar_input_1.CreateAvatarInput) === "function" ? _b : Object, typeof (_d = typeof Express !== "undefined" && (_c = Express.Multer) !== void 0 && _c.File) === "function" ? _d : Object]),
+    __metadata("design:returntype", Promise)
+], AvatarsResolver.prototype, "createAvatar", null);
+exports.AvatarsResolver = AvatarsResolver = __decorate([
+    (0, graphql_1.Resolver)(() => avatar_entity_1.Avatar),
+    __metadata("design:paramtypes", [typeof (_a = typeof avatars_service_1.AvatarsService !== "undefined" && avatars_service_1.AvatarsService) === "function" ? _a : Object])
+], AvatarsResolver);
+
+
+/***/ }),
+
+/***/ "./apps/profile/src/avatars/avatars.service.ts":
+/*!*****************************************************!*\
+  !*** ./apps/profile/src/avatars/avatars.service.ts ***!
+  \*****************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AvatarsService = void 0;
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const client_s3_1 = __webpack_require__(/*! @aws-sdk/client-s3 */ "@aws-sdk/client-s3");
+const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
+let AvatarsService = class AvatarsService {
+    constructor(configService) {
+        this.configService = configService;
+        this.s3Client = new client_s3_1.S3Client({
+            region: this.configService.getOrThrow("AWS_S3_REGION"),
+        });
+    }
+    async upload(fileName, file) {
+        await this.s3Client.send(new client_s3_1.PutObjectCommand({
+            Bucket: 'profile/avatars',
+            Key: fileName,
+            Body: file,
+        }));
+    }
+};
+exports.AvatarsService = AvatarsService;
+exports.AvatarsService = AvatarsService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [typeof (_a = typeof config_1.ConfigService !== "undefined" && config_1.ConfigService) === "function" ? _a : Object])
+], AvatarsService);
+
+
+/***/ }),
+
+/***/ "./apps/profile/src/avatars/dto/create-avatar.input.ts":
+/*!*************************************************************!*\
+  !*** ./apps/profile/src/avatars/dto/create-avatar.input.ts ***!
+  \*************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CreateAvatarInput = void 0;
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+let CreateAvatarInput = class CreateAvatarInput {
+};
+exports.CreateAvatarInput = CreateAvatarInput;
+__decorate([
+    (0, graphql_1.Field)(() => File, { description: 'Example field (placeholder)' }),
+    __metadata("design:type", typeof (_a = typeof File !== "undefined" && File) === "function" ? _a : Object)
+], CreateAvatarInput.prototype, "File", void 0);
+exports.CreateAvatarInput = CreateAvatarInput = __decorate([
+    (0, graphql_1.InputType)()
+], CreateAvatarInput);
+
+
+/***/ }),
+
+/***/ "./apps/profile/src/avatars/entities/avatar.entity.ts":
+/*!************************************************************!*\
+  !*** ./apps/profile/src/avatars/entities/avatar.entity.ts ***!
+  \************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Avatar = void 0;
+const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
+let Avatar = class Avatar {
+};
+exports.Avatar = Avatar;
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int, { description: 'Example field (placeholder)' }),
+    __metadata("design:type", Number)
+], Avatar.prototype, "exampleField", void 0);
+exports.Avatar = Avatar = __decorate([
+    (0, graphql_1.ObjectType)()
+], Avatar);
+
+
+/***/ }),
+
 /***/ "./apps/profile/src/entities/profile.entitie.ts":
 /*!******************************************************!*\
   !*** ./apps/profile/src/entities/profile.entitie.ts ***!
@@ -118,12 +314,14 @@ const apollo_1 = __webpack_require__(/*! @nestjs/apollo */ "@nestjs/apollo");
 const prisma_service_1 = __webpack_require__(/*! ../../../prisma/prisma.service */ "./prisma/prisma.service.ts");
 const jwt_1 = __webpack_require__(/*! @nestjs/jwt */ "@nestjs/jwt");
 const profile_resolver_1 = __webpack_require__(/*! ./profile.resolver */ "./apps/profile/src/profile.resolver.ts");
+const avatars_module_1 = __webpack_require__(/*! ./avatars/avatars.module */ "./apps/profile/src/avatars/avatars.module.ts");
 let ProfileModule = class ProfileModule {
 };
 exports.ProfileModule = ProfileModule;
 exports.ProfileModule = ProfileModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            avatars_module_1.AvatarsModule,
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
             }),
@@ -340,6 +538,16 @@ exports.PrismaService = PrismaService = __decorate([
 
 /***/ }),
 
+/***/ "@aws-sdk/client-s3":
+/*!*************************************!*\
+  !*** external "@aws-sdk/client-s3" ***!
+  \*************************************/
+/***/ ((module) => {
+
+module.exports = require("@aws-sdk/client-s3");
+
+/***/ }),
+
 /***/ "@nestjs/apollo":
 /*!*********************************!*\
   !*** external "@nestjs/apollo" ***!
@@ -397,6 +605,16 @@ module.exports = require("@nestjs/graphql");
 /***/ ((module) => {
 
 module.exports = require("@nestjs/jwt");
+
+/***/ }),
+
+/***/ "@nestjs/platform-express":
+/*!*******************************************!*\
+  !*** external "@nestjs/platform-express" ***!
+  \*******************************************/
+/***/ ((module) => {
+
+module.exports = require("@nestjs/platform-express");
 
 /***/ }),
 

@@ -9,9 +9,11 @@ import {
 import { PrismaService } from "../../../prisma/prisma.service";
 import { JwtService } from "@nestjs/jwt";
 import { ProfileResolver } from "./profile.resolver";
+import { AvatarsModule } from "./avatars/avatars.module";
 
 @Module({
   imports: [
+    AvatarsModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
