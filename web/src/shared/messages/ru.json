@@ -1,0 +1,19 @@
+{
+    "header": {
+      "title": "ТИТАН Реклама",
+      "buttons": {
+        "signIn": "Войти",
+        "signOut": "Выход"
+      }
+    },
+    "profile": {
+      "about": "о себе",
+      "registerAt": "зарегестрирован"
+    },
+    "tabs": {
+      "general": "Главная",
+      "search": "Поиск",
+      "create": "Создать",
+      "profile": "Профиль"
+    }
+  }

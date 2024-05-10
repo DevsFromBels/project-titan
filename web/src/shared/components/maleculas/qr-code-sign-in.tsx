@@ -1,4 +1,4 @@
-import Logo from "@/app/favicon.ico";
+import Logo from "@/app/[locale]/favicon.ico";
 import { QRCode } from "react-qrcode-logo";
 
 interface IQRCodeSignIn {

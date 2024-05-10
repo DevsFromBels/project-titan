@@ -10,6 +10,9 @@ import MainLayout from "@/shared/components/maleculas/main-layout";
 import WannaMobileWidget from "@/widgets/wanna-mobile/wanna-mobile";
 import ApolloProviderClient from "@/shared/Providers/ApolloProvider";
 import DetectNavigation from "@/widgets/(naivigation)/detect-navigation";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
+import { ApolloWrapperServer } from "@/features/graphql/server/apollo-wrapper-server";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -34,13 +37,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params: { locale },
 }: Readonly<{
   children: React.ReactNode;
+  params: { locale: string };
 }>) {
+  const messages = await getMessages();
+
   return (
-    <html lang="en" suppressHydrationWarning={true}>
+    <html lang={locale} suppressHydrationWarning={true}>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
@@ -49,25 +56,27 @@ export default function RootLayout({
         suppressHydrationWarning={true}
       >
         <ApolloProviderClient>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <NextTopLoader
-              color="#00AA00"
-              initialPosition={0.6}
-              showSpinner={false}
-            />
-            <Header />
-            <MainLayout>
-              <DetectNavigation />
-              {children}
-            </MainLayout>
+          <NextIntlClientProvider messages={messages}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <NextTopLoader
+                color="#00AA00"
+                initialPosition={0.6}
+                showSpinner={false}
+              />
+              <Header />
+              <main className="w-[100%] flex m-auto">
+                <DetectNavigation />
+                {children}
+              </main>
 
-            <WannaMobileWidget />
-          </ThemeProvider>
+              <WannaMobileWidget />
+            </ThemeProvider>
+          </NextIntlClientProvider>
         </ApolloProviderClient>
       </body>
     </html>

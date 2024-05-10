@@ -1,4 +1,4 @@
-import { GET_PROFILE } from "@/features/graphql/client/actions/profile/getProfile.action";
+import { GET_PROFILE } from "@/features/graphql/actions/profile/getProfile.action";
 import { getClient } from "@/features/graphql/server/client";
 import { IUseProfile } from "@/shared/hooks/use-profile";
 import { notFound } from "next/navigation";
@@ -7,6 +7,7 @@ import {
   ProfileMainBlockWidget,
   ProfileStatusWidget,
 } from "@/widgets/profile/index";
+import { i18nLocales } from "@/shared/constants/i18n-locales";
 
 const client = getClient();
 
@@ -14,6 +15,10 @@ export function generateViewport() {
   return {
     themeColor: "#222",
   };
+}
+
+export function generateStaticParams() {
+  return i18nLocales.map((locale) => ({locale}));
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }) {

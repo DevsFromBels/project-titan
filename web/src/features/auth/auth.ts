@@ -1,11 +1,11 @@
 import { useMutation } from "@apollo/client";
-import { LOGIN_USER } from "@/features/graphql/client/actions/login.action";
-import { ACTIVATE_USER } from "@/features/graphql/client/actions/activation.action";
+import { LOGIN_USER } from "@/features/graphql/actions/login.action";
+import { ACTIVATE_USER } from "@/features/graphql/actions/activation.action";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { updateTokens } from "./updateTokens";
 import { useRegistrationStore } from "../store/register.store";
-import { REGISTER_USER } from "../graphql/client/actions/register.action";
+import { REGISTER_USER } from "../graphql/actions/register.action";
 
 const handleAuth = () => {
   const [signIn, { loading: signInLoading }] = useMutation(LOGIN_USER);

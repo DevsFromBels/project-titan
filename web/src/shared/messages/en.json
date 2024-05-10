@@ -1,0 +1,19 @@
+{
+  "header": {
+    "title": "TITAN Advertisement",
+    "buttons": {
+      "signIn": "Sign In",
+      "signOut": "Sign Out"
+    }
+  },
+  "profile": {
+    "about": "about",
+    "registerAt": "registered at"
+  },
+  "tabs": {
+    "general": "General",
+    "search": "Search",
+    "create": "Create",
+    "profile": "Profile"
+  }
+}
