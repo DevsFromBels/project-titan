@@ -28,6 +28,7 @@ model Avatars {
 model Profile {
   userId   String  @id @unique
   user     User    @relation(fields: [userId], references: [id])
+  profilePicture  String?
   info     String? @default("")
   isPublic Boolean @default(true)
 }

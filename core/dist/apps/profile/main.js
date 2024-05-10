@@ -365,15 +365,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a;
+var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ProfileResolver = void 0;
 const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 const profile_service_1 = __webpack_require__(/*! ./profile.service */ "./apps/profile/src/profile.service.ts");
 const profile_entitie_1 = __webpack_require__(/*! ./entities/profile.entitie */ "./apps/profile/src/entities/profile.entitie.ts");
+const graphql_upload_1 = __webpack_require__(/*! graphql-upload */ "graphql-upload");
 let ProfileResolver = class ProfileResolver {
     constructor(profileService) {
         this.profileService = profileService;
+    }
+    async uploadProfilePicture(userId, file) {
+        const uploadedFile = await file;
+        return this.profileService.uploadProfilePicture(userId, uploadedFile);
     }
     async profile(userName) {
         return await this.profileService.getProfile(userName);
@@ -389,6 +394,14 @@ let ProfileResolver = class ProfileResolver {
     }
 };
 exports.ProfileResolver = ProfileResolver;
+__decorate([
+    (0, graphql_1.Mutation)(() => String),
+    __param(0, (0, graphql_1.Args)("userId", { type: () => String })),
+    __param(1, (0, graphql_1.Args)({ name: "file", type: () => graphql_upload_1.GraphQLUpload })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, typeof (_b = typeof Promise !== "undefined" && Promise) === "function" ? _b : Object]),
+    __metadata("design:returntype", Promise)
+], ProfileResolver.prototype, "uploadProfilePicture", null);
 __decorate([
     (0, graphql_1.Query)(() => profile_entitie_1.UserProfile),
     __param(0, (0, graphql_1.Args)("userName")),
@@ -436,14 +449,59 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a;
+var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ProfileService = void 0;
 const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
 const prisma_service_1 = __webpack_require__(/*! ../../../prisma/prisma.service */ "./prisma/prisma.service.ts");
+const AWS = __webpack_require__(/*! aws-sdk */ "aws-sdk");
+const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
+const AVATAR_BASE_URL = "https://eu2.contabostorage.com/profile/avatars";
 let ProfileService = class ProfileService {
-    constructor(prisma) {
+    constructor(prisma, configService) {
         this.prisma = prisma;
+        this.configService = configService;
+        this.s3 = new AWS.S3({
+            accessKeyId: this.configService.get("AWS_ACCESS_KEY_ID"),
+            secretAccessKey: this.configService.get("AWS_SECRET_ACCESS_KEY"),
+            region: this.configService.get("AWS_S3_REGION"),
+        });
+    }
+    async uploadProfilePicture(userId, file) {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id: userId,
+            },
+        });
+        if (!user) {
+            throw new common_1.BadGatewayException("User not found");
+        }
+        const fileExtension = file.mimetype.split("/")[1];
+        const key = `avatars/${userId}.${fileExtension}`;
+        try {
+            await this.s3
+                .upload({
+                Bucket: this.configService.get("S3_BUCKET_NAME"),
+                Key: key,
+                Body: file.buffer,
+                ContentType: file.mimetype,
+                ACL: "public-read",
+            })
+                .promise();
+            await this.prisma.user.update({
+                where: {
+                    id: userId,
+                },
+                data: {
+                    profilePicture: `${AVATAR_BASE_URL}/${key}`,
+                },
+            });
+            return `${AVATAR_BASE_URL}/${key}`;
+        }
+        catch (error) {
+            console.error(error);
+            throw new common_1.InternalServerErrorException("Failed to upload the profile picture");
+        }
     }
     async getProfile(userId) {
         const user = await this.prisma.user.findUnique({
@@ -502,7 +560,7 @@ let ProfileService = class ProfileService {
 exports.ProfileService = ProfileService;
 exports.ProfileService = ProfileService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [typeof (_a = typeof prisma_service_1.PrismaService !== "undefined" && prisma_service_1.PrismaService) === "function" ? _a : Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof prisma_service_1.PrismaService !== "undefined" && prisma_service_1.PrismaService) === "function" ? _a : Object, typeof (_b = typeof config_1.ConfigService !== "undefined" && config_1.ConfigService) === "function" ? _b : Object])
 ], ProfileService);
 
 
@@ -635,6 +693,26 @@ module.exports = require("@nestjs/platform-fastify");
 /***/ ((module) => {
 
 module.exports = require("@prisma/client");
+
+/***/ }),
+
+/***/ "aws-sdk":
+/*!**************************!*\
+  !*** external "aws-sdk" ***!
+  \**************************/
+/***/ ((module) => {
+
+module.exports = require("aws-sdk");
+
+/***/ }),
+
+/***/ "graphql-upload":
+/*!*********************************!*\
+  !*** external "graphql-upload" ***!
+  \*********************************/
+/***/ ((module) => {
+
+module.exports = require("graphql-upload");
 
 /***/ })
 

@@ -16,4 +16,7 @@ export class UpdateProfileDto {
 
   @Field({ nullable: true })
   info?: string;
+
+  @Field({ nullable: true })
+  profilePicture?: string;
 }
