@@ -8,6 +8,7 @@ export const GET_PROFILE: DocumentNode = gql`
 				name
 				email
 				role
+				createdAt
 			}
 			info
 			isPublic

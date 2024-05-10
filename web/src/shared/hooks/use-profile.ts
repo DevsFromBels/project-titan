@@ -23,6 +23,7 @@ export type IUseProfile = {
         name: string
         email: string
         role: string
+        createdAt: string
       }
       info: string
       isPublic: boolean

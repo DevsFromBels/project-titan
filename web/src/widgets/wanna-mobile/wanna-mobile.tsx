@@ -6,7 +6,7 @@ import { Button } from "../../shared/components/ui/button";
 import { useRouter } from "next/navigation";
 import {Cross1Icon} from '@radix-ui/react-icons'
 
-const WannaMobile = () => {
+const WannaMobileWidget = () => {
   const {isMobile } = useIsMobile();
   const componentRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -82,4 +82,4 @@ const WannaMobile = () => {
   );
 };
 
-export default WannaMobile;
+export default WannaMobileWidget;

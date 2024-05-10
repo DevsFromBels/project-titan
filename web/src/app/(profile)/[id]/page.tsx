@@ -2,14 +2,17 @@ import { GET_PROFILE } from "@/features/graphql/client/actions/profile/getProfil
 import { getClient } from "@/features/graphql/server/client";
 import { IUseProfile } from "@/shared/hooks/use-profile";
 import { notFound } from "next/navigation";
-import SideBar from "@/widgets/(naivigation)/side-bar";
-import Image from "next/image";
+
+import {
+  ProfileMainBlockWidget,
+  ProfileStatusWidget,
+} from "@/widgets/profile/index";
 
 const client = getClient();
 
 export function generateViewport() {
   return {
-    themeColor: "#b284be",
+    themeColor: "#222",
   };
 }
 
@@ -70,27 +73,15 @@ export default async function Page({ params }: { params: { id: string } }) {
 
     return (
       <>
-        {/* <DetectNavigation/> */}
-        <div className="w-[100vw]">
-          <div className="relative flex flex-col justify-center items-center h-[200px] gap-2 bg-[#b284be]">
-            <div className="blur-[50px] w-[80px] h-[80px] bg-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0"></div>
-            <div className="relative relative z-10 select-none">
-              <Image
-                src={image}
-                className="rounded-full shadow-lg shadow-cyan-500/10 border border-slate-100"
-                width={100}
-                height={100}
-                alt="profile image"
-                draggable={false}
-                priority
-              />
-            </div>
-            <h1 className="font-medium text-2xl">{data.profile.user.name}</h1>
-          </div>
-          <div>
-            <p>about</p>
-            <p>{data.profile.info}</p>
-          </div>
+        <div>
+          <ProfileMainBlockWidget
+            id={data.profile.user.id}
+            username={data.profile.user.name}
+          />
+          <ProfileStatusWidget
+            info={data.profile.info}
+            registerDateString={data.profile.user.createdAt}
+          />
         </div>
       </>
     );

@@ -7,7 +7,7 @@ import { ThemeProvider } from "@/shared/components/Themes/theme-provider";
 import NextTopLoader from "nextjs-toploader";
 import Header from "@/widgets/header/header";
 import MainLayout from "@/shared/components/maleculas/main-layout";
-import WannaMobile from "@/widgets/wanna-mobile/wanna-mobile";
+import WannaMobileWidget from "@/widgets/wanna-mobile/wanna-mobile";
 import ApolloProviderClient from "@/shared/Providers/ApolloProvider";
 import DetectNavigation from "@/widgets/(naivigation)/detect-navigation";
 
@@ -66,7 +66,7 @@ export default function RootLayout({
               {children}
             </MainLayout>
 
-            <WannaMobile />
+            <WannaMobileWidget />
           </ThemeProvider>
         </ApolloProviderClient>
       </body>
