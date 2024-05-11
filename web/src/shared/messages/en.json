@@ -1,0 +1,34 @@
+{
+  "header": {
+    "title": "Titan Project | Ads",
+    "buttons": {
+      "signIn": "Sign In",
+      "signUp": "Sign Up"
+    }
+  },
+  "profile": {
+    "about": "about",
+    "registerAt": "registered at"
+  },
+  "tabs": {
+    "general": "General",
+    "search": "Search",
+    "create": "Create",
+    "profile": "Profile"
+  },
+  "mode-toggle": {
+    "light": "Light Theme",
+    "dark": "Dark Theme",
+    "system": "System Theme",
+    "btn-text": "Toggle theme"
+  },
+  "wanna-mobile": {
+    "aria-label": "Close  modal",
+    "text": "Do you wanna use a mobile app?",
+    "btn-text": "Continue with mobile"
+  },
+  "not-found": {
+    "text": "This page could not be found.",
+    "btn-text": "Come back home"
+  }
+}
