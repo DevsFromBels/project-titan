@@ -23,16 +23,16 @@ const handleAuth = () => {
 
     if (res.data.login.error) return;
 
-    console.log(res.data.login.refreshToken);
-    console.log(res.data.login.accessToken);
+    // console.log(res.data.login.refreshToken);
+    // console.log(res.data.login.accessToken);
 
     Cookies.set("refresh_token", res.data.login.refreshToken, {
-      // domain: ".titanproject.top",
-      domain: "localhost",
+      domain: ".titanproject.top",
+      // domain: "localhost",
     });
     Cookies.set("access_token", res.data.login.accessToken, {
-      // domain: ".titanproject.top",
-      domain: "localhost",
+      domain: ".titanproject.top",
+      // domain: "localhost",
     });
 
     updateTokens();
