@@ -6,7 +6,7 @@ export default function NotFound() {
   const t = useTranslations('not-found')
 
   return (
-    <div className="w-[100vw] flex h-screen items-center justify-center">
+    <div className="w-[calc(100vw_-_250px)] m-auto flex h-screen items-center justify-center">
       <div className="text-center">
         <h1 className="text-6xl font-bold">404</h1>
 
