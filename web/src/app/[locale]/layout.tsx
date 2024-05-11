@@ -21,6 +21,13 @@ const fontSans = FontSans({
 
 export const metadata: Metadata = {
   title: "Titan - Advertisement Social Network",
+  icons: [
+    {
+      url: '/favicon.ico',
+      type: "image/x-icon",
+      sizes: "256x256"
+    }
+  ],
   description:
     "Discover the premier advertising social network for connecting businesses and customers.",
   keywords: ["Advertising", "Social Network", "Titan", "Online Marketing"],
@@ -69,7 +76,7 @@ export default async function RootLayout({
                 showSpinner={false}
               />
               <Header />
-              <main className="w-[100%] flex m-auto">
+              <main className="w-[100%] h-[100vh] flex m-auto">
                 <DetectNavigation />
                 {children}
               </main>

@@ -26,7 +26,7 @@ const ProfileMainBlockWidget = ({id,  username }: IProfileMainBlockWidget) => {
           priority
         />
       </div>
-      <h1 className="font-medium text-2xl">{username}</h1>
+      <h1 className="font-medium text-2xl text-white ">{username}</h1>
     </div>
   );
 };

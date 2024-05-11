@@ -1,8 +1,4 @@
-"use client"
-import SideBar from '@/widgets/(naivigation)/side-bar'
-import React, { memo } from 'react';
-
-const GlobalPage = memo(() => {
+const GlobalPage = () => {
   return (
     <div className='flex h-[100vh] w-[100vw]'>
       <div className='w-full'>
@@ -63,6 +59,6 @@ const GlobalPage = memo(() => {
       </div>
     </div>
   )
-})
+}
 
 export default GlobalPage
