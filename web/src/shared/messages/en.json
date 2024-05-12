@@ -12,8 +12,10 @@
   },
   "tabs": {
     "general": "General",
-    "search": "Search",
     "create": "Create",
+    "search": "Search",
+    "market": "Market",
+    "menu": "Menu",
     "profile": "Profile"
   },
   "mode-toggle": {
@@ -30,5 +32,20 @@
   "not-found": {
     "text": "This page could not be found.",
     "btn-text": "Come back home"
+  },
+  "menu": {
+    "messages": "Messages",
+    "subscriptions": "Subscriptions",
+    "about": "About US",
+    "settings": "Settings",
+    "FAQ": "FAQ"
+  },
+  "pages": {
+    "global-page": {
+      "meta": {
+        "title":"Titan Project | Ads",
+        "description": "Titan - The leading advertisement social network."
+      }
+    }
   }
 }
