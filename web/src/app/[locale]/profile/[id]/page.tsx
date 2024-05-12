@@ -44,10 +44,13 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 
     return {
       title,
+      
       openGraph: {
         description: data.profile.info,
         images: "https://titanproject.top/cat.jpeg",
         url,
+        type: "profile",
+        siteName: "Titan"
       },
     };
   } catch (error) {
