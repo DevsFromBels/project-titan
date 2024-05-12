@@ -50,7 +50,7 @@ const MobileTabs = (user: IMobileTabs) => {
             <p>{t("menu")}</p>
           </div>
         </DrawerTrigger>
-        <DrawerContent className="h-[50vh]">
+        <DrawerContent className="h-[60vh]">
           <DrawerClose>
             <div
               className="absolute top-2 right-2 rounded-full w-[50px] h-[50px] border flex justify-center items-center"
@@ -89,7 +89,7 @@ const MobileTabs = (user: IMobileTabs) => {
               </Link>
             </div>
           </div>
-          <DrawerFooter>
+          <DrawerFooter className="p-4">
             <ModeToggleMenu />
           </DrawerFooter>
         </DrawerContent>
