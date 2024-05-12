@@ -15,9 +15,6 @@ export class UserSettings {
   password: string;
 
   @Field()
-  profileId: string;
-
-  @Field()
   role: string;
 
   @Field()

@@ -6,7 +6,8 @@ export class SettingsService {
   constructor(private prisma: PrismaService) {}
 
   async getSettings(req: any) {
-    const user = req.user;
+    const user = req.req.user;
+    console.log(user)
 
     const userSettings = await this.prisma.user.findFirst({
       where: {
