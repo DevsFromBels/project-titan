@@ -14,12 +14,13 @@ const DetectNavigation = () => {
   const size = useWindowSize();
 
   useEffect(() => {
-    setComponentLoaidng(false)
-  }, [])
-
+    setComponentLoaidng(false);
+  }, []);
+  
   if (!userData?.id || !userData?.name) {
     return null;
   }
+  
 
   if (componentLoading || userLoading) {
     return <CenterLoader />;

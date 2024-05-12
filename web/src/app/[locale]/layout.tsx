@@ -12,7 +12,8 @@ import ApolloProviderClient from "@/shared/Providers/ApolloProvider";
 import DetectNavigation from "@/widgets/(naivigation)/detect-navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import { ApolloWrapperServer } from "@/features/graphql/server/apollo-wrapper-server";
+import Script from "next/script";
+import { generateGlobalLD } from "@/shared/seo/global-page";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -39,9 +40,17 @@ export const metadata: Metadata = {
     title: "Titan",
     description: "Titan - The leading advertisement social network.",
     images: "https://titanproject.top/cat.jpeg",
-    creators: ["Titan"],
-    url: "https://titanproject.top/",
+    url: "https://titanproject.top",
+    type: "website",
+    siteName: "Titan",
   },
+  alternates: {
+    canonical: '/',
+    languages: {
+      ru: "/ru",
+      en: "/en"
+    }
+  }
 };
 
 export default async function RootLayout({
@@ -75,8 +84,15 @@ export default async function RootLayout({
                 initialPosition={0.6}
                 showSpinner={false}
               />
+              <Script 
+                id="global-schema"
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                  __html: generateGlobalLD(),
+                }}
+              />
               <Header />
-              <main className="w-[100%] h-[100vh] flex m-auto">
+              <main className="w-[100%] h-[100vh] flex m-auto overflow-y-auto">
                 <DetectNavigation />
                 {children}
               </main>

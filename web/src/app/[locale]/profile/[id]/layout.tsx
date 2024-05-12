@@ -16,8 +16,8 @@ export default function ProfileLayout({
   unstable_setRequestLocale(locale);
 
   return (
-    <ApolloWrapperServer>
-      <main className="flex h-[100vh] w-[100vw]">{children}</main>
-    </ApolloWrapperServer>
+      <ApolloWrapperServer>
+        <main className="flex h-[100vh] w-[100vw]">{children}</main>
+      </ApolloWrapperServer>
   );
 }
