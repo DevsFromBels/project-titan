@@ -14,6 +14,9 @@ const httpLink = new HttpLink({
 const accessToken = Cookies.get("access_token");
 const refreshToken = Cookies.get("refresh_token");
 
+console.log(accessToken)
+console.log(refreshToken)
+
 const authMiddleware = new ApolloLink((operation, forward) => {
   operation.setContext({
     headers: {
