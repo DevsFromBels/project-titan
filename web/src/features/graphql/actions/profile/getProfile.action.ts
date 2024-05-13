@@ -12,6 +12,7 @@ export const GET_PROFILE: DocumentNode = gql`
 			}
 			info
 			isPublic
+			
 		}
 	}
 `

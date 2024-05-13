@@ -39,8 +39,14 @@ export class ProfileSettings {
 @ObjectType()
 export class Settings {
   @Field(() => UserSettings)
-  userSettings: UserSettings
+  userSettings: UserSettings;
 
   @Field(() => ProfileSettings)
-  profileSettings: ProfileSettings
+  profileSettings: ProfileSettings;
+}
+
+@ObjectType()
+export class UpdateInfo {
+  @Field(() => ProfileSettings)
+  profileSettings: ProfileSettings;
 }

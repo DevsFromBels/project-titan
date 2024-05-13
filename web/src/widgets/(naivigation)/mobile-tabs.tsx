@@ -74,10 +74,12 @@ const MobileTabs = (user: IMobileTabs) => {
                 <Contact />
                 {tm("subscriptions")}
               </Link>
-              <Link href={`${user.id}/settings`} className="p-2 flex gap-2 items-center">
+              <DrawerClose>
+              <Link href={`/profile/${user.id}/settings`} className="p-2 flex gap-2 items-center">
                 <Settings />
                 {tm("settings")}
               </Link>
+              </DrawerClose>
             </div>
 
             <div className="flex flex-col justify-center gap-1 border p-2 rounded-lg">

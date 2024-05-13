@@ -1,4 +1,4 @@
-import { Args, Context, Query, Resolver } from "@nestjs/graphql";
+import { Args, Context, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ProfileService } from "./profile.service";
 import {
   AllUsersProfiles,
@@ -8,7 +8,7 @@ import {
 import { UseGuards } from "@nestjs/common";
 import { AuthGuard } from "apps/users/src/guards/auth.guard";
 import { SettingsService } from "./services/settings/settings.service";
-import { Settings } from "./entities/settings.entitie";
+import { Settings, UpdateInfo } from "./entities/settings.entitie";
 
 @Resolver("Profile")
 export class ProfileResolver {
@@ -49,6 +49,12 @@ export class ProfileResolver {
   @UseGuards(AuthGuard)
   async getSettings(@Context() context: { req: Request }) {
     return await this.settingService.getSettings(context);
+  }
+
+  @Mutation(() => UpdateInfo)
+  @UseGuards(AuthGuard)
+  async settingsUpdateUserInfo(@Context() context: { req: Request }, @Args("newInfo") newInfo: string) {
+    return await this.settingService.settingsUpdateUserInfo(context, newInfo);
   }
 
   // @UseGuards(AuthGuard)
