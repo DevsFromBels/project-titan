@@ -1,0 +1,12 @@
+Sitemap: https://titanproject.top/en/sitemap.xml
+User-agent: *
+Allow: /ru
+Allow: /en
+Allow: /ru/sign-in
+Allow: /en/sign-in
+Allow: /ru/sign-up
+Allow: /en/sign-up
+Allow: /*
+
+User-agent: Googlebot-Image
+Disallow: /

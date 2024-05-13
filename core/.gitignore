@@ -1,6 +1,9 @@
 node_modules
 # Keep environment variables out of version control
 .env
-dist/
+dist
+dist/apps
+dist/apps/gateway
+dist/apps/profile
 /.history
 .DS_Store

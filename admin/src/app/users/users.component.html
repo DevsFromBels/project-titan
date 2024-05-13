@@ -1,0 +1,31 @@
+@if (loading) {
+<div class="relative h-screen">
+  <div
+    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center"
+  >
+    <my-loader></my-loader>
+    <h2 class="mt-4">Loading Data...</h2>
+  </div>
+</div>
+} @else {
+<table class="w-full flex-col">
+  <tr class="text-start">
+    <th>User</th>
+    <th>Email</th>
+    <th>Role</th>
+    <th>CreatedAt</th>
+  </tr>
+  @for (user of users; track user.id) {
+  <tr class="text-center">
+    <td class="cursor-pointer underline" routerLink="{{ user.id }}">
+      {{ user.name }}
+    </td>
+    <td>{{ user.email }}</td>
+    <td>{{ user.role }}</td>
+    <td>{{ user.createdAt }}</td>
+  </tr>
+  }
+</table>
+} @if (errorMessage) {
+<h2>{{ errorMessage }}</h2>
+}

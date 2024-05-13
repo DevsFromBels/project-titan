@@ -1,7 +1,7 @@
 "use client"
 import React from "react"
 import { ApolloProvider } from "@apollo/client"
-import { graphqlClient } from "@/shared/graphql/gql.setup"
+import { graphqlClient } from "@/features/graphql/client/gql.setup"
 import { TooltipProvider } from "@/shared/components/ui/tooltip"
 
 interface IApolloProvider extends React.HTMLAttributes<HTMLDivElement> {}
