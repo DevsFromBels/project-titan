@@ -57,3 +57,9 @@ export class UserProfileSearch {
   users?: Profile[];
 }
 
+@ObjectType()
+export class AllUsersProfiles {
+  @Field(() => [Profile], { nullable: true })
+  users?: Profile[];
+}
+

@@ -169,7 +169,7 @@ export class UsersService {
       },
     });
 
-    if (user && (await this.compaprePassword(password, user.password))) {
+    if (user && (await this.comparePassword(password, user.password))) {
       const tokeSender = new TokenSender(this.configService, this.jwtService);
       return tokeSender.sendToken(user);
     } else {
@@ -178,7 +178,7 @@ export class UsersService {
         accessToken: null,
         refreshToken: null,
         error: {
-          message: "Inavlid email or password",
+          message: "Invalid email or password",
         },
       };
     }
@@ -205,7 +205,7 @@ export class UsersService {
     };
   }
 
-  async compaprePassword(
+  async comparePassword(
     password: string,
     hashedPassword: string,
   ): Promise<boolean> {
