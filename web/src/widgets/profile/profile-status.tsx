@@ -1,6 +1,5 @@
 import { DateOptionsWithMonth } from "@/shared/constants/date-output";
 import {getLocale, getTranslations} from 'next-intl/server';
-import { useTranslations } from "next-intl";
 
 interface IProfileStatusWidget {
   info: string;

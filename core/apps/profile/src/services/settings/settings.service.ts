@@ -7,7 +7,7 @@ export class SettingsService {
 
   async getSettings(req: any) {
     const user = req.req.user;
-    console.log(user)
+    // console.log(user)
 
     const userSettings = await this.prisma.user.findFirst({
       where: {
@@ -37,6 +37,37 @@ export class SettingsService {
 
     return {
       userSettings,
+      profileSettings
+    }
+  }
+
+  async settingsUpdateUserInfo(req: any, newInfo: string) {
+    const user = req.req.user;
+
+    const userSettings = await this.prisma.user.findFirst({
+      where: {
+        id: user.id,
+      },
+    });
+
+    if (!userSettings) {
+      return new BadRequestException(`User not found`);
+    }
+
+    const profileSettings = await this.prisma.profile.update({
+      where: {
+        userId: userSettings.id,
+      },
+      data: {
+        info: newInfo
+      }
+    })
+
+    if(!profileSettings) {
+      return new BadRequestException(`Profile not found`);
+    }
+
+    return {
       profileSettings
     }
   }

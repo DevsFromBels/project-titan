@@ -46,6 +46,23 @@
         "title":"Titan Project | Ads",
         "description": "Titan - The leading advertisement social network."
       }
+    },
+    "settings-page": {
+      "profile-settings": {
+        "block-name": "Profile Settings",
+        "info": "Info",
+        "address": "Select your contry"
+      },
+      "user-settings": {
+        "username": "User name",
+        "userID": "User ID",
+        "email": "Email",
+        "role": "Role"
+      },
+      "security-settings": {
+        "is-public-profile" : "Is public profile",
+        "signOut": "Sign out"
+      }
     }
   }
 }

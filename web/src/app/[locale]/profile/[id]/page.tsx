@@ -29,6 +29,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
       query: GET_PROFILE,
       variables: {
         userName: id,
+        timestamp: Date.now(), 
       },
     });
 
@@ -78,6 +79,8 @@ export default async function Page({ params }: { params: { id: string } }) {
       id === "sh1woo"
         ? "https://titanproject.top/sh1woo.jpeg"
         : "https://titanproject.top/cat.jpeg";
+
+    console.log(data.profile)
 
     return (
       <>

@@ -106,7 +106,7 @@ const SideBar = (user: ISideBar) => {
               asChild
             >
               <Link
-                href={`/settings`}
+                href={`/profile/${user.id}/settings`}
                 className="flex gap-2 justify-start items-center"
               >
                 <Settings /> {tm("settings")}
