@@ -36,6 +36,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/profile/tsconfig.app.json"
       }
+    },
+    "market": {
+      "type": "application",
+      "root": "apps/market",
+      "entryFile": "main",
+      "sourceRoot": "apps/market/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/market/tsconfig.app.json"
+      }
     }
   }
 }
