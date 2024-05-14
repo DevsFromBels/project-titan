@@ -60,6 +60,7 @@ jobs:
 
   admin-build:
     runs-on: self-hosted
+    needs: client-build
 
     steps:
       - uses: actions/checkout@v4
