@@ -14,6 +14,7 @@ import * as fs from "fs";
 import { MarketService } from "./market.service";
 import { extname, join } from "path";
 import { uuidv7 } from "uuidv7";
+
 import { HeadersGuard } from "./auth.guard";
 const pump = util.promisify(pipeline);
 
@@ -26,7 +27,7 @@ declare module "fastify" {
 @Controller()
 export class MarketController {
   constructor(private readonly marketService: MarketService) {}
-  
+
   @Get()
   getHello(): string {
     return this.marketService.getHello();
