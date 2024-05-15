@@ -12,30 +12,36 @@ export class ProfileService {
         id: userId,
       },
     });
-
+  
     if (!user) {
       throw new BadGatewayException("User not found");
     }
-
+  
     const profile = await this.prisma.profile.findUnique({
       where: {
         userId: user.id,
       },
     });
-
+  
     const avatar = await this.prisma.avatars.findFirst({
       where: {
         userId: user.id,
-      }
-    })
-
+      },
+    });
+  
+    let avatar_url = '';
+    if (avatar && avatar.url) {
+      avatar_url = avatar.url;
+    }
+  
     return {
       user: user,
       info: profile.info,
       isPublic: profile.isPublic,
-      avatar_url: avatar.url
+      avatar_url: avatar_url,
     };
   }
+  
 
   async searchUserProfile(
     userName: string,

@@ -13,7 +13,7 @@ export class MarketService {
     image: string,
     name: string,
     userID: string,
-    price_per_show: number
+    price_per_show: string
   ) {
     const user = await this.prisma.user.findFirst({
       where: {
@@ -39,7 +39,7 @@ export class MarketService {
         name: name,
         link: "",
         user_id: userID,
-        price_for_show: price_per_show,
+        price_for_show: parseFloat(price_per_show),
       },
     });
   }

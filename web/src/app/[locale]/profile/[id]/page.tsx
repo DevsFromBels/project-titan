@@ -10,11 +10,11 @@ import {
 import { useQuery } from "@apollo/client";
 import { ProfileSkeleton } from "@/shared/components/maleculas/skeletons/profile-skeleton";
 
-export function generateViewport() {
-  return {
-    themeColor: "#222",
-  };
-}
+// export function generateViewport() {
+//   return {
+//     themeColor: "#222",
+//   };
+// }
 
 // export function generateMetadata({ params }: { params: { id: string } }) {
 //   const id = params.id.toLowerCase();

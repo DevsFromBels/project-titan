@@ -13,6 +13,15 @@ async function bootstrap() {
     AvatarsModule,
     new FastifyAdapter()
   );
+
+  app.enableCors({
+    origin: '*',
+    // origin: 'https://titanproject.top', // for release 1.0
+    credentials: true,
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'accesstoken', 'refreshtoken'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  });
+
   await app.register(multipart, {
     limits: {
       fileSize: 1024 * 1024 * 3,

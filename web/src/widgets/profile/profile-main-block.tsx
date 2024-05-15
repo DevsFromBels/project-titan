@@ -7,7 +7,8 @@ interface IProfileMainBlockWidget {
 }
 
 const ProfileMainBlockWidget = ({image,  username }: IProfileMainBlockWidget) => {
-  let porfileImage = 'https://avatars-api.titanproject.top' + image;
+  // let porfileImage = 'https://avatars-api.titanproject.top' + image;
+  let porfileImage = 'http://localhost:4003' + image;
 
   if(!image) {
     porfileImage = "https://titanproject.top/cat.jpeg"

@@ -58,7 +58,7 @@ export class MarketController {
         fileUrl,
         name,
         user_id,
-        +pricePeerShow
+        pricePeerShow
       );
 
       return reply.status(200).send(prodcut);
