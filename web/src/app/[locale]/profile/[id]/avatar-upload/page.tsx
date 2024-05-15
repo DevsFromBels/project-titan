@@ -79,15 +79,15 @@ export default function Page() {
               }}
             />
           ) : (
-            <p>Drop an image here or click to select one</p>
+            <Button className='mb-2'>Drop an image here or click to select one</Button>
           )}
         </div>
       )}
 
       {croppedImage && (
         <div>
-          <Image src={croppedImage} alt="Cropped Avatar" width={200} height={200} />
-          <h2>Ваш аватар</h2>
+          <Image src={croppedImage} className='rounded' alt="Cropped Avatar" width={200} height={200} />
+          <h2 className='my-2 text-center'>Ваш аватар</h2>
         </div>
       )}
 

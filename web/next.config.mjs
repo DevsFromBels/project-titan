@@ -15,7 +15,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'avatars-api.titanprojet.top',
+        hostname: 'avatars-api.titanproject.top',
         port: '',
         pathname: '/**',
       },

@@ -15,7 +15,7 @@ const ProfileMainBlockWidget = ({
   username,
 }: IProfileMainBlockWidget) => {
   // let porfileImage = 'https://avatars-api.titanproject.top' + image;
-  let porfileImage = "https://avatars-api.titanprojet.top" + image;
+  let porfileImage = "https://avatars-api.titanproject.top" + image;
 
   console.log(porfileImage)
   console.log(image)
