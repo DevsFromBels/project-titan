@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const USER_UPDATE_SETTINGS = gql`
-  mutation SettingsUpdateUserInfo {
-    settingsUpdateUserInfo(newInfo: "Hey, I am Sergey, 19 y.o buisness man") {
+  mutation SettingsUpdateUserInfo($newInfo: String!) {
+    settingsUpdateUserInfo(newInfo: $newInfo) {
       profileSettings {
         info
         isPublic

@@ -1,4 +1,4 @@
-import { ApolloWrapperServer } from "@/features/graphql/server/apollo-wrapper-server";
+import ApolloProviderClient from "@/shared/Providers/ApolloProvider";
 import { i18nLocales } from "@/shared/constants/i18n-locales";
 import { unstable_setRequestLocale } from "next-intl/server";
 
@@ -16,8 +16,8 @@ export default function ProfileLayout({
   unstable_setRequestLocale(locale);
 
   return (
-      <ApolloWrapperServer>
+      <ApolloProviderClient>
         <main className="flex h-[100vh] w-[100vw]">{children}</main>
-      </ApolloWrapperServer>
+      </ApolloProviderClient>
   );
 }

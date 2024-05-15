@@ -14,5 +14,5 @@ export const GET_PROFILE: DocumentNode = gql`
 			isPublic
 			avatar_url
 		}
-	}
+	},
 `
