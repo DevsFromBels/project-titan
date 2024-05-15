@@ -12,5 +12,13 @@ module.exports = {
       name: "profile",
       script: "dist/apps/profile/main.js",
     },
+    {
+      name: "market",
+      script: "dist/apps/market/main.js",
+    },
+    {
+      name: "avatars",
+      script: "dist/apps/avatars/main.js",
+    },
   ],
 };

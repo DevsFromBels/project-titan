@@ -7,7 +7,6 @@ import {
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from "../../../prisma/prisma.service";
-import { Observable } from "rxjs";
 
 @Injectable()
 export class HeadersGuard implements CanActivate {
