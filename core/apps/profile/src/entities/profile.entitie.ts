@@ -49,10 +49,19 @@ export class UserProfile {
 
   @Field({nullable: true})
   isPublic: boolean;
+
+  @Field({nullable: true})
+  avatar_url: string;
 }
 
 @ObjectType()
 export class UserProfileSearch {
+  @Field(() => [Profile], { nullable: true })
+  users?: Profile[];
+}
+
+@ObjectType()
+export class AllUsersProfiles {
   @Field(() => [Profile], { nullable: true })
   users?: Profile[];
 }

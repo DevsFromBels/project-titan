@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const deviceMatch = [
@@ -17,6 +18,7 @@ const useIsMobile = () => {
 
     const handleResize = () => {
       setIsMobile(deviceMatch.some((regExp) => navigator.userAgent.match(regExp)));
+      setIsLoading(false);
     };
 
     window.addEventListener('resize', handleResize);
@@ -27,7 +29,7 @@ const useIsMobile = () => {
     };
   }, []);
 
-  return isMobile;
+  return { isMobile, isLoading };
 };
 
 export default useIsMobile;

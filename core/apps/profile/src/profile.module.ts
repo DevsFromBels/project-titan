@@ -9,6 +9,7 @@ import {
 import { PrismaService } from "../../../prisma/prisma.service";
 import { JwtService } from "@nestjs/jwt";
 import { ProfileResolver } from "./profile.resolver";
+import { SettingsService } from "./services/settings/settings.service";
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { ProfileResolver } from "./profile.resolver";
     PrismaService,
     JwtService,
     ProfileResolver,
+    SettingsService
   ],
 })
 export class ProfileModule {}

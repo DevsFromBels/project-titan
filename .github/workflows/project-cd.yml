@@ -1,0 +1,75 @@
+name: CD project
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  server-build:
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        node-version: [20.10.0]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create .env file
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          ACTIVATION_SECRET: ${{ secrets.ACTIVATION_SECRET }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_SERVICE: ${{ secrets.SMTP_SERVICE }}
+          SMTP_MAIL: ${{ secrets.SMTP_MAIL }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+          REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
+        run: |
+          cd core
+          touch .env
+          echo "DATABASE_URL=$DATABASE_URL" >> .env
+          echo "ACTIVATION_SECRET=$ACTIVATION_SECRET" >> .env
+          echo "SMTP_HOST=$SMTP_HOST" >> .env
+          echo "SMTP_SERVICE=$SMTP_SERVICE" >> .env
+          echo "SMTP_MAIL=$SMTP_MAIL" >> .env
+          echo "SMTP_PASSWORD=$SMTP_PASSWORD" >> .env
+          echo "ACCESS_TOKEN_SECRET=$ACCESS_TOKEN_SECRET" >> .env
+          echo "REFRESH_TOKEN_SECRET=$REFRESH_TOKEN_SECRET" >> .env
+      - name: Install dependencies and build NestJS microservices
+        run: |
+          cd core
+          npm install
+          npm run build && npm run build profile
+      - name: Restart pm2
+        run: pm2 restart 1 2 3 
+
+  client-build:
+    needs: server-build
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        node-version: [20.10.0]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies and build Next.js project
+        run: |
+          cd web
+          npm install
+          npm run build --if-present
+      - name: Restart pm2
+        run: pm2 restart titan-web
+
+  admin-build:
+    runs-on: self-hosted
+    needs: client-build
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.10.0'
+      - name: Install dependencies and build Angular project
+        run: |
+          cd admin
+          npm install
+          npm run build
+          pm2 restart admin
