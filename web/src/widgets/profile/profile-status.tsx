@@ -1,17 +1,17 @@
 import { DateOptionsWithMonth } from "@/shared/constants/date-output";
-import {getLocale, getTranslations} from 'next-intl/server';
+import { useLocale, useTranslations } from "next-intl";
 
 interface IProfileStatusWidget {
   info: string;
   registerDateString: string;
 }
 
-const ProfileStatusWidget = async ({
+const ProfileStatusWidget = ({
   info,
   registerDateString,
 }: IProfileStatusWidget) => {
-  const locale = await getLocale();
-  const t = await getTranslations('profile');
+  const locale = useLocale();
+  const t = useTranslations('profile');
 
   const languages = {
     ru: "ru-RU",

@@ -1,4 +1,6 @@
+import { USER_UPDATE_SETTINGS_ADDRESS } from "@/features/graphql/actions/settings/user-update-address";
 import { USER_UPDATE_SETTINGS } from "@/features/graphql/actions/settings/user-update-info";
+import { graphqlClient } from "@/features/graphql/client/gql.setup";
 import { Button } from "@/shared/components/ui/button";
 import { SelectItem } from "@/shared/components/ui/select";
 import { Textarea } from "@/shared/components/ui/textarea";
@@ -8,12 +10,13 @@ import {
   Select,
   SelectContent,
   SelectGroup,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@radix-ui/react-select";
 import { SlidersHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 interface IProfileSettingsWidget {
   info: string;
@@ -25,6 +28,11 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
   const [editingAddress, setEditingAddress] = useState(false);
   const [tempInfo, setTempInfo] = useState(info);
   const [tempAddress, setTempAddress] = useState(address);
+
+  const [
+    updateUserAddress,
+    { loading: loadingUpdateAddress, data: updatedAddress },
+  ] = useMutation(USER_UPDATE_SETTINGS_ADDRESS);
 
   const settingsProfileTranslation = useTranslations("pages.settings-page");
 
@@ -49,15 +57,29 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
       if (data && data.settingsUpdateUserInfo) {
         setTempInfo(data.settingsUpdateUserInfo.profileSettings.info);
       }
+
+      graphqlClient.resetStore();
     } catch (error) {
       console.error(error);
     }
     setEditingInfo(false);
   };
 
-  const handleSaveAddress = () => {
-    // Здесь вы можете отправить tempAddress на сервер
-    // и использовать useOptimisticUpdate для обновления состояния на клиенте
+  const handleSaveAddress = async () => {
+    try {
+      const { data } = await updateUserAddress({
+        variables: {
+          address: tempAddress,
+        },
+      });
+      if (data && data.settingsUpdateUserAddress) {
+        setTempAddress(data.settingsUpdateUserAddress.profileSettings.address);
+      }
+      console.log(data);
+      graphqlClient.resetStore();
+    } catch (error) {
+      console.error(error);
+    }
     setEditingAddress(false);
   };
 
@@ -152,21 +174,48 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
         )}
         {editingAddress && (
           <div className="flex gap-2">
-            <Select>
+            <Select defaultValue={tempAddress}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select a country" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-background border-neutral-800 border rounded-md p-2">
                 <SelectGroup>
-                  <SelectItem value="usa">USA</SelectItem>
-                  <SelectItem value="united-kingdom">United Kingdom</SelectItem>
-                  <SelectItem value="belarus">Belarus</SelectItem>
-                  <SelectItem value="sweden">Sweden</SelectItem>
-                  <SelectItem value="kazakhstan">Kazakhstan</SelectItem>
+                  <SelectLabel>Country</SelectLabel>
+                  <SelectItem value="usa" onClick={() => setTempAddress("usa")}>
+                    USA
+                  </SelectItem>
+                  <SelectItem
+                    value="united-kingdom"
+                    onClick={() => setTempAddress("united-kingdom")}
+                  >
+                    United Kingdom
+                  </SelectItem>
+                  <SelectItem
+                    value="belarus"
+                    onClick={() => setTempAddress("belarus")}
+                  >
+                    Belarus
+                  </SelectItem>
+                  <SelectItem
+                    value="sweden"
+                    onClick={() => setTempAddress("sweden")}
+                  >
+                    Sweden
+                  </SelectItem>
+                  <SelectItem
+                    value="kazakhstan"
+                    onClick={() => setTempAddress("kazakhstan")}
+                  >
+                    Kazakhstan
+                  </SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
-            <Button variant="outline" onClick={handleSaveAddress}>
+            <Button
+              variant="outline"
+              onClick={handleSaveAddress}
+              disabled={!editingAddress}
+            >
               Save
             </Button>
             <Button variant="outline" onClick={handleCancelAddress}>

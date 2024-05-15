@@ -3,7 +3,7 @@ import useSettings from "@/shared/hooks/use-settings";
 import CenterLoader from "@/widgets/center-loader/center-loader";
 import React from "react";
 import { redirect } from "next/navigation";
-import { Fingerprint} from "lucide-react";
+import { Fingerprint } from "lucide-react";
 import ProfileSettingsWidget from "@/widgets/settings/profile-settings";
 import UserSettingsWidget from "@/widgets/settings/user-settings";
 
