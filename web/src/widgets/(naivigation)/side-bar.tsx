@@ -70,7 +70,7 @@ const SideBar = (user: ISideBar) => {
               asChild
             >
               <Link
-                href={`/${user.id}/create`}
+                href={`/profile/${user.id}/create`}
                 className="flex gap-2 justify-start items-center"
               >
                 <Plus /> {t("create")}
@@ -82,7 +82,7 @@ const SideBar = (user: ISideBar) => {
               asChild
             >
               <Link
-                href={`/${user.id}/search`}
+                href={`/profile/${user.id}/search`}
                 className="flex gap-2 justify-start items-center"
               >
                 <Search /> {t("search")}
@@ -94,7 +94,7 @@ const SideBar = (user: ISideBar) => {
               asChild
             >
               <Link
-                href={`${user.id}/subscriptions`}
+                href={`/profile/${user.id}/subscriptions`}
                 className="flex gap-2 justify-start items-center"
               >
                 <Contact /> {tm("subscriptions")}
