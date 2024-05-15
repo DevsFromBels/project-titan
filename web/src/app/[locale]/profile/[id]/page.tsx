@@ -83,6 +83,7 @@ export default function Page({ params }: { params: { id: string } }) {
           <ProfileMainBlockWidget
             image={data.profile.avatar_url}
             username={data.profile.user.name}
+            id={data.profile.user.id}
           />
           <ProfileStatusWidget
             info={data.profile.info}
