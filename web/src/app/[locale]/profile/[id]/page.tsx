@@ -74,10 +74,6 @@ export default function Page({ params }: { params: { id: string } }) {
 
     console.log(data);
 
-    const image =
-      id === "sh1woo"
-        ? "https://titanproject.top/sh1woo.jpeg"
-        : "https://titanproject.top/cat.jpeg";
 
     console.log(data.profile);
 
