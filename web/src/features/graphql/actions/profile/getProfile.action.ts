@@ -12,7 +12,7 @@ export const GET_PROFILE: DocumentNode = gql`
 			}
 			info
 			isPublic
-			
+			avatar_url
 		}
 	}
 `

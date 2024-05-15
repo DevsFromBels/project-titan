@@ -19,7 +19,6 @@ enum Role {
 
 model Avatars {
   id     String  @id @default(uuid())
-  public Boolean @default(true)
   url    String
   user   User    @relation(fields: [userId], references: [id])
   userId String  @unique

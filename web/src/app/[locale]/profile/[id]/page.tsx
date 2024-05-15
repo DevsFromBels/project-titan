@@ -75,18 +75,13 @@ export default async function Page({ params }: { params: { id: string } }) {
       return notFound();
     }
 
-    const image =
-      id === "sh1woo"
-        ? "https://titanproject.top/sh1woo.jpeg"
-        : "https://titanproject.top/cat.jpeg";
-
     console.log(data.profile)
 
     return (
       <>
         <div>
           <ProfileMainBlockWidget
-            id={data.profile.user.id}
+            image={data.profile.avatar_url}
             username={data.profile.user.name}
           />
           <ProfileStatusWidget
