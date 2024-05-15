@@ -49,10 +49,11 @@ const Page = () => {
 
   return (
     <div className="w-[95%] m-auto flex justify-center items-center flex-col">
-      <form onSubmit={handleSubmit} className="w-[500px] flex flex-col gap-5">
+      <form onSubmit={handleSubmit} className="w-[320px] sm:w-[500px] flex flex-col gap-5">
+        <h1 className="text-center text-xl">Create your AD'S now!</h1>
         <Input
           type="text"
-          placeholder="Your ADS name"
+          placeholder="Your AD'S name"
           value={adsName}
           onChange={(event) => setAdsName(event.target.value)}
         />
@@ -67,7 +68,7 @@ const Page = () => {
         />
         <p>Value: {sliderValue}</p>
 
-        <Button type="submit">Создать</Button>
+        <Button type="submit">Create</Button>
       </form>
     </div>
   );

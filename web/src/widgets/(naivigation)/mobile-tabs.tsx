@@ -98,7 +98,7 @@ const MobileTabs = (user: IMobileTabs) => {
       </Drawer>
 
       <Link
-        href={`/${user.id}/create`}
+        href={`/profile/${user.id}/create`}
         className="flex flex-col items-center text-sm gap-1"
       >
         <Plus className="w-[20px] h-[20px]" />
