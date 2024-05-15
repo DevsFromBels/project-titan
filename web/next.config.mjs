@@ -19,6 +19,12 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'market-api.titanproject.top',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   // productionBrowserSourceMaps: false, // Disable source maps in development
