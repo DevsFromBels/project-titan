@@ -49,6 +49,9 @@ export class UserProfile {
 
   @Field({nullable: true})
   isPublic: boolean;
+
+  @Field({nullable: true})
+  avatar_url: string;
 }
 
 @ObjectType()

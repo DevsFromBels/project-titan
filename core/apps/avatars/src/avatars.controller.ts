@@ -11,11 +11,10 @@ import { pipeline } from "stream";
 import * as util from "util";
 import { FastifyReply, FastifyRequest } from "fastify";
 import * as fs from "fs";
-import { MarketService } from "./market.service";
+import { AvatarsService } from "./avatars.service";
 import { extname, join } from "path";
 import { uuidv7 } from "uuidv7";
-
-import { HeadersGuard } from "./auth.guard";
+import { HeadersGuard } from "./guards/auth.guard";
 const pump = util.promisify(pipeline);
 
 declare module "fastify" {
@@ -25,25 +24,23 @@ declare module "fastify" {
 }
 
 @Controller()
-export class MarketController {
-  constructor(private readonly marketService: MarketService) {}
-
+export class AvatarsController {
+  constructor(private readonly avatarService: AvatarsService) {}
+  
   @Get()
   getHello(): string {
-    return this.marketService.getHello();
+    return this.avatarService.getHello();
   }
 
   @UseGuards(HeadersGuard)
-  @Post("/create")
+  @Post("/upload")
   async createRequest(
     @Req() req: FastifyRequest,
     @Res() reply: FastifyReply,
-    @Query("name") name: string,
-    @Query("price_peer_show") pricePeerShow: string
   ) {
     const data = await req.file();
     const fileName = `${uuidv7()}${extname(data.filename)}`;
-    const uploadDir = join(__dirname, "..", "..", "uploads", "market");
+    const uploadDir = join(__dirname, "..", "..", "uploads", "avatars");
     const filePath = join(uploadDir, fileName);
     try {
       const user_id = req.user.id;
@@ -52,16 +49,14 @@ export class MarketController {
         fs.mkdirSync(uploadDir, { recursive: true });
       }
       await pump(data.file, fs.createWriteStream(filePath));
-      const fileUrl = `/uploads/market/${fileName}`;
+      const fileUrl = `/uploads/avatars/${fileName}`;
 
-      const prodcut = await this.marketService.createProduct(
+      const avatar = await this.avatarService.uploadUserAvatar(
         fileUrl,
-        name,
         user_id,
-        +pricePeerShow
       );
 
-      return reply.status(200).send(prodcut);
+      return reply.status(200).send(avatar);
     } catch (err) {
       if (data.file.truncated) {
         // Если файл был обрезан из-за превышения лимита размера
@@ -70,10 +65,5 @@ export class MarketController {
         reply.status(500).send(err._message);
       }
     }
-  }
-
-  @Get('/getMarket')
-  async getMarket() {
-    return await this.marketService.getMarket();
   }
 }

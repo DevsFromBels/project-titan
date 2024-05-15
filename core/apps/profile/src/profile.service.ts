@@ -23,10 +23,17 @@ export class ProfileService {
       },
     });
 
+    const avatar = await this.prisma.avatars.findFirst({
+      where: {
+        userId: user.id,
+      }
+    })
+
     return {
       user: user,
       info: profile.info,
       isPublic: profile.isPublic,
+      avatar_url: avatar.url
     };
   }
 

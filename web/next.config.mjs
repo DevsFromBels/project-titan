@@ -13,6 +13,12 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'avatars-api.titanproject.top',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   // productionBrowserSourceMaps: false, // Disable source maps in development

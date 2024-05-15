@@ -27,5 +27,6 @@ export type IUseProfile = {
       }
       info: string
       isPublic: boolean
+      avatar_url: string
     }
 }
