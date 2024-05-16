@@ -8,18 +8,25 @@ import 'cropperjs/dist/cropper.css'
 import { Input } from '@/shared/components/ui/input'
 import { Button } from '@/shared/components/ui/button'
 import Cookies from 'js-cookie'
+import { graphqlClient } from '@/features/graphql/client/gql.setup'
+import { useRouter } from '@/navigation'
+
 
 export default function Page() {
   const [file, setFile] = useState<File | null>(null)
   const [croppedImage, setCroppedImage] = useState<string | null>(null)
   const [showCropper, setShowCropper] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps, open } = useDropzone({
     accept: { 'image/*': [] },
     onDrop: (acceptedFiles: File[]) => {
       setFile(acceptedFiles[0])
       setShowCropper(true)
     },
+    noClick: true,
+    noKeyboard: true
   })
 
   const cropImage = () => {
@@ -34,6 +41,8 @@ export default function Page() {
 
   const uploadImage = async () => {
     if (!croppedImage) return
+
+    setLoading(true)
 
     const formData = new FormData()
     const response = await fetch(croppedImage)
@@ -52,11 +61,15 @@ export default function Page() {
 
       if (response.ok) {
         console.log('Avatar uploaded successfully')
+        graphqlClient.resetStore()
+        router.push('/profile')
       } else {
         console.error('Failed to upload avatar')
+        setLoading(false)
       }
     } catch (error) {
       console.error('Error uploading avatar:', error)
+      setLoading(false)
     }
   }
 
@@ -74,12 +87,13 @@ export default function Page() {
               viewMode={2}
               autoCropArea={0.8}
               dragMode="move"
+              aspectRatio={1}
               onInitialized={(instance) => {
                 setCropper(instance)
               }}
             />
           ) : (
-            <Button className='mb-2'>Drop an image here or click to select one</Button>
+            <Button className='mb-2' onClick={open}>Выбрать фото</Button>
           )}
         </div>
       )}
@@ -93,16 +107,21 @@ export default function Page() {
 
       <div className='flex gap-3'>
         {showCropper ? (
-          <Button onClick={cropImage} disabled={!file}>
-            Кадрировать аватар
-          </Button>
+          <>
+            <Button onClick={cropImage} disabled={!file || loading}>
+              Кадрировать аватар
+            </Button>
+            <Button onClick={open} disabled={loading}>
+              Выбрать другое фото
+            </Button>
+          </>
         ) : (
-          <Button onClick={() => setShowCropper(true)}>
+          <Button onClick={() => setShowCropper(true)} disabled={loading}>
             Изменить аватар
           </Button>
         )}
-        <Button onClick={uploadImage} disabled={!croppedImage}>
-          Загрузить аватар
+        <Button onClick={uploadImage} disabled={!croppedImage || loading}>
+          {loading ? 'Загрузка...' : 'Загрузить аватар'}
         </Button>
       </div>
     </div>
