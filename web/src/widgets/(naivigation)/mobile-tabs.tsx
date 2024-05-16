@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from "@/shared/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar";
 import { User } from "@/shared/types/auth.types";
 import { Link } from "@/navigation";
 import {
@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { Button } from "@/shared/components/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -22,8 +21,9 @@ import {
   DrawerTrigger,
 } from "@/shared/components/ui/drawer";
 import { ModeToggleMenu } from "@/shared/components/maleculas/mode-toggle-menu";
+import { IUseProfile } from "@/shared/hooks/use-profile";
 
-interface IMobileTabs extends User {}
+interface IMobileTabs extends User, IUseProfile {}
 
 const MobileTabs = (user: IMobileTabs) => {
   const t = useTranslations("tabs");
@@ -52,9 +52,7 @@ const MobileTabs = (user: IMobileTabs) => {
         </DrawerTrigger>
         <DrawerContent className="h-[60vh]">
           <DrawerClose>
-            <div
-              className="absolute top-2 right-2 rounded-full w-[50px] h-[50px] border flex justify-center items-center"
-            >
+            <div className="absolute top-2 right-2 rounded-full w-[50px] h-[50px] border flex justify-center items-center">
               <Cross1Icon />
             </div>
           </DrawerClose>
@@ -75,10 +73,13 @@ const MobileTabs = (user: IMobileTabs) => {
                 {tm("subscriptions")}
               </Link>
               <DrawerClose>
-              <Link href={`/profile/${user.id}/settings`} className="p-2 flex gap-2 items-center">
-                <Settings />
-                {tm("settings")}
-              </Link>
+                <Link
+                  href={`/profile/${user.id}/settings`}
+                  className="p-2 flex gap-2 items-center"
+                >
+                  <Settings />
+                  {tm("settings")}
+                </Link>
               </DrawerClose>
             </div>
 
@@ -108,12 +109,13 @@ const MobileTabs = (user: IMobileTabs) => {
         href={`/profile/${user.id}`}
         className="flex flex-col items-center text-sm gap-1"
       >
-        <Avatar className="w-[20px] h-[20px]">
-          {/* <AvatarImage
-            className="border"
-            src={"https://github.com/shadcn.png"}
-            alt={"@shadcn"}
-          /> */}
+        <Avatar className="w-[20px] h-[20px] bg-cover p-0 rounded-full">
+          {user.profile.avatar_url && (
+            <AvatarImage
+              src={`https://avatars-api.titanproject.top${user.profile.avatar_url}`}
+              alt={user.name}
+            />
+          )}
           <AvatarFallback>
             {user?.name?.slice(0, 2).toUpperCase() || "SH"}
           </AvatarFallback>
