@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { Button } from "@/shared/components/ui/button";
 import {
   Drawer,
   DrawerClose,

@@ -24,7 +24,7 @@ const Layout = () => {
 	}, [user, loading])
 
 	return (
-		<View className='bg-white dark:bg-background'>
+		<View className='bg-background'>
 			<Slot />
 			<StatusBar hidden />
 		</View>

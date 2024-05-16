@@ -1,7 +1,7 @@
 import { forwardRef } from "react"
 import { Text, TextInput, View } from "react-native"
 
-import { cn } from "../lib/utils"
+import { cn } from "../../lib/utils"
 
 export interface InputProps
 	extends React.ComponentPropsWithoutRef<typeof TextInput> {
@@ -18,7 +18,7 @@ const Input = forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
 			<TextInput
 				className={cn(
 					inputClasses,
-					"border border-input py-2.5 px-4 rounded-lg text-dark dark:text-white h-[60]"
+					"border border-input py-2.5 px-4 rounded-lg text-white h-[60]"
 				)}
 				placeholderTextColor={"gray"}
 				{...props}
