@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { Fingerprint } from "lucide-react";
 import ProfileSettingsWidget from "@/widgets/settings/profile-settings";
 import UserSettingsWidget from "@/widgets/settings/user-settings";
+import AvatarSettingsWidget from "@/widgets/settings/avatar-settings";
 
 const page = () => {
   const { data, loading } = useSettings();
@@ -20,6 +21,7 @@ const page = () => {
 
   return (
     <div className="w-[95%] mx-auto flex flex-col gap-2">
+      <AvatarSettingsWidget avatarUrl={data.avatar_url} />
       <ProfileSettingsWidget
         info={data.profileSettings.info}
         address={data.profileSettings.address}

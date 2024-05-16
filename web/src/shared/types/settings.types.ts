@@ -5,6 +5,7 @@ export interface IGetSettings {
 export interface GetSettings {
   userSettings: UserSettings;
   profileSettings: ProfileSettings;
+  avatar_url: string;
 }
 
 export interface UserSettings {

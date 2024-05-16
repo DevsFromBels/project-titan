@@ -43,6 +43,9 @@ export class Settings {
 
   @Field(() => ProfileSettings)
   profileSettings: ProfileSettings;
+
+  @Field({nullable: true})
+  avatar_url: string;
 }
 
 @ObjectType()
