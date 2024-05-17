@@ -1,8 +1,8 @@
 import { Skeleton } from "@/components/ui/Skeleton";
 import { GET_SETTIGNS } from "@/graphql/actions/settings/get-settings";
 import { IGetSettings } from "@/types/settings.types";
-import ProfileMainBlockWidget from "@/widgets/profile-main-block";
-import ProfileStatusWidget from "@/widgets/profile-status";
+import ProfileMainBlockWidget from "@/widgets/profile/profile-main-block";
+import ProfileStatusWidget from "@/widgets/profile/profile-status";
 import { useQuery } from "@apollo/client";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native";

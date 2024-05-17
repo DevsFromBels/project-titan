@@ -1,8 +1,8 @@
-import { Tabs } from "expo-router";
+import { Link, Tabs, router } from "expo-router";
 import { SafeAreaView, Text } from "react-native";
-import { Avatar, AvatarFallback } from "@/components/ui/Avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { i18n } from "@/localization/i18n";
-import { Home, Plus, CircleDollarSignIcon, Menu, User } from "lucide-react-native";
+import { Home, Plus, CircleDollarSignIcon, Bell, Settings } from "lucide-react-native";
 import { GET_SETTIGNS } from "@/graphql/actions/settings/get-settings";
 import { IGetSettings } from "@/types/settings.types";
 import { useQuery } from "@apollo/client";
@@ -13,7 +13,7 @@ const TabsLayout = () => {
   });
 
   return (
-    <SafeAreaView className="h-full w-screen">
+    <SafeAreaView className="h-screen w-screen">
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: "white",
@@ -53,11 +53,11 @@ const TabsLayout = () => {
           }}
         />
         <Tabs.Screen
-          name="menu"
+          name="notification"
           options={{
-            title: `${i18n.t("menu")}`,
+            title: `${i18n.t("notification")}`,
             tabBarIcon: ({ color }) => (
-              <Menu className="w-[20px] h-[20px]" color={color} />
+              <Bell className="w-[20px] h-[20px]" color={color} />
             ),
           }}
         />
@@ -71,13 +71,14 @@ const TabsLayout = () => {
           }}
         />
         <Tabs.Screen
-          name="profile/index"
+          name="profile"
           options={{
             title: `${i18n.t("profile")}`,
             tabBarIcon: () => (
               <Avatar className="w-[30px] h-[30px] rounded-full">
+                <AvatarImage src={`https://avatars-api.titanproject.top${data?.getSettings.avatar_url}`} />
                 <AvatarFallback>
-                  {data?.getSettings.userSettings.name?.slice(0, 2).toUpperCase() || "SH"}
+                  {data?.getSettings.userSettings.name.slice(0,2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
             ),

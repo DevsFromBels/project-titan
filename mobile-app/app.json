@@ -22,7 +22,8 @@
 				"foregroundImage": "./assets/adaptive-icon.png",
 				"backgroundColor": "#000000"
 			},
-			"package": "com.dev1siwoo.mobileapp"
+			"package": "com.dev1siwoo.mobileapp",
+			"permissions": ["android.permission.SCHEDULE_EXACT_ALARM"]
 		},
 		"web": {
 			"favicon": "./assets/logo.png"

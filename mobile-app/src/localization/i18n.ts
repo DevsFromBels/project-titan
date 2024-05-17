@@ -13,6 +13,10 @@ const translations = {
     menu: "Menu",
     setting: "Setting",
     about: "About",
+    notification: "Notification",
+    block_name: 'Profile Settings',
+    address: 'Address',
+    info: 'Info'
   },
   ru: {
     welcome: "Привет",
@@ -23,7 +27,11 @@ const translations = {
     create: "Создать",
     market: "Рынок",
     menu: "Меню",
-    about: "О себе"
+    about: "О себе",
+    notification: "Уведомления",
+    block_name: 'Настройки пользователя',
+    address: 'Адрес',
+    info: 'О себе'
   },
 };
 
