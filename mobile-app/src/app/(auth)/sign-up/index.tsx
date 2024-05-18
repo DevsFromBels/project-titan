@@ -1,5 +1,4 @@
-import { Input } from "@/components/Input"
-import OTPInputView from "@twotalltotems/react-native-otp-input"
+import { Input } from "@/components/ui/Input"
 import { REGISTER_USER } from "@/graphql/actions/register.action"
 import { i18n } from "@/localization/i18n"
 import { useMutation } from "@apollo/client"
@@ -133,16 +132,16 @@ const index = () => {
 
 	if (loading) {
 		return (
-			<View className='h-screen bg-white dark:bg-background flex justify-center items-center'>
-				<Text className='text-black dark:text-white'>Loading ...</Text>
+			<View className='h-screen bg-background flex justify-center items-center'>
+				<Text className='text-white'>Loading ...</Text>
 			</View>
 		)
 	}
 
 	return (
-		<View className='bg-white dark:bg-background h-screen w-screen'>
+		<View className='bg-background h-screen w-screen'>
 			{showOTPInput && (
-				<View className='bg-white dark:bg-background h-screen w-screen flex justify-center items-center mt-4 absolute z-10'>
+				<View className='bg-background h-screen w-screen flex justify-center items-center mt-4 absolute z-10'>
 					<Input
 						className='w-[350]'
 						placeholder='Code...'
@@ -150,24 +149,24 @@ const index = () => {
 						onChangeText={setOtp}
 					/>
 					<Pressable
-						className='w-[350] h-[70] rounded-[15] flex justify-center items-center bg-black dark:bg-white mt-4'
+						className='w-[350] h-[70] rounded-[15] flex justify-center items-center bg-white mt-4'
 						onPress={verifyOTPHandler}
 					>
-						<Text className='text-2xl text-white dark:text-black'>
+						<Text className='text-2xl text-black'>
 							Verify OTP
 						</Text>
 					</Pressable>
 				</View>
 			)}
-			<View className='w-[40] bg-white dark:bg-background'>
+			<View className='w-[40] bg-background'>
 				<TouchableOpacity onPress={() => router.replace("/")}>
-					<Text className='text-6xl color-black dark:color-white'>
+					<Text className='text-6xl color-white'>
 						←
 					</Text>
 				</TouchableOpacity>
 			</View>
-			<View className='bg-white dark:bg-background flex justify-center gap-2 items-center h-screen pb-[150]'>
-				<Text className='text-dark dark:text-white flex flex-col mt-10 text-3xl text-center'>
+			<View className='bg-background flex justify-center gap-2 items-center h-screen pb-[150]'>
+				<Text className='text-white flex flex-col mt-10 text-3xl text-center'>
 					{i18n.t("signup")}
 				</Text>
 				{errorNot && (
@@ -195,10 +194,10 @@ const index = () => {
 			</View>
 			<View className='flex justify-end items-center pb-5 absolute h-screen w-screen'>
 				<Pressable
-					className='w-[350] h-[70] rounded-[15] flex justify-center items-center bg-black dark:bg-white'
+					className='w-[350] h-[70] rounded-[15] flex justify-center items-center bg-white'
 					onPress={handleSignUpPress}
 				>
-					<Text className='text-2xl text-white dark:text-black'>
+					<Text className='text-2xl text-black'>
 						{i18n.t("signup")}
 					</Text>
 				</Pressable>

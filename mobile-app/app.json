@@ -2,7 +2,7 @@
 	"expo": {
 		"scheme": "Titan Advertisiment",
 		"name": "Titan Advertisiment",
-		"slug": "Titan Advertisiment",
+		"slug": "mobile-app",
 		"userInterfaceStyle": "automatic",
 		"version": "1.0.0",
 		"orientation": "portrait",
@@ -22,7 +22,8 @@
 				"foregroundImage": "./assets/adaptive-icon.png",
 				"backgroundColor": "#000000"
 			},
-			"package": "com.dev1siwoo.mobileapp"
+			"package": "com.dev1siwoo.mobileapp",
+			"permissions": ["android.permission.SCHEDULE_EXACT_ALARM"]
 		},
 		"web": {
 			"favicon": "./assets/logo.png"

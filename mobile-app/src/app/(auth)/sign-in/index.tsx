@@ -2,7 +2,7 @@ import { useMutation } from "@apollo/client"
 import { LOGIN_USER } from "../../../graphql/actions/login.action"
 import { useState, useCallback } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { Input } from "../../../components/Input"
+import { Input } from "../../../components/ui/Input"
 import { View, Text, TouchableOpacity, Pressable } from "react-native"
 import { router } from "expo-router"
 import { SafeAreaView } from "react-native"
@@ -52,7 +52,7 @@ const SignInPage = () => {
 					"refresh_token",
 					data.login.refreshToken
 				)
-				router.replace('/home')
+				router.replace('/(tabs)')
 				setIsLoading(false)
 			} catch (err) {
 				setErrorNot("An error occurred. Please try again.")
@@ -64,7 +64,7 @@ const SignInPage = () => {
 
 	if (loading) {
 		return (
-			<View className='h-screen dark: bg-background flex justify-center items-center'>
+			<View className='h-screen bg-background flex justify-center items-center'>
 				<Text>Loading ...</Text>
 			</View>
 		)
@@ -72,20 +72,20 @@ const SignInPage = () => {
 
 	return (
 		<SafeAreaView className='h-screen'>
-			<View className='w-[40] bg-white dark:bg-background'>
+			<View className='w-[40] bg-background'>
 				<TouchableOpacity onPress={() => router.replace("/")}>
-					<Text className='text-6xl color-black dark:color-white'>
+					<Text className='text-6xl color-white'>
 						←
 					</Text>
 				</TouchableOpacity>
 			</View>
 
-			<View className='flex items-center justify-center pb-[200] gap-3 w-screen h-screen bg-white dark:bg-background'>
-				<Text className='text-dark dark:text-white flex flex-col mt-10 text-3xl text-center'>
+			<View className='flex items-center justify-center pb-[200] gap-3 w-screen h-screen bg-background'>
+				<Text className='text-white flex flex-col mt-10 text-3xl text-center'>
 					{i18n.t("signin")}
 				</Text>
 				{errorNot && (
-					<Text className='dark: text-red-500'>{errorNot}</Text>
+					<Text className='text-red-500'>{errorNot}</Text>
 				)}
 				<Input
 					className='w-[350]'
@@ -103,10 +103,10 @@ const SignInPage = () => {
 			</View>
 			<View className='flex justify-end items-center pb-5 absolute h-screen w-screen'>
 				<Pressable
-					className='w-[350] h-[70] rounded-[15] flex justify-center items-center bg-black dark:bg-white'
+					className='w-[350] h-[70] rounded-[15] flex justify-center items-center bg-white'
 					onPress={() => loginHandler(email, password)}
 				>
-					<Text className='text-2xl text-white dark:text-black'>
+					<Text className='text-2xl text-black'>
 						{i18n.t("signin")}
 					</Text>
 				</Pressable>
