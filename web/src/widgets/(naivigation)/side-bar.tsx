@@ -5,6 +5,7 @@ import Image from "next/image";
 import logoLight from "@/../public/logo_light.svg";
 import logoDark from "@/../public/logo_dark.svg";
 import {
+  Bell,
   CircleDollarSign,
   Contact,
   Home,
@@ -65,10 +66,10 @@ const SideBar = (user: ISideBar) => {
               asChild
             >
               <Link
-                href={`/messages`}
+                href={`/profile/${user.id}/notifications`}
                 className="flex gap-2 justify-start items-center"
               >
-                <MessageCircle /> {tm("messages")}
+                <Bell /> {tm("notifications")}
               </Link>
             </Button>
             <Button

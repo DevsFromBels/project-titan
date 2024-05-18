@@ -20,5 +20,9 @@ module.exports = {
       name: "avatars",
       script: "dist/apps/avatars/main.js",
     },
+    {
+      name: "notifications",
+      script: "dist/apps/notifications/main.js",
+    },
   ],
 };

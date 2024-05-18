@@ -49,7 +49,10 @@ const Page = () => {
 
   return (
     <div className="w-[95%] m-auto flex justify-center items-center flex-col">
-      <form onSubmit={handleSubmit} className="w-[320px] sm:w-[500px] flex flex-col gap-5">
+      <form
+        onSubmit={handleSubmit}
+        className="w-[320px] sm:w-[500px] flex flex-col gap-5"
+      >
         <h1 className="text-center text-xl">Create your AD'S now!</h1>
         <Input
           type="text"
@@ -57,7 +60,7 @@ const Page = () => {
           value={adsName}
           onChange={(event) => setAdsName(event.target.value)}
         />
-        <Input type="file" name="" onChange={handleFileChange} />
+        <Input type="file" name="image" accept="image/*" onChange={handleFileChange} />
         <Slider
           value={[sliderValue]}
           onValueChange={(newValue) =>

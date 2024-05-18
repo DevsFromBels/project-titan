@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build && nest build profile && nest build market && nest build avatars",
+    "build": "nest build && nest build profile && nest build market && nest build avatars && nest build notifications",
     "start-micro": "pm2 start ecosystem.config.js",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start:gateway": "nest start gateway",
@@ -36,6 +36,8 @@
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/platform-fastify": "^10.3.7",
+    "@nestjs/platform-socket.io": "^10.3.8",
+    "@nestjs/websockets": "^10.3.8",
     "@prisma/client": "^5.7.0",
     "@types/bcrypt": "^5.0.2",
     "@types/ejs": "^3.1.5",

@@ -20,8 +20,11 @@ const page = () => {
   }
 
   return (
-    <div className="w-[95%] mx-auto flex flex-col gap-2">
-      <AvatarSettingsWidget avatarUrl={data.avatar_url} />
+    <div className="w-[95%] mx-auto flex flex-col gap-2 pb-4">
+      <AvatarSettingsWidget
+        avatarUrl={data.avatar_url}
+        id={data.userSettings.id}
+      />
       <ProfileSettingsWidget
         info={data.profileSettings.info}
         address={data.profileSettings.address}
@@ -32,7 +35,7 @@ const page = () => {
         email={data?.userSettings.email}
         role={data?.userSettings.role}
       />
-      <div className="border rounded-xl mt-5 p-4 flex flex-col gap-2">
+      <div className="border rounded-xl mt-5 p-4 flex flex-col gap-2 mb-5">
         <div className="flex gap-2">
           <Fingerprint />
           <h1>Security</h1>
@@ -42,6 +45,7 @@ const page = () => {
           <div>{data?.profileSettings.isPublic ? true : false}</div>
         </div>
       </div>
+      <div className="pb-10 lg:pb-8"></div>
     </div>
   );
 };
