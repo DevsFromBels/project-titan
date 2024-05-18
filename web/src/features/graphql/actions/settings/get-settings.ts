@@ -17,6 +17,7 @@ export const GET_SETTIGNS = gql`
         address
         referred_users
       }
+      avatar_url
     }
   }
 `;

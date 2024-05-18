@@ -9,6 +9,7 @@ import {
   MessageCircle,
   Contact,
   Settings,
+  Bell,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Cross1Icon } from "@radix-ui/react-icons";
@@ -61,9 +62,9 @@ const MobileTabs = (user: IMobileTabs) => {
           </DrawerHeader>
           <div className="w-[95%] flex flex-col gap-4 mx-auto">
             <div className="flex flex-col justify-center gap-1 border p-2 rounded-lg">
-              <Link href={"/messages"} className="p-2 flex gap-2 items-center">
-                <MessageCircle />
-                {tm("messages")}
+              <Link href={`/profile/${user.id}/notifications`} className="p-2 flex gap-2 items-center">
+                <Bell />
+                {tm("notifications")}
               </Link>
               <Link
                 href={`${user.id}/subscriptions`}
