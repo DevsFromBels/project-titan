@@ -22,7 +22,7 @@ const _layout = () => {
           headerTitle: "Profile",
           headerTitleAlign: "center",
           headerStyle: {
-            backgroundColor: "black",
+            backgroundColor: "#121111",
           },
           headerTintColor: "white",
           headerShadowVisible: false,
@@ -39,7 +39,7 @@ const _layout = () => {
         ),
         headerShadowVisible: false,
         headerStyle: {
-            backgroundColor: 'black',
+            backgroundColor: '#121111',
         },
         headerTintColor: 'white'
       }} />

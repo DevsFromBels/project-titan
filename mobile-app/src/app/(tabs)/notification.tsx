@@ -3,8 +3,8 @@ import React from 'react'
 
 const Notification = () => {
   return (
-    <View>
-      <Text>Notification</Text>
+    <View className='bg-[#121111] h-full w-screen flex justify-center items-center'>
+      <Text className='text-white'>Notification</Text>
     </View>
   )
 }

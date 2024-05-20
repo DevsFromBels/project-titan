@@ -95,7 +95,7 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
         <Text className="text-xl text-white">{i18n.t("block_name")}</Text>
       </View>
       <View className="flex flex-col gap-2">
-        <Text className='text-white text-xl'>{i18n.t("info")}</Text>
+        <Text className='text-white text-xl'>{i18n.t("about")}</Text>
         {!editingInfo &&
           updatedInfo?.settingsUpdateUserInfo?.profileSettings.info && (
             <View className="flex justify-between">

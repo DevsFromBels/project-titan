@@ -28,6 +28,7 @@ export default function TabProfileScreen() {
           username={data.getSettings.userSettings.name}
           id={data.getSettings.userSettings.id}
           info={data.getSettings.profileSettings.info}
+          registerDateString={data.getSettings.userSettings.createdAt}
         />
       </SafeAreaView>
     );
