@@ -53,6 +53,8 @@ model Market {
   link           String
   user_id        String
   price_for_show Float
+  total_shows    Int
+  current_shows  Int
 }
 
 model Notification {

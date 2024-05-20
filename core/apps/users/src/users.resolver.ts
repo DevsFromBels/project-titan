@@ -40,7 +40,7 @@ export class UsersResolver {
     @Args("activationDto") activationDto: ActivationDto,
     @Context() context: { res: Response },
   ): Promise<ActivationResponse> {
-    return await this.userService.actiivateUser(activationDto, context.res);
+    return await this.userService.activateUser(activationDto, context.res);
   }
 
   @Mutation(() => LoginResponse)

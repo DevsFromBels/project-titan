@@ -25,7 +25,7 @@ const Page = () => {
   useEffect(() => {
     if (!user?.id || !shouldFetchNotifications) return;
 
-    const socket = io("notifications-api.titanproject.top", {
+    const socket = io("nfapi.titanproject.top", {
       auth: { userId: user.id },
     });
     // const socket = io("http://localhost:4005", {

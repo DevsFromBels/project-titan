@@ -90,7 +90,7 @@ const SideBar = (user: ISideBar) => {
               asChild
             >
               <Link
-                href={`/profile/${user.id}/search`}
+                href={`/search`}
                 className="flex gap-2 justify-start items-center"
               >
                 <Search /> {t("search")}

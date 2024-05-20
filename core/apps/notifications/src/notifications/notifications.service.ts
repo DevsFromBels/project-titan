@@ -5,6 +5,14 @@ import { PrismaService } from "../../../../prisma/prisma.service";
 export class NotificationsService {
   constructor(private prisma: PrismaService) {}
 
+  /**
+   * Get all users notifications
+   *
+   * @async
+   * @param {string} userId
+   * @param {?Date} [lastSentAt]
+   * @returns {unknown}
+   */
   async getNotificationsForUser(userId: string, lastSentAt?: Date) {
 
     const user = await this.prisma.user.findFirst({
@@ -57,6 +65,13 @@ export class NotificationsService {
     return allNotifications;
   }
 
+  /**
+   * Must be deleted in the future, return a first user update
+   *
+   * @async
+   * @param {string} userId
+   * @returns {unknown}
+   */
   async createFirstNotification(userId: string) {
     return this.prisma.notification.create({
       data: {

@@ -22,6 +22,14 @@ export class UsersService {
     private readonly emailService: EmailService,
   ) {}
 
+  /**
+   * Register a user on the system.
+   *
+   * @async
+   * @param {RegisterDto} registerDto
+   * @param {Response} response
+   * @returns {unknown}
+   */
   async register(registerDto: RegisterDto, response: Response) {
     const { name, email, password } = registerDto;
     const id = name.toLowerCase().trim();
@@ -78,6 +86,13 @@ export class UsersService {
     return { activation_token, response };
   }
 
+  /**
+   * Create activation Token for comfirm an email address
+   *
+   * @async
+   * @param {UserData} user
+   * @returns {unknown}
+   */
   async createActivationToken(user: UserData) {
     const activationCode = Math.floor(100000 + Math.random() * 9000).toString();
 
@@ -95,7 +110,15 @@ export class UsersService {
     return { token, activationCode };
   }
 
-  async actiivateUser(activationDto: ActivationDto, response: Response) {
+  /**
+   * Activating user account with email address
+   *
+   * @async
+   * @param {ActivationDto} activationDto
+   * @param {Response} response
+   * @returns {unknown}
+   */
+  async activateUser(activationDto: ActivationDto, response: Response) {
     const { activationToken, activationCode } = activationDto;
 
     const newUser: { user: UserData; activationCode: string } =
@@ -151,7 +174,6 @@ export class UsersService {
 
     const avatar = this.prisma.avatars.create({
       data: {
-        public: true,
         url: "",
         userId: user.id
       }
@@ -160,6 +182,13 @@ export class UsersService {
     return { user, response, profile, avatar };
   }
 
+  /**
+   * Login user to the system
+   *
+   * @async
+   * @param {LoginDto} loginDto
+   * @returns {unknown}
+   */
   async Login(loginDto: LoginDto) {
     const { email, password } = loginDto;
 
@@ -184,6 +213,13 @@ export class UsersService {
     }
   }
 
+  /**
+   * Get from JWT tokens a user
+   *
+   * @async
+   * @param {*} req
+   * @returns {unknown}
+   */
   async getLoggedInUser(req: any) {
     const user = req.user;
     const accessToken = req.accesstoken;
@@ -195,6 +231,13 @@ export class UsersService {
     return { user, refreshToken, accessToken };
   }
 
+  /**
+   * Logout user from JWT token
+   *
+   * @async
+   * @param {*} req
+   * @returns {unknown}
+   */
   async Logout(req: any) {
     req.user = null;
     req.accesstoken = null;
@@ -205,6 +248,14 @@ export class UsersService {
     };
   }
 
+  /**
+   * Compared password from data get's and server db data
+   *
+   * @async
+   * @param {string} password
+   * @param {string} hashedPassword
+   * @returns {Promise<boolean>}
+   */
   async comparePassword(
     password: string,
     hashedPassword: string,

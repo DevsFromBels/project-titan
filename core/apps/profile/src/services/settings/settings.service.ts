@@ -5,9 +5,15 @@ import { PrismaService } from "../../../../../prisma/prisma.service";
 export class SettingsService {
   constructor(private prisma: PrismaService) {}
 
+  /**
+   * Get all user settings
+   *
+   * @async
+   * @param {*} req
+   * @returns {unknown}
+   */
   async getSettings(req: any) {
     const user = req.req.user;
-    // console.log(user)
 
     const userSettings = await this.prisma.user.findFirst({
       where: {
@@ -31,7 +37,7 @@ export class SettingsService {
       },
     });
 
-    if(!profileSettings) {
+    if (!profileSettings) {
       return new BadRequestException(`Profile not found`);
     }
 
@@ -40,8 +46,8 @@ export class SettingsService {
         userId: user.id,
       },
     });
-  
-    let avatar_url = '';
+
+    let avatar_url = "";
     if (avatar && avatar.url) {
       avatar_url = avatar.url;
     }
@@ -49,10 +55,19 @@ export class SettingsService {
     return {
       userSettings,
       profileSettings,
-      avatar_url
-    }
+      avatar_url,
+    };
   }
 
+  /**
+   * Need update!!! Must be update not only user info,
+   * need to update all user settings
+   *
+   * @async
+   * @param {*} req
+   * @param {string} newInfo
+   * @returns {unknown}
+   */
   async settingsUpdateUserInfo(req: any, newInfo: string) {
     const user = req.req.user;
 
@@ -71,16 +86,16 @@ export class SettingsService {
         userId: userSettings.id,
       },
       data: {
-        info: newInfo
-      }
-    })
+        info: newInfo,
+      },
+    });
 
-    if(!profileSettings) {
+    if (!profileSettings) {
       return new BadRequestException(`Profile not found`);
     }
 
     return {
-      profileSettings
-    }
+      profileSettings,
+    };
   }
 }

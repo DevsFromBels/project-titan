@@ -12,7 +12,7 @@ import * as util from "util";
 import { FastifyReply, FastifyRequest } from "fastify";
 import * as fs from "fs";
 import { MarketService } from "./market.service";
-import { extname, join } from "path";
+import { extname, join } from "path";``
 import { uuidv7 } from "uuidv7";
 
 import { HeadersGuard } from "./auth.guard";
@@ -39,7 +39,8 @@ export class MarketController {
     @Req() req: FastifyRequest,
     @Res() reply: FastifyReply,
     @Query("name") name: string,
-    @Query("price_peer_show") pricePeerShow: string
+    @Query("price_peer_show") pricePeerShow: string,
+    @Query("total_shows") totalShows: string
   ) {
     const data = await req.file();
     const fileName = `${uuidv7()}${extname(data.filename)}`;
@@ -58,7 +59,8 @@ export class MarketController {
         fileUrl,
         name,
         user_id,
-        pricePeerShow
+        pricePeerShow,
+        totalShows
       );
 
       return reply.status(200).send(prodcut);
@@ -72,6 +74,26 @@ export class MarketController {
     }
   }
 
+  /**
+   * Contorller for get user market data
+   *
+   * @async
+   * @param {FastifyRequest} req
+   * @returns {unknown}
+   */
+  @UseGuards(HeadersGuard)
+  async getAllUserMarketProducts(@Req() req: FastifyRequest) {
+    const user_id = req.user.id;
+
+    return this.marketService.getAllUserMarketProducts(user_id);
+  }
+
+  /**
+   * Contorller for get all market products
+   *
+   * @async
+   * @returns {unknown}
+   */
   @Get('/getMarket')
   async getMarket() {
     return await this.marketService.getMarket();
