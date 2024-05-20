@@ -1,6 +1,6 @@
 import { Link, router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { View, Image, Text, ScrollView } from "react-native";
+import { View, Image, Text, ScrollView, ActivityIndicator } from "react-native";
 import { Button } from "@/components/ui/Button";
 
 export interface IMarket {
@@ -44,9 +44,14 @@ const market = () => {
     const formattedPrice = price.toFixed(7);
     return parseFloat(formattedPrice).toString();
   };
+
+  if(isLoading) {
+    return <ActivityIndicator className="w-[50px] h-[50px]" color='white'/>
+  }
+
   return (
     <ScrollView>
-      <View className="bg-black h-screen grid grid-cols-1 gap-4 p-5 overflow-y-auto">
+      <View className="bg-[#121111] h-screen grid grid-cols-1 gap-4 p-5 overflow-y-auto">
         {data.map((e) => (
           <React.Fragment key={e.content_id}>
             {!imageErrors.includes(e.content_id) && (
@@ -73,7 +78,7 @@ const market = () => {
                 </View>
                 <Button
                   label="Подключить"
-                  onPress={() => router.replace("/")}
+                  onPress={() => router.replace("/(tabs)")}
                 />
               </View>
             )}

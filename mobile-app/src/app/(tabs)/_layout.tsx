@@ -13,7 +13,7 @@ const TabsLayout = () => {
   });
 
   return (
-    <SafeAreaView className="h-screen w-screen">
+    <SafeAreaView className="h-full w-screen">
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: "white",
@@ -22,7 +22,7 @@ const TabsLayout = () => {
             display: "flex",
             justifyContent: "flex-end",
             alignItems: "flex-end",
-            backgroundColor: "black",
+            backgroundColor: "#100F0F",
             position: "absolute",
             left: 0,
             right: 0,

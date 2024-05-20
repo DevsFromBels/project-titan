@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, ActivityIndicator } from "react-native";
 import React from "react";
 import ProfileSettingsWidget from "@/widgets/settings/profile-settings";
 import { router } from "expo-router";
@@ -10,12 +10,16 @@ const settings = () => {
   const { data, loading } = useSettings();
 
 
+  if(loading) {
+  return <ActivityIndicator className='w-[50px] h-[50px] flex justify-center items-center' />
+  }
+
   if (!data?.userSettings.id) {
     return router.replace("/sign-in");
   }
 
   return (
-    <View className="w-screen h-screen mx-auto flex flex-col gap-2 bg-black text-white">
+    <View className="w-screen h-screen mx-auto flex flex-col gap-2 bg-[#121111] text-white">
       <ProfileSettingsWidget
         info={data.profileSettings.info}
         address={data.profileSettings.address}
@@ -26,13 +30,13 @@ const settings = () => {
         email={data?.userSettings.email}
         role={data?.userSettings.role}
       />
-      <View className="border rounded-xl mt-5 p-4 flex flex-col gap-2">
-        <View className="flex gap-2">
-          <Fingerprint />
-          <Text className='text-sm'>Security</Text>
+      <View className="border rounded-xl mt-5 p-4 flex flex-col gap-2 border-white">
+        <View className="flex gap-2 flex-row">
+          <Fingerprint color='white' />
+          <Text className='text-xl text-white'>Security</Text>
         </View>
         <View>
-          <Text>Is Profile Public</Text>
+          <Text className='text-white text-xl'>Is Profile Public</Text>
           <View>{data?.profileSettings.isPublic ? true : false}</View>
         </View>
       </View>

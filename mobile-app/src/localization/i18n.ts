@@ -16,7 +16,10 @@ const translations = {
     notification: "Notification",
     block_name: 'Profile Settings',
     address: 'Address',
-    info: 'Info'
+    info: 'We dont know anything about this user',
+    verifyOtp: 'Verify OTP',
+    registerAt: 'Register At',
+    edit: 'Edit',
   },
   ru: {
     welcome: "Привет",
@@ -31,7 +34,10 @@ const translations = {
     notification: "Уведомления",
     block_name: 'Настройки пользователя',
     address: 'Адрес',
-    info: 'О себе'
+    info: 'Мы ничего не знаем о этом пользователе',
+    verifyOtp: 'Подтвердить OTP',
+    registerAt: 'Зарегистрирован',
+    edit: 'Изменить'
   },
 };
 

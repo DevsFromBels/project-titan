@@ -1,40 +1,42 @@
-import ApolloProviderClient from "@/Provider/ApolloProvider"
-import { useApolloClientDevTools } from "@dev-plugins/apollo-client"
-import "../styles/globals.css"
-import { Slot, Stack, router } from "expo-router"
-import { ApolloClient, InMemoryCache } from "@apollo/client"
-import { StatusBar } from "expo-status-bar"
-import { View } from "react-native"
-import useUser from "@/hooks/use-user"
-import { useEffect } from "react"
+import ApolloProviderClient from "@/Provider/ApolloProvider";
+import { useApolloClientDevTools } from "@dev-plugins/apollo-client";
+import "../styles/globals.css";
+import { Slot, Stack, router } from "expo-router";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { StatusBar } from "expo-status-bar";
+import { ActivityIndicator, View } from "react-native";
+import useUser from "@/hooks/use-user";
+import { useEffect, useLayoutEffect } from "react";
 
 const client = new ApolloClient({
-	uri: process.env.EXPO_PUBLIC_SERVER_URI,
-	cache: new InMemoryCache(),
-})
+  uri: process.env.EXPO_PUBLIC_SERVER_URI,
+  cache: new InMemoryCache(),
+});
 
 const Layout = () => {
-	useApolloClientDevTools(client)
-	const { user, loading } = useUser()
+  useApolloClientDevTools(client);
+  const { user, loading } = useUser();
 
-	useEffect(() => {
-		if (!loading && user) {
-			router.replace("/(tabs)")
-		} else if (!loading && !user) router.replace("/")
-	}, [user, loading])
+  useLayoutEffect(() => {
+    if (!loading && user) {
+      router.replace("/(tabs)");
+    } else if (!loading && !user) {
+      router.replace("/");
+    }
+  }, [user, loading]);
 
-	return (
-		<View className='bg-background'>
-			<Slot />
-			<StatusBar hidden />
-		</View>
-	)
-}
+  return (
+    <View className="bg-[#121111]">
+      <Slot />
+      <StatusBar hidden />
+    </View>
+  );
+};
 
 export default function RootLayout() {
-	return (
-		<ApolloProviderClient>
-			<Layout />
-		</ApolloProviderClient>
-	)
+  return (
+    <ApolloProviderClient>
+      <Layout />
+    </ApolloProviderClient>
+  );
 }
