@@ -6,6 +6,7 @@ import { DateOptionsWithMonth } from "@/constants/date-output";
 import { Badge } from "@/components/ui/Badge";
 import { Pencil } from "lucide-react-native";
 
+
 interface IProfileMainBlockWidget {
   image: string;
   username: string;

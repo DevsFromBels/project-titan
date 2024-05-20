@@ -48,27 +48,35 @@ const WannaMobileWidget = () => {
     hideComponent();
   };
 
-  const handleContinueWithMobile = () => {
+  const handleContinueWithMobile = async () => {
     const appLink = "mobile-app://";
     const userAgent = navigator.userAgent.toLowerCase();
     const isAndroid = userAgent.indexOf("android") > -1;
-    const isIOS =
-      userAgent.indexOf("iphone") > -1 || userAgent.indexOf("ipad") > -1;
-
+    const isIOS = userAgent.indexOf("iphone") > -1 || userAgent.indexOf("ipad") > -1;
+  
     if (isAndroid || isIOS) {
-      window.location.href = appLink;
-
-      router.push("/download");
+      try {
+        const response = await fetch(appLink, { method: 'HEAD' });
+        if (response.ok) {
+          window.location.href = appLink;
+        } else {
+          router.push("/download-apps");
+          handleContinueWithWeb()
+        }
+      } catch (error) {
+        router.push("/download-apps");
+        handleContinueWithWeb()
+      }
     } else {
-      router.push("/");
+      window.location.href = "/download-apps";
     }
   };
+  
 
   if (!isMobile) {
     return null;
   }
 
-  
   return (
     <div
       ref={componentRef}

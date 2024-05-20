@@ -14,7 +14,6 @@ const settings = () => {
   return <ActivityIndicator className='w-[50px] h-[50px] flex justify-center items-center' />
   }
 
-
   if (!data?.userSettings.id) {
     return router.replace("/sign-in");
   }

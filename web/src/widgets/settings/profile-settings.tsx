@@ -4,7 +4,6 @@ import { graphqlClient } from "@/features/graphql/client/gql.setup";
 import { Button } from "@/shared/components/ui/button";
 import { SelectItem } from "@/shared/components/ui/select";
 import { Textarea } from "@/shared/components/ui/textarea";
-import { ProfileSettings } from "@/shared/types/settings.types";
 import { useMutation } from "@apollo/client";
 import {
   Select,
@@ -13,7 +12,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@radix-ui/react-select";
+} from "@/shared/components/ui/select";
 import { SlidersHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
 import React, { useCallback, useState } from "react";
@@ -105,7 +104,7 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
 
   return (
     <div className="border rounded-xl mt-5 p-4 flex flex-col gap-2">
-      <div className="flex gap-2">
+      <div className="flex gap-1">
         <SlidersHorizontal />
         <h1>{settingsProfileTranslation("profile-settings.block-name")}</h1>
       </div>
@@ -124,7 +123,7 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
           info &&
           !updatedInfo?.settingsUpdateUserInfo?.profileSettings.info && (
             <div className="flex justify-between">
-              <p>{info}</p>
+              <p className="text-lg">{info}</p>
               <Button variant="outline" onClick={handleEditInfo}>
                 Edit
               </Button>
@@ -136,7 +135,7 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
               // type="text"
               value={tempInfo}
               onChange={handleInfoChange}
-              className="border rounded-md px-2 py-1 resize-none"
+              className="border rounded-md px-2 py-1 resize-none text-lg"
             />
             <Button
               variant="outline"
@@ -178,7 +177,7 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select a country" />
               </SelectTrigger>
-              <SelectContent className="bg-background border-neutral-800 border rounded-md p-2">
+              <SelectContent>
                 <SelectGroup>
                   <SelectLabel>Country</SelectLabel>
                   <SelectItem value="usa" onClick={() => setTempAddress("usa")}>

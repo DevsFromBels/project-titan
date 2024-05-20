@@ -27,7 +27,7 @@ export class SettingsService {
         info: true,
         isPublic: true,
         address: true,
-        referred_users: true
+        referred_users: true,
       },
     });
 
@@ -35,9 +35,21 @@ export class SettingsService {
       return new BadRequestException(`Profile not found`);
     }
 
+    const avatar = await this.prisma.avatars.findFirst({
+      where: {
+        userId: user.id,
+      },
+    });
+  
+    let avatar_url = '';
+    if (avatar && avatar.url) {
+      avatar_url = avatar.url;
+    }
+
     return {
       userSettings,
-      profileSettings
+      profileSettings,
+      avatar_url
     }
   }
 
