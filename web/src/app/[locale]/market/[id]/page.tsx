@@ -8,10 +8,14 @@ import {
   BreadcrumbSeparator,
   BreadcrumbPage,
 } from "@/shared/components/ui/breadcrumb";
+import { Button } from "@/shared/components/ui/button";
+import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger, DrawerHeader } from "@/shared/components/ui/drawer";
 import { MarketPost } from "@/shared/types/market.types";
+import { Share2Icon, ShareIcon } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { use } from "react";
+import ShareMarketPost from "./shareMarketPost";
 
 interface Params {
   id: string;
@@ -78,7 +82,18 @@ export default function Page({ params }: PageProps) {
         <p>
           Показы: {marketPost.current_shows}/{marketPost.total_shows}
         </p>
-        <SubscribeButton postId={marketPost.content_id}/>
+        <div className="flex items-center gap-2">
+          <SubscribeButton postId={marketPost.content_id}/>
+          <Drawer>
+            <DrawerTrigger className="border w-[50px] h-[50px] p-1 rounded-full flex items-center justify-center"><ShareIcon width="18px" height="18px"/></DrawerTrigger>
+            <DrawerContent className="h-[250px]">
+              <DrawerHeader >
+                <DrawerTitle className="text-center">Поделиться товаром</DrawerTitle>
+              </DrawerHeader>
+              <ShareMarketPost id={marketPost.content_id}/>
+            </DrawerContent>
+          </Drawer>
+        </div>
       </div>
       <div>
         <SimilarProducts post_id={params.id} />

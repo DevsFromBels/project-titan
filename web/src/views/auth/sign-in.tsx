@@ -45,20 +45,20 @@ const SignInPage = () => {
             justify-center
             "
         >
-          <h2 className="flex flex-col text-xl text-center">Sign In</h2>
+          <h2 className="flex flex-col text-xl text-center">Войти</h2>
           <Input
-            placeholder="email"
+            placeholder="электронная почта"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <Input
-            placeholder="password"
+            placeholder="пароль"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button type="submit">Sign In</Button>
+          <Button type="submit">Войти</Button>
         </form>
         {/* <QRCodeSignIn url={qrcode_url} theme={theme}/> */}
       </div>
