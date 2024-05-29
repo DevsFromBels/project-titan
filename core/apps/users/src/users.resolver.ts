@@ -5,6 +5,7 @@ import {
   LoginResponse,
   LogoutResponse,
   RegisterResponse,
+  UserByEmail,
 } from "./types/users.types";
 import { ActivationDto, RegisterDto } from "./dto/user.dto";
 import {
@@ -61,5 +62,10 @@ export class UsersResolver {
   @UseGuards(AuthGuard)
   async LogOutUser(@Context() context: { req: Request }) {
     return this.userService.Logout(context.req);
+  }
+
+  @Query(() => UserByEmail)
+  async getUserByName(@Args("email") email: string) {
+    return this.userService.getUserByEmail(email);
   }
 }

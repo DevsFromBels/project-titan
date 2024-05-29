@@ -7,6 +7,7 @@ import { EmailService } from "./email/email.service";
 import * as bcrypt from "bcrypt";
 import { TokenSender } from "./utils/sendToken";
 import { User } from "@prisma/client";
+import { OmitType } from "@nestjs/graphql";
 
 interface UserData {
   name: string;
@@ -28,12 +29,11 @@ export class UsersService {
    *
    * @async
    * @param {string} userName
-   * @returns {Promise<User>}
    */
-  async getUserByName(userName: string): Promise<User> {
-    const user = await this.prisma.user.findFirst({
+  async getUserByEmail(email: string) {
+    const user = await this.prisma.user.findUnique({
       where: {
-        name: userName,
+        email: email,
       },
     });
 
@@ -41,7 +41,17 @@ export class UsersService {
       throw new BadRequestException("User not found");
     }
 
-    return user;
+    const avatar = await this.prisma.avatars.findFirst({
+      where: {
+        userId: user.id
+      }
+    })
+
+    return {
+      name: user.name,
+      email: user.email,
+      avatar: avatar.url
+    }
   }
 
   /**

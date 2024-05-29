@@ -82,6 +82,7 @@ export class MarketController {
    * @returns {unknown}
    */
   @UseGuards(HeadersGuard)
+  @Get('/get-all-user-market-products')
   async getAllUserMarketProducts(@Req() req: FastifyRequest) {
     const user_id = req.user.id;
 
@@ -89,7 +90,7 @@ export class MarketController {
   }
 
   /**
-   * Contorller for get market products
+   * Controller for get market products
    *
    * @async
    * @returns {unknown}
@@ -97,5 +98,10 @@ export class MarketController {
   @Get("/getMarket")
   async getMarket(@Query("id") id: string) {
     return await this.marketService.getMarket(id);
+  }
+
+  @Get('/get-similar-products')
+  async getSimilarProducts(@Query("content_id") content_id: string) {
+    return this.marketService.findSimilarProducts(content_id);
   }
 }

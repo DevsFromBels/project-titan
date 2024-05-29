@@ -1,4 +1,4 @@
-import { ObjectType, Field, Directive } from '@nestjs/graphql';
+import { ObjectType, Field, Directive } from "@nestjs/graphql";
 
 @ObjectType()
 export class User {
@@ -19,4 +19,16 @@ export class User {
 
   @Field()
   createdAt: Date;
+}
+
+@ObjectType()
+export class GetUserByName {
+  @Field()
+  name: string;
+
+  @Field()
+  email: string;
+
+  @Field()
+  avatar: string;
 }
