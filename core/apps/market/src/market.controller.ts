@@ -12,7 +12,7 @@ import * as util from "util";
 import { FastifyReply, FastifyRequest } from "fastify";
 import * as fs from "fs";
 import { MarketService } from "./market.service";
-import { extname, join } from "path";``
+import { extname, join } from "path";
 import { uuidv7 } from "uuidv7";
 
 import { HeadersGuard } from "./auth.guard";
@@ -89,13 +89,13 @@ export class MarketController {
   }
 
   /**
-   * Contorller for get all market products
+   * Contorller for get market products
    *
    * @async
    * @returns {unknown}
    */
-  @Get('/getMarket')
-  async getMarket() {
-    return await this.marketService.getMarket();
+  @Get("/getMarket")
+  async getMarket(@Query("id") id: string) {
+    return await this.marketService.getMarket(id);
   }
 }
