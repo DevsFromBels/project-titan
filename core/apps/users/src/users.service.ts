@@ -6,6 +6,7 @@ import { ActivationDto, LoginDto, RegisterDto } from "./dto/user.dto";
 import { EmailService } from "./email/email.service";
 import * as bcrypt from "bcrypt";
 import { TokenSender } from "./utils/sendToken";
+import { User } from "@prisma/client";
 
 interface UserData {
   name: string;
@@ -19,8 +20,29 @@ export class UsersService {
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
-    private readonly emailService: EmailService,
+    private readonly emailService: EmailService
   ) {}
+
+  /**
+   * getUserByName
+   *
+   * @async
+   * @param {string} userName
+   * @returns {Promise<User>}
+   */
+  async getUserByName(userName: string): Promise<User> {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        name: userName,
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestException("User not found");
+    }
+
+    return user;
+  }
 
   /**
    * Register a user on the system.
@@ -47,11 +69,11 @@ export class UsersService {
       },
     });
 
-    if(existName) {
+    if (existName) {
       throw new BadRequestException("User already exist with this username!");
     }
 
-    if(existName) {
+    if (existName) {
       throw new BadRequestException("User already exist with this username!");
     }
 
@@ -104,7 +126,7 @@ export class UsersService {
       {
         secret: this.configService.get<string>("ACTIVATION_SECRET"),
         expiresIn: "5m",
-      },
+      }
     );
 
     return { token, activationCode };
@@ -137,8 +159,8 @@ export class UsersService {
     const existName = await this.prisma.user.findUnique({
       where: {
         name,
-      }
-    })
+      },
+    });
 
     const existUser = await this.prisma.user.findUnique({
       where: {
@@ -146,7 +168,7 @@ export class UsersService {
       },
     });
 
-    if(existName) {
+    if (existName) {
       throw new BadRequestException("User already exist with this username!");
     }
 
@@ -168,16 +190,16 @@ export class UsersService {
       data: {
         info: "",
         isPublic: true,
-        userId: user.id
-      }
-    })
+        userId: user.id,
+      },
+    });
 
     const avatar = this.prisma.avatars.create({
       data: {
         url: "",
-        userId: user.id
-      }
-    })
+        userId: user.id,
+      },
+    });
 
     return { user, response, profile, avatar };
   }
@@ -225,8 +247,8 @@ export class UsersService {
     const accessToken = req.accesstoken;
     const refreshToken = req.refreshtoken;
 
-    console.log(accessToken)
-    console.log(refreshToken)
+    console.log(accessToken);
+    console.log(refreshToken);
 
     return { user, refreshToken, accessToken };
   }
@@ -258,7 +280,7 @@ export class UsersService {
    */
   async comparePassword(
     password: string,
-    hashedPassword: string,
+    hashedPassword: string
   ): Promise<boolean> {
     return await bcrypt.compare(password, hashedPassword);
   }
