@@ -1,0 +1,78 @@
+import ProfileMarketSkeleton from "@/shared/components/maleculas/skeletons/profile-market-skeleton";
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from "@/shared/components/ui/breadcrumb";
+import { MarketPost } from "@/shared/types/market.types";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import { use } from "react";
+
+interface Params {
+  id: string;
+}
+
+interface PageProps {
+  params: Params;
+}
+
+const SimilarProducts = dynamic(() => import("./SimilarProducts"), {
+  ssr: false,
+  loading: () => <ProfileMarketSkeleton/>,
+});
+
+async function GetSingleProduct(post_id: string) {
+  const res: MarketPost = await fetch(
+    `https://market-api.titanproject.top/getMarket?id=${post_id}`,
+    {
+      method: "GET",
+      next: {
+        revalidate: 1500,
+      },
+    }
+  ).then((res) => res.json());
+
+  return res;
+}
+
+export default function Page({ params }: PageProps) {
+  const marketPost = use(GetSingleProduct(params.id));
+
+  return (
+    <div>
+      <Breadcrumb className="p-2 text-lg">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/market">Рынок</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{marketPost.name}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <div className="w-screen lg:w-[calc(100vw_-_250px)] flex flex-col justify-center items-center gap-1 mt-2">
+        <Image
+          className="rounded select-none w-[250px] h-[250px]"
+          src={`https://market-api.titanproject.top${marketPost.content}`}
+          width={250}
+          height={250}
+          draggable={false}
+          alt=""
+        />
+
+        <h1 className="text-lg">{marketPost.name}</h1>
+        <p>
+          Показы: {marketPost.current_shows}/{marketPost.total_shows}
+        </p>
+      </div>
+      <div>
+        <SimilarProducts post_id={params.id} />
+      </div>
+    </div>
+  );
+}
