@@ -1,7 +1,6 @@
 import { Link, router, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { View, Image, Text, ScrollView, ActivityIndicator } from "react-native";
-import { View, Image, Text, ScrollView, ActivityIndicator } from "react-native";
 import { Button } from "@/components/ui/Button";
 
 export interface IMarket {
@@ -56,43 +55,44 @@ const market = () => {
   return (
     <ScrollView>
       <View className="bg-[#121111] h-screen grid grid-cols-1 gap-4 p-5 overflow-y-auto">
-      <View className="bg-[#121111] h-screen grid grid-cols-1 gap-4 p-5 overflow-y-auto">
-        {data.map((e) => (
-          <React.Fragment key={e.content_id}>
-            {!imageErrors.includes(e.content_id) && (
-              <View className="w-full h-auto max-h-[430px] sm:max-w-[400px] sm:w-[250px] break-all flex flex-col gap-2 border-white border rounded-xl p-2">
-                <View className="w-full h-[200px]">
-                  <Image
-                    className="w-full h-full object-cover rounded"
-                    alt="Image"
-                    source={{
-                      uri: `https://market-api.titanproject.top${e.content}`,
+        <View className="bg-[#121111] h-screen grid grid-cols-1 gap-4 p-5 overflow-y-auto">
+          {data.map((e) => (
+            <React.Fragment key={e.content_id}>
+              {!imageErrors.includes(e.content_id) && (
+                <View className="w-full h-auto max-h-[430px] sm:max-w-[400px] sm:w-[250px] break-all flex flex-col gap-2 border-white border rounded-xl p-2">
+                  <View className="w-full h-[200px]">
+                    <Image
+                      className="w-full h-full object-cover rounded"
+                      alt="Image"
+                      source={{
+                        uri: `https://market-api.titanproject.top${e.content}`,
+                      }}
+                      onError={() => handleImageError(e.content_id)}
+                    />
+                  </View>
+                  <View className="flex flex-col gap-2 p-2">
+                    <Text className="w-[200px] text-ellipsis overflow-hidden text-white">
+                      Название:
+                      <Text className="text-white">{e.name}</Text>
+                    </Text>
+                    <Text className="w-[200px] text-ellipsis overflow-hidden text-white">
+                      Цена за показ:
+                      <Text className="text-white ">
+                        {formatPrice(e.price_for_show)}$
+                      </Text>
+                    </Text>
+                  </View>
+                  <Button
+                    label="Подключить"
+                    onPress={() => {
+                      router.push(`/(tabs)/market/${e.content_id}`);
                     }}
-                    onError={() => handleImageError(e.content_id)}
                   />
                 </View>
-                <View className="flex flex-col gap-2 p-2">
-                  <Text className="w-[200px] text-ellipsis overflow-hidden text-white">
-                    Название:
-                    <Text className="text-white">{e.name}</Text>
-                  </Text>
-                  <Text className="w-[200px] text-ellipsis overflow-hidden text-white">
-                    Цена за показ:
-                    <Text className="text-white ">
-                      {formatPrice(e.price_for_show)}$
-                    </Text>
-                  </Text>
-                </View>
-                <Button
-                  label="Подключить"
-                  onPress={() => {
-                    router.push(`/(tabs)/market/${e.content_id}`);
-                  }}
-                />
-              </View>
-            )}
-          </React.Fragment>
-        ))}
+              )}
+            </React.Fragment>
+          ))}
+        </View>
       </View>
     </ScrollView>
   );
