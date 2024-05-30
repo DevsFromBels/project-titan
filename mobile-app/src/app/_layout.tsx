@@ -6,7 +6,7 @@ import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator, View } from "react-native";
 import useUser from "@/hooks/use-user";
-import { useEffect, useLayoutEffect } from "react";
+import { useEffect, useState } from "react";
 
 const client = new ApolloClient({
   uri: process.env.EXPO_PUBLIC_SERVER_URI,
@@ -17,7 +17,7 @@ const Layout = () => {
   useApolloClientDevTools(client);
   const { user, loading } = useUser();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!loading && user) {
       router.replace("/(tabs)");
     } else if (!loading && !user) {
@@ -25,18 +25,16 @@ const Layout = () => {
     }
   }, [user, loading]);
 
-  return (
-    <View className="bg-[#121111]">
-      <Slot />
-      <StatusBar hidden />
-    </View>
-  );
+  return <Slot />;
 };
 
 export default function RootLayout() {
   return (
     <ApolloProviderClient>
-      <Layout />
+      <View className="bg-[#121111]">
+        <Layout />
+        <StatusBar hidden />
+      </View>
     </ApolloProviderClient>
   );
 }

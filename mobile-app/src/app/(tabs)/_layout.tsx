@@ -2,7 +2,7 @@ import { Link, Tabs, router } from "expo-router";
 import { SafeAreaView, Text } from "react-native";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { i18n } from "@/localization/i18n";
-import { Home, Plus, CircleDollarSignIcon, Bell, Settings } from "lucide-react-native";
+import { Home, Plus, CircleDollarSignIcon, Bell, Settings, Search } from "lucide-react-native";
 import { GET_SETTIGNS } from "@/graphql/actions/settings/get-settings";
 import { IGetSettings } from "@/types/settings.types";
 import { useQuery } from "@apollo/client";
@@ -53,11 +53,11 @@ const TabsLayout = () => {
           }}
         />
         <Tabs.Screen
-          name="notification"
+          name="search"
           options={{
-            title: `${i18n.t("notification")}`,
+            title: `${i18n.t("search")}`,
             tabBarIcon: ({ color }) => (
-              <Bell className="w-[20px] h-[20px]" color={color} />
+              <Search className="w-[20px] h-[20px]" color={color} />
             ),
           }}
         />

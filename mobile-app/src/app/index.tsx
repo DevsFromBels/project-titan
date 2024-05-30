@@ -1,12 +1,8 @@
 import { View, Image, Pressable, Text, ActivityIndicator } from "react-native";
 import { router } from "expo-router";
 import { i18n } from "@/localization/i18n";
-import useUser from "@/hooks/use-user";
-import { useLayoutEffect } from "react";
 
 export default function index() {
-
-
   return (
     <View className="bg-[#121111]">
       <View className="flex mt-[150] items-center h-screen w-screen absolute">
@@ -34,3 +30,4 @@ export default function index() {
       </View>
     </View>
   );
+}

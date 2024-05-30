@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Input } from "../../../components/ui/Input";
 import { View, Text, TouchableOpacity, Pressable, ActivityIndicator } from "react-native";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native";
 import { i18n } from "@/localization/i18n";
 import { MoveLeft } from "lucide-react-native";
@@ -96,6 +96,11 @@ const SignInPage = () => {
         >
           <Text className="text-2xl text-black">{i18n.t("signin")}</Text>
         </Pressable>
+      </View>
+      <View className="flex justify-center items-center mt-[90px] absolute h-screen w-screen">
+        <Text className="text-white">
+          <Link href='/ch-pass'>Забыли пароль?</Link>
+        </Text>
       </View>
     </SafeAreaView>
   );

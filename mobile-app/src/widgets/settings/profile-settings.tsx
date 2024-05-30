@@ -4,10 +4,10 @@ import { graphqlClient } from "@/graphql/gql.setup";
 import { Button } from "@/components/ui/Button";
 import { useMutation } from "@apollo/client";
 import { SlidersHorizontal } from "lucide-react-native";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { i18n } from "@/localization/i18n";
-import { TextArea } from "native-base";
 import { View, Text } from "react-native";
+import { Input } from "@/components/ui/Input";
 
 interface IProfileSettingsWidget {
   info: string;
@@ -91,15 +91,17 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
   return (
     <View className="border rounded-xl mt-5 p-4 flex flex-col gap-2 border-white">
       <View className="flex gap-2 flex-row">
-        <SlidersHorizontal color='white' />
+        <SlidersHorizontal color="white" />
         <Text className="text-xl text-white">{i18n.t("block_name")}</Text>
       </View>
       <View className="flex flex-col gap-2">
-        <Text className='text-white text-xl'>{i18n.t("info")}</Text>
+        <Text className="text-white text-xl">{i18n.t("info")}</Text>
         {!editingInfo &&
           updatedInfo?.settingsUpdateUserInfo?.profileSettings.info && (
             <View className="flex justify-between">
-              <Text className='text-white'>{updatedInfo.settingsUpdateUserInfo.profileSettings.info}</Text>
+              <Text className="text-white">
+                {updatedInfo.settingsUpdateUserInfo.profileSettings.info}
+              </Text>
               <Button label="Edit" onPress={handleEditInfo} />
             </View>
           )}
@@ -107,13 +109,13 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
           info &&
           !updatedInfo?.settingsUpdateUserInfo?.profileSettings.info && (
             <View className="flex justify-between">
-              <Text className='text-white'>{info}</Text>
+              <Text className="text-white">{info}</Text>
               <Button label="Edit" onPress={handleEditInfo} />
             </View>
           )}
         {editingInfo && (
           <View className="flex flex-col gap-2">
-            <TextArea
+            <Input
               value={tempInfo}
               onChange={handleInfoChange}
               style={{
@@ -124,7 +126,6 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
                 paddingTop: 4,
                 paddingBottom: 4,
               }}
-              autoCompleteType={undefined}
             />
             <Button
               label={loadingUpdateInfo ? "Saving..." : "Save"}

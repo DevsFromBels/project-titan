@@ -1,4 +1,4 @@
-import { Link, router } from "expo-router";
+import { Link, router, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { View, Image, Text, ScrollView, ActivityIndicator } from "react-native";
 import { Button } from "@/components/ui/Button";
@@ -10,6 +10,9 @@ export interface IMarket {
   link: string;
   user_id: string;
   price_for_show: number;
+  total_shows: number;
+  current_shows: number;
+  category: string;
 }
 
 async function getData() {
@@ -45,8 +48,8 @@ const market = () => {
     return parseFloat(formattedPrice).toString();
   };
 
-  if(isLoading) {
-    return <ActivityIndicator className="w-[50px] h-[50px]" color='white'/>
+  if (isLoading) {
+    return <ActivityIndicator className="w-[50px] h-[50px]" color="white" />;
   }
 
   return (
@@ -73,12 +76,16 @@ const market = () => {
                   </Text>
                   <Text className="w-[200px] text-ellipsis overflow-hidden text-white">
                     Цена за показ:
-                    <Text className="text-white ">{formatPrice(e.price_for_show)}$</Text>
+                    <Text className="text-white ">
+                      {formatPrice(e.price_for_show)}$
+                    </Text>
                   </Text>
                 </View>
                 <Button
                   label="Подключить"
-                  onPress={() => router.replace("/(tabs)")}
+                  onPress={() => {
+                    router.push(`/(tabs)/market/${e.content_id}`);
+                  }}
                 />
               </View>
             )}

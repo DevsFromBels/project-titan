@@ -20,6 +20,7 @@ const translations = {
     verifyOtp: 'Verify OTP',
     registerAt: 'Register At',
     edit: 'Edit',
+    search: 'Search'
   },
   ru: {
     welcome: "Привет",
@@ -37,7 +38,8 @@ const translations = {
     info: 'Мы ничего не знаем о этом пользователе',
     verifyOtp: 'Подтвердить OTP',
     registerAt: 'Зарегистрирован',
-    edit: 'Изменить'
+    edit: 'Изменить',
+    search: 'Поиск'
   },
 };
 
