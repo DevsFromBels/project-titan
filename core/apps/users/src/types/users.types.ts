@@ -1,5 +1,5 @@
 import { ObjectType, Field } from "@nestjs/graphql";
-import { User } from "../entities/user.entity";
+import { GetUserByName, User } from "../entities/user.entity";
 
 @ObjectType()
 export class ErrorType {
@@ -48,4 +48,10 @@ export class LogoutResponse {
   @Field()
   message: string;
 }
+
+export class UserByEmail {
+  @Field(() => GetUserByName)
+  user: GetUserByName | any;
+}
+
 

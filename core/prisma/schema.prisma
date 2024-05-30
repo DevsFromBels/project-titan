@@ -47,12 +47,15 @@ model User {
 }
 
 model Market {
-  content_id     String @id @default(uuid())
+  content_id     String  @id @default(uuid())
   content        String
   name           String
   link           String
   user_id        String
   price_for_show Float
+  total_shows    Int
+  current_shows  Int
+  category       String?
 }
 
 model Notification {

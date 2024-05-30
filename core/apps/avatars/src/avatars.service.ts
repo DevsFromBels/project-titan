@@ -11,6 +11,14 @@ export class AvatarsService {
     return 'Avatars service of https://tianproject.top';
   }
 
+  /**
+   * Just method for update an user avatar
+   *
+   * @async
+   * @param {string} fileUrl
+   * @param {string} userID
+   * @returns {unknown}
+   */
   async uploadUserAvatar(fileUrl: string, userID: string){
     const user = await this.prisma.user.findFirst({
       where: {

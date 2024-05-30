@@ -3,7 +3,13 @@ import { LOGIN_USER } from "../../../graphql/actions/login.action";
 import { useState, useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Input } from "../../../components/ui/Input";
-import { View, Text, TouchableOpacity, Pressable, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native";
 import { i18n } from "@/localization/i18n";
@@ -57,7 +63,11 @@ const SignInPage = () => {
   if (loading) {
     return (
       <View className="h-screen bg-[#121111] flex justify-center items-center">
-        <ActivityIndicator className='w-[50px] h-[50px]' size='large' color='white'/>
+        <ActivityIndicator
+          className="w-[50px] h-[50px]"
+          size="large"
+          color="white"
+        />
       </View>
     );
   }
@@ -99,12 +109,11 @@ const SignInPage = () => {
       </View>
       <View className="flex justify-center items-center mt-[90px] absolute h-screen w-screen">
         <Text className="text-white">
-          <Link href='/ch-pass'>Забыли пароль?</Link>
+          <Link href="/ch-pass">Забыли пароль?</Link>
         </Text>
       </View>
     </SafeAreaView>
   );
 };
-
 
 export default SignInPage;

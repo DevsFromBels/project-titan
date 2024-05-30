@@ -12,8 +12,13 @@ const client = new ApolloClient({
   uri: process.env.EXPO_PUBLIC_SERVER_URI,
   cache: new InMemoryCache(),
 });
+  uri: process.env.EXPO_PUBLIC_SERVER_URI,
+  cache: new InMemoryCache(),
+});
 
 const Layout = () => {
+  useApolloClientDevTools(client);
+  const { user, loading } = useUser();
   useApolloClientDevTools(client);
   const { user, loading } = useUser();
 

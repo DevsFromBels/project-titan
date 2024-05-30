@@ -39,7 +39,8 @@ export class MarketController {
     @Req() req: FastifyRequest,
     @Res() reply: FastifyReply,
     @Query("name") name: string,
-    @Query("price_peer_show") pricePeerShow: string
+    @Query("price_peer_show") pricePeerShow: string,
+    @Query("total_shows") totalShows: string
   ) {
     const data = await req.file();
     const fileName = `${uuidv7()}${extname(data.filename)}`;
@@ -58,7 +59,8 @@ export class MarketController {
         fileUrl,
         name,
         user_id,
-        pricePeerShow
+        pricePeerShow,
+        totalShows
       );
 
       return reply.status(200).send(prodcut);
@@ -72,8 +74,34 @@ export class MarketController {
     }
   }
 
-  @Get('/getMarket')
-  async getMarket() {
-    return await this.marketService.getMarket();
+  /**
+   * Contorller for get user market data
+   *
+   * @async
+   * @param {FastifyRequest} req
+   * @returns {unknown}
+   */
+  @UseGuards(HeadersGuard)
+  @Get('/get-all-user-market-products')
+  async getAllUserMarketProducts(@Req() req: FastifyRequest) {
+    const user_id = req.user.id;
+
+    return this.marketService.getAllUserMarketProducts(user_id);
+  }
+
+  /**
+   * Controller for get market products
+   *
+   * @async
+   * @returns {unknown}
+   */
+  @Get("/getMarket")
+  async getMarket(@Query("id") id: string) {
+    return await this.marketService.getMarket(id);
+  }
+
+  @Get('/get-similar-products')
+  async getSimilarProducts(@Query("content_id") content_id: string) {
+    return this.marketService.findSimilarProducts(content_id);
   }
 }

@@ -6,6 +6,13 @@ import { Profile, UserProfile } from "./entities/profile.entitie";
 export class ProfileService {
   constructor(private prisma: PrismaService) {}
 
+  /**
+   * Return user profile from user id
+   *
+   * @async
+   * @param {string} userId
+   * @returns {Promise<UserProfile>}
+   */
   async getProfile(userId: string): Promise<UserProfile> {
     const user = await this.prisma.user.findUnique({
       where: {
@@ -43,6 +50,14 @@ export class ProfileService {
   }
   
 
+  /**
+   * Searching profile with public user profile's
+   *
+   * @async
+   * @param {string} userName
+   * @param {?number} [limit]
+   * @returns {Promise<{ users: Profile[]; isPublic: boolean[] | null }>}
+   */
   async searchUserProfile(
     userName: string,
     limit?: number
@@ -69,6 +84,14 @@ export class ProfileService {
     };
   }
 
+/**
+ * For admin panel get all users profile's
+ *
+ * @async
+ * @param {string} limit
+ * @param {?number} [page]
+ * @returns {Promise<{ users: Profile[] }>}
+ */
 async getAllUsersProfiles(limit: string, page?: number): Promise<{ users: Profile[] }> {
   const users = await this.prisma.user.findMany({
     take: Number(limit),

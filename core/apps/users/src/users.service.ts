@@ -6,6 +6,8 @@ import { ActivationDto, LoginDto, RegisterDto } from "./dto/user.dto";
 import { EmailService } from "./email/email.service";
 import * as bcrypt from "bcrypt";
 import { TokenSender } from "./utils/sendToken";
+import { User } from "@prisma/client";
+import { OmitType } from "@nestjs/graphql";
 
 interface UserData {
   name: string;
@@ -19,9 +21,47 @@ export class UsersService {
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
-    private readonly emailService: EmailService,
+    private readonly emailService: EmailService
   ) {}
 
+  /**
+   * getUserByName
+   *
+   * @async
+   * @param {string} userName
+   */
+  async getUserByEmail(email: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestException("User not found");
+    }
+
+    const avatar = await this.prisma.avatars.findFirst({
+      where: {
+        userId: user.id
+      }
+    })
+
+    return {
+      name: user.name,
+      email: user.email,
+      avatar: avatar.url
+    }
+  }
+
+  /**
+   * Register a user on the system.
+   *
+   * @async
+   * @param {RegisterDto} registerDto
+   * @param {Response} response
+   * @returns {unknown}
+   */
   async register(registerDto: RegisterDto, response: Response) {
     const { name, email, password } = registerDto;
     const id = name.toLowerCase().trim();
@@ -39,11 +79,11 @@ export class UsersService {
       },
     });
 
-    if(existName) {
+    if (existName) {
       throw new BadRequestException("User already exist with this username!");
     }
 
-    if(existName) {
+    if (existName) {
       throw new BadRequestException("User already exist with this username!");
     }
 
@@ -78,6 +118,13 @@ export class UsersService {
     return { activation_token, response };
   }
 
+  /**
+   * Create activation Token for comfirm an email address
+   *
+   * @async
+   * @param {UserData} user
+   * @returns {unknown}
+   */
   async createActivationToken(user: UserData) {
     const activationCode = Math.floor(100000 + Math.random() * 9000).toString();
 
@@ -89,13 +136,21 @@ export class UsersService {
       {
         secret: this.configService.get<string>("ACTIVATION_SECRET"),
         expiresIn: "5m",
-      },
+      }
     );
 
     return { token, activationCode };
   }
 
-  async actiivateUser(activationDto: ActivationDto, response: Response) {
+  /**
+   * Activating user account with email address
+   *
+   * @async
+   * @param {ActivationDto} activationDto
+   * @param {Response} response
+   * @returns {unknown}
+   */
+  async activateUser(activationDto: ActivationDto, response: Response) {
     const { activationToken, activationCode } = activationDto;
 
     const newUser: { user: UserData; activationCode: string } =
@@ -114,8 +169,8 @@ export class UsersService {
     const existName = await this.prisma.user.findUnique({
       where: {
         name,
-      }
-    })
+      },
+    });
 
     const existUser = await this.prisma.user.findUnique({
       where: {
@@ -123,7 +178,7 @@ export class UsersService {
       },
     });
 
-    if(existName) {
+    if (existName) {
       throw new BadRequestException("User already exist with this username!");
     }
 
@@ -145,21 +200,27 @@ export class UsersService {
       data: {
         info: "",
         isPublic: true,
-        userId: user.id
-      }
-    })
+        userId: user.id,
+      },
+    });
 
     const avatar = this.prisma.avatars.create({
       data: {
-        public: true,
         url: "",
-        userId: user.id
-      }
-    })
+        userId: user.id,
+      },
+    });
 
     return { user, response, profile, avatar };
   }
 
+  /**
+   * Login user to the system
+   *
+   * @async
+   * @param {LoginDto} loginDto
+   * @returns {unknown}
+   */
   async Login(loginDto: LoginDto) {
     const { email, password } = loginDto;
 
@@ -184,17 +245,31 @@ export class UsersService {
     }
   }
 
+  /**
+   * Get from JWT tokens a user
+   *
+   * @async
+   * @param {*} req
+   * @returns {unknown}
+   */
   async getLoggedInUser(req: any) {
     const user = req.user;
     const accessToken = req.accesstoken;
     const refreshToken = req.refreshtoken;
 
-    console.log(accessToken)
-    console.log(refreshToken)
+    console.log(accessToken);
+    console.log(refreshToken);
 
     return { user, refreshToken, accessToken };
   }
 
+  /**
+   * Logout user from JWT token
+   *
+   * @async
+   * @param {*} req
+   * @returns {unknown}
+   */
   async Logout(req: any) {
     req.user = null;
     req.accesstoken = null;
@@ -205,9 +280,17 @@ export class UsersService {
     };
   }
 
+  /**
+   * Compared password from data get's and server db data
+   *
+   * @async
+   * @param {string} password
+   * @param {string} hashedPassword
+   * @returns {Promise<boolean>}
+   */
   async comparePassword(
     password: string,
-    hashedPassword: string,
+    hashedPassword: string
   ): Promise<boolean> {
     return await bcrypt.compare(password, hashedPassword);
   }

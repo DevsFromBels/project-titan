@@ -4,11 +4,13 @@ import { Slider } from "@/shared/components/ui/slider";
 import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
 import Cookies from "js-cookie";
+import { useRouter } from "@/navigation";
 
 const Page = () => {
   const [sliderValue, setSliderValue] = useState<number>(50000);
   const [adsName, setAdsName] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const router = useRouter()
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -34,11 +36,15 @@ const Page = () => {
       }
     );
 
-    console.log(response.json());
     setFile(null);
     setSliderValue(50000);
     setAdsName("");
-    console.log("Form submitted with slider value:", sliderValue);
+
+    if(response.ok) {
+      router.push("/market")
+    }
+    
+    // console.log("Form submitted with slider value:", sliderValue);
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {

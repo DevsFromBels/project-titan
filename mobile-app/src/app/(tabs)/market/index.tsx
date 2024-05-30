@@ -1,6 +1,7 @@
 import { Link, router, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { View, Image, Text, ScrollView, ActivityIndicator } from "react-native";
+import { View, Image, Text, ScrollView, ActivityIndicator } from "react-native";
 import { Button } from "@/components/ui/Button";
 
 export interface IMarket {
@@ -54,6 +55,7 @@ const market = () => {
 
   return (
     <ScrollView>
+      <View className="bg-[#121111] h-screen grid grid-cols-1 gap-4 p-5 overflow-y-auto">
       <View className="bg-[#121111] h-screen grid grid-cols-1 gap-4 p-5 overflow-y-auto">
         {data.map((e) => (
           <React.Fragment key={e.content_id}>
