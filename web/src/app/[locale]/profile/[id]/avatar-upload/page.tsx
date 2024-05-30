@@ -76,7 +76,7 @@ export default function Page() {
   };
 
   return (
-    <div className="w-[95%] m-auto flex flex-col justify-center items-center">
+    <div className="relative w-[95%] m-auto flex flex-col justify-center items-center">
       {showCropper && (
         <div {...getRootProps()} className="dropzone">
           <Input {...getInputProps()} />

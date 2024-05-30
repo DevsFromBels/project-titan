@@ -51,7 +51,7 @@ const Page = () => {
                 </p>
               </div>
               <Button asChild>
-                <Link href="/">Подключить</Link>
+                <Link href={`/market/${e.content_id}`}>Подключить</Link>
               </Button>
             </div>
           </React.Fragment>

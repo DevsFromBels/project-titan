@@ -25,7 +25,7 @@ const Page = () => {
     const refreshToken = Cookies.get("refresh_token");
 
     const response = await fetch(
-      `https://market-api.titanproject.top/create?name=${adsName}&price_peer_show=${price_peer_show}`,
+      `https://market-api.titanproject.top/create?name=${adsName}&price_peer_show=${price_peer_show}&total_shows=${sliderValue}`,
       {
         method: "POST",
         body: formData,

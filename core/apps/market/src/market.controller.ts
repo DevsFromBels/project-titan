@@ -14,6 +14,8 @@ import * as fs from "fs";
 import { MarketService } from "./market.service";
 import { extname, join } from "path";
 import { uuidv7 } from "uuidv7";
+import sharp from 'sharp';
+
 
 import { HeadersGuard } from "./auth.guard";
 const pump = util.promisify(pipeline);
@@ -48,44 +50,48 @@ export class MarketController {
     const filePath = join(uploadDir, fileName);
     try {
       const user_id = req.user.id;
-
+  
       if (!fs.existsSync(uploadDir)) {
         fs.mkdirSync(uploadDir, { recursive: true });
       }
       await pump(data.file, fs.createWriteStream(filePath));
-      const fileUrl = `/uploads/market/${fileName}`;
-
-      const prodcut = await this.marketService.createProduct(
+  
+      // Конвертация изображения в WebP
+      const webpPath = join(uploadDir, `${fileName}.webp`);
+      await sharp(filePath)
+       .webp({ quality: 80 }) // Настройка качества изображения
+       .toFile(webpPath); // Сохранение результата
+  
+      const fileUrl = `/uploads/market/${fileName}.webp`;
+  
+      const product = await this.marketService.createProduct(
         fileUrl,
         name,
         user_id,
         pricePeerShow,
         totalShows
       );
-
-      return reply.status(200).send(prodcut);
+  
+      return reply.status(200).send(product);
     } catch (err) {
       if (data.file.truncated) {
-        // Если файл был обрезан из-за превышения лимита размера
         reply.send("Error occurred");
       } else {
-        reply.status(500).send(err._message);
+        reply.status(500).send(err.message);
       }
     }
   }
+  
 
   /**
-   * Contorller for get user market data
+   * Controller for get user market data
    *
    * @async
-   * @param {FastifyRequest} req
+   * @param {string} user_id
    * @returns {unknown}
    */
-  @UseGuards(HeadersGuard)
   @Get('/get-all-user-market-products')
-  async getAllUserMarketProducts(@Req() req: FastifyRequest) {
-    const user_id = req.user.id;
-
+  async getAllUserMarketProducts(@Query("user_id") user_id: string) {
     return this.marketService.getAllUserMarketProducts(user_id);
   }
 
