@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService, JwtVerifyOptions } from "@nestjs/jwt";
 import { PrismaService } from "../../../prisma/prisma.service";
@@ -43,14 +43,56 @@ export class UsersService {
 
     const avatar = await this.prisma.avatars.findFirst({
       where: {
-        userId: user.id
-      }
-    })
+        userId: user.id,
+      },
+    });
 
     return {
       name: user.name,
       email: user.email,
-      avatar: avatar.url
+      avatar: avatar.url,
+    };
+  }
+
+  async sendResetPasswordEmail(email: string) {
+    const activationCode = Math.floor(100000 + Math.random() * 9000).toString();
+    const token = this.jwtService.sign(
+      { email, activationCode },
+      {
+        secret: this.configService.get<string>("RESET_PASSWORD_SECRET"),
+        expiresIn: "60m",
+      }
+    );
+    await this.emailService.sendMail({
+      email,
+      subject: "Reset Your Password",
+      template: "./reset-password-mail",
+      name: "Your App Name",
+      activationCode,
+    });
+  }
+
+  async changePassword(
+    resetToken: string,
+    newPassword: string
+  ): Promise<boolean> {
+    try {
+      const decoded = this.jwtService.verify(resetToken);
+      const user = await this.prisma.user.findUnique({
+        where: { email: decoded.email },
+      });
+      if (!user) {
+        throw new NotFoundException("User not found.");
+      }
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      await this.prisma.user.update({
+        where: { email: decoded.email },
+        data: { password: hashedPassword },
+      });
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
     }
   }
 

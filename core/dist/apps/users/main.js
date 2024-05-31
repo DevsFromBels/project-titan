@@ -122,7 +122,7 @@ exports.EmailModule = EmailModule = __decorate([
                         },
                     },
                     defaults: {
-                        from: "TITAN Finance",
+                        from: "TITAN Project",
                     },
                     template: {
                         dir: (0, path_1.resolve)(__dirname, `${process.cwd()}/email-templates`),
@@ -207,7 +207,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.User = void 0;
+exports.GetUserByName = exports.User = void 0;
 const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 let User = class User {
 };
@@ -239,6 +239,24 @@ __decorate([
 exports.User = User = __decorate([
     (0, graphql_1.ObjectType)()
 ], User);
+let GetUserByName = class GetUserByName {
+};
+exports.GetUserByName = GetUserByName;
+__decorate([
+    (0, graphql_1.Field)(),
+    __metadata("design:type", String)
+], GetUserByName.prototype, "name", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    __metadata("design:type", String)
+], GetUserByName.prototype, "email", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    __metadata("design:type", String)
+], GetUserByName.prototype, "avatar", void 0);
+exports.GetUserByName = GetUserByName = __decorate([
+    (0, graphql_1.ObjectType)()
+], GetUserByName);
 
 
 /***/ }),
@@ -348,9 +366,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a, _b;
+var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.LogoutResponse = exports.LoginResponse = exports.ActivationResponse = exports.RegisterResponse = exports.ErrorType = void 0;
+exports.UserByEmail = exports.LogoutResponse = exports.LoginResponse = exports.ActivationResponse = exports.RegisterResponse = exports.ErrorType = void 0;
 const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 const user_entity_1 = __webpack_require__(/*! ../entities/user.entity */ "./apps/users/src/entities/user.entity.ts");
 let ErrorType = class ErrorType {
@@ -427,6 +445,13 @@ __decorate([
 exports.LogoutResponse = LogoutResponse = __decorate([
     (0, graphql_1.ObjectType)()
 ], LogoutResponse);
+class UserByEmail {
+}
+exports.UserByEmail = UserByEmail;
+__decorate([
+    (0, graphql_1.Field)(() => user_entity_1.GetUserByName),
+    __metadata("design:type", Object)
+], UserByEmail.prototype, "user", void 0);
 
 
 /***/ }),
@@ -526,10 +551,17 @@ let UsersResolver = class UsersResolver {
         return { activation_token };
     }
     async activateUser(activationDto, context) {
-        return await this.userService.actiivateUser(activationDto, context.res);
+        return await this.userService.activateUser(activationDto, context.res);
     }
     async login(email, password) {
         return await this.userService.Login({ email, password });
+    }
+    async requestResetPassword(email) {
+        await this.userService.sendResetPasswordEmail(email);
+        return true;
+    }
+    async changePassword(resetToken, newPassword) {
+        return this.userService.changePassword(resetToken, newPassword);
     }
     async getLoggedInUser(context) {
         return this.userService.getLoggedInUser(context.req);
@@ -563,6 +595,21 @@ __decorate([
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", typeof (_f = typeof Promise !== "undefined" && Promise) === "function" ? _f : Object)
 ], UsersResolver.prototype, "login", null);
+__decorate([
+    (0, graphql_1.Mutation)(() => Boolean),
+    __param(0, (0, graphql_1.Args)("email")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UsersResolver.prototype, "requestResetPassword", null);
+__decorate([
+    (0, graphql_1.Mutation)(() => Boolean),
+    __param(0, (0, graphql_1.Args)("resetToken")),
+    __param(1, (0, graphql_1.Args)("newPassword")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], UsersResolver.prototype, "changePassword", null);
 __decorate([
     (0, graphql_1.Query)(() => users_types_1.LoginResponse),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
@@ -620,6 +667,61 @@ let UsersService = class UsersService {
         this.configService = configService;
         this.emailService = emailService;
     }
+    async getUserByEmail(email) {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                email: email,
+            },
+        });
+        if (!user) {
+            throw new common_1.BadRequestException("User not found");
+        }
+        const avatar = await this.prisma.avatars.findFirst({
+            where: {
+                userId: user.id,
+            },
+        });
+        return {
+            name: user.name,
+            email: user.email,
+            avatar: avatar.url,
+        };
+    }
+    async sendResetPasswordEmail(email) {
+        const activationCode = Math.floor(100000 + Math.random() * 9000).toString();
+        const token = this.jwtService.sign({ email, activationCode }, {
+            secret: this.configService.get("RESET_PASSWORD_SECRET"),
+            expiresIn: "60m",
+        });
+        await this.emailService.sendMail({
+            email,
+            subject: "Reset Your Password",
+            template: "./reset-password-mail",
+            name: "Your App Name",
+            activationCode,
+        });
+    }
+    async changePassword(resetToken, newPassword) {
+        try {
+            const decoded = this.jwtService.verify(resetToken);
+            const user = await this.prisma.user.findUnique({
+                where: { email: decoded.email },
+            });
+            if (!user) {
+                throw new common_1.NotFoundException("User not found.");
+            }
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+            await this.prisma.user.update({
+                where: { email: decoded.email },
+                data: { password: hashedPassword },
+            });
+            return true;
+        }
+        catch (error) {
+            console.error(error);
+            return false;
+        }
+    }
     async register(registerDto, response) {
         const { name, email, password } = registerDto;
         const id = name.toLowerCase().trim();
@@ -674,7 +776,7 @@ let UsersService = class UsersService {
         });
         return { token, activationCode };
     }
-    async actiivateUser(activationDto, response) {
+    async activateUser(activationDto, response) {
         const { activationToken, activationCode } = activationDto;
         const newUser = this.jwtService.verify(activationToken, {
             secret: this.configService.get("ACTIVATION_SECRET"),
@@ -688,7 +790,7 @@ let UsersService = class UsersService {
         const existName = await this.prisma.user.findUnique({
             where: {
                 name,
-            }
+            },
         });
         const existUser = await this.prisma.user.findUnique({
             where: {
@@ -714,15 +816,14 @@ let UsersService = class UsersService {
             data: {
                 info: "",
                 isPublic: true,
-                userId: user.id
-            }
+                userId: user.id,
+            },
         });
         const avatar = this.prisma.avatars.create({
             data: {
-                public: true,
                 url: "",
-                userId: user.id
-            }
+                userId: user.id,
+            },
         });
         return { user, response, profile, avatar };
     }

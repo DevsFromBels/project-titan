@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@apollo/gateway": "^2.6.2",
+    "@apollo/server": "^4.10.4",
     "@apollo/subgraph": "^2.6.2",
     "@as-integrations/fastify": "^2.1.1",
     "@fastify/multipart": "^8.2.0",

@@ -22,7 +22,7 @@ export class UsersResolver {
   @Mutation(() => RegisterResponse)
   async register(
     @Args("registerDto") registerDto: RegisterDto,
-    @Context() context: { res: Response },
+    @Context() context: { res: Response }
   ): Promise<RegisterResponse> {
     if (!registerDto.email || !registerDto.name || !registerDto.password) {
       throw new BadRequestException("Please fill the all fields.");
@@ -30,7 +30,7 @@ export class UsersResolver {
 
     const { activation_token } = await this.userService.register(
       registerDto,
-      context.res,
+      context.res
     );
 
     return { activation_token };
@@ -39,7 +39,7 @@ export class UsersResolver {
   @Mutation(() => ActivationResponse)
   async activateUser(
     @Args("activationDto") activationDto: ActivationDto,
-    @Context() context: { res: Response },
+    @Context() context: { res: Response }
   ): Promise<ActivationResponse> {
     return await this.userService.activateUser(activationDto, context.res);
   }
@@ -47,9 +47,23 @@ export class UsersResolver {
   @Mutation(() => LoginResponse)
   async login(
     @Args("email") email: string,
-    @Args("password") password: string,
+    @Args("password") password: string
   ): Promise<LoginResponse> {
     return await this.userService.Login({ email, password });
+  }
+
+  @Mutation(() => Boolean)
+  async requestResetPassword(@Args("email") email: string) {
+    await this.userService.sendResetPasswordEmail(email);
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  async changePassword(
+    @Args("resetToken") resetToken: string,
+    @Args("newPassword") newPassword: string
+  ) {
+    return this.userService.changePassword(resetToken, newPassword);
   }
 
   @Query(() => LoginResponse)
@@ -64,8 +78,8 @@ export class UsersResolver {
     return this.userService.Logout(context.req);
   }
 
-  @Query(() => UserByEmail)
-  async getUserByName(@Args("email") email: string) {
-    return this.userService.getUserByEmail(email);
-  }
+  // @Query(() => UserByEmail)
+  // async getUserByName(@Args("email") email: string) {
+  //   return this.userService.getUserByEmail(email);
+  // }
 }
