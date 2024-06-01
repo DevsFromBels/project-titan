@@ -102,12 +102,24 @@ export class MarketController {
    * @returns {unknown}
    */
   @Get("/getMarket")
-  async getMarket(@Query("id") id: string) {
-    return await this.marketService.getMarket(id);
+  async getMarket(
+    @Query("id") id: string,
+    @Query("page") page: string = "1",
+    @Query("limit") limit: string = "10"
+  ) {
+    const pageNumber = parseInt(page, 10);
+    const limitNumber = parseInt(limit, 10);
+    return await this.marketService.getMarket(id, pageNumber, limitNumber);
   }
 
   @Get('/get-similar-products')
-  async getSimilarProducts(@Query("content_id") content_id: string) {
-    return this.marketService.findSimilarProducts(content_id);
+  async getSimilarProducts(
+    @Query("content_id") content_id: string,
+    @Query("page") page: string = "1",
+    @Query("limit") limit: string = "10"
+  ) {
+    const pageNumber = parseInt(page, 10);
+    const limitNumber = parseInt(limit, 10);
+    return this.marketService.findSimilarProducts(content_id, pageNumber, limitNumber);
   }
 }
