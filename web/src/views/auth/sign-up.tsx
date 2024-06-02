@@ -25,6 +25,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/shared/components/ui/input-otp";
+import AnimatedGridPattern from '@/shared/components/ui/animated-grid-pattern';
 
 const SignUpPage = () => {
   const { register, signUpLoading, confirmRegister, OTPLoading } = handleAuth();
@@ -119,6 +120,10 @@ const SignUpPage = () => {
             </DialogHeader>
           </DialogContent>
         </Dialog>
+      <AnimatedGridPattern
+      maxOpacity={0.5}
+      className='z-10 blur-[3px]'
+      />
       </div>
     </div>
   );

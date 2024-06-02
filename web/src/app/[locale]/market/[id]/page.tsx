@@ -1,4 +1,6 @@
+import ImageBackgroundDetector from "@/shared/components/maleculas/ImageWithShadow";
 import ProfileMarketSkeleton from "@/shared/components/maleculas/skeletons/profile-market-skeleton";
+import AnimatedGridPattern from "@/shared/components/ui/animated-grid-pattern";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -22,7 +24,7 @@ interface PageProps {
 
 const SimilarProducts = dynamic(() => import("./SimilarProducts"), {
   ssr: false,
-  loading: () => <ProfileMarketSkeleton/>,
+  loading: () => <ProfileMarketSkeleton />,
 });
 
 async function GetSingleProduct(post_id: string) {
@@ -43,7 +45,7 @@ export default function Page({ params }: PageProps) {
   const marketPost = use(GetSingleProduct(params.id));
 
   return (
-    <div>
+    <div className="m-auto">
       <Breadcrumb className="p-2 text-lg">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -55,17 +57,17 @@ export default function Page({ params }: PageProps) {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="w-screen lg:w-[calc(100vw_-_250px)] flex flex-col justify-center items-center gap-1 mt-2">
+      <div className="relative w-screen lg:w-[calc(100vw_-_250px)] flex flex-col justify-center items-center gap-1 mt-2">
         <Image
-          className="rounded select-none w-[250px] h-[250px]"
+          className="rounded select-none w-[250px] h-[250px] z-20"
           src={`https://market-api.titanproject.top${marketPost.content}`}
           width={250}
           height={250}
           draggable={false}
           alt=""
         />
-
         <h1 className="text-lg">{marketPost.name}</h1>
+        <p>Цена за показ: {marketPost.price_for_show} BYR</p>
         <p>
           Показы: {marketPost.current_shows}/{marketPost.total_shows}
         </p>

@@ -20,12 +20,17 @@ const Header = () => {
   }
 
   return (
-    <header className="w-[95%] h-[3rem] m-auto flex justify-between items-center">
+    <header className="w-[95%] h-[3rem] m-auto flex justify-between items-center z-30">
       <div>
         <Link href="/">{t('title')}</Link>
       </div>
       <nav className="flex gap-3 items-center text-sm">
+        <Button variant={'ghost'} asChild>
+        <Link href="/market">Рынок</Link>
+        </Button>
+        <Button variant={'ghost'} asChild>
         <Link href="/sign-in">{t('buttons.signIn')}</Link>
+        </Button>
         <Link href="/sign-up">
           <Button size="sm">{t('buttons.signUp')}</Button>
         </Link>
