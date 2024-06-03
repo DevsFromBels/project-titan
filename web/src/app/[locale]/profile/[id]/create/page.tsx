@@ -1,84 +1,130 @@
 "use client";
-import React, { useState } from "react";
-import { Slider } from "@/shared/components/ui/slider";
-import { Input } from "@/shared/components/ui/input";
+import React, { useState, useCallback } from "react";
+import { useDropzone } from "react-dropzone";
+import Cropper from "react-cropper";
+import "cropperjs/dist/cropper.css";
 import { Button } from "@/shared/components/ui/button";
-import Cookies from "js-cookie";
-import { useRouter } from "@/navigation";
+import { BadgePlus, Upload } from "lucide-react";
+import dynamic from "next/dynamic";
 
-const Page = () => {
-  const [sliderValue, setSliderValue] = useState<number>(50000);
-  const [adsName, setAdsName] = useState("");
-  const [file, setFile] = useState<File | null>(null);
-  const router = useRouter()
+const ContinueMarketCreate = dynamic(() => import('./continue-market-create'), {
+  ssr: false
+})
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const price_peer_show = 10 / sliderValue;
-    const formData = new FormData();
+interface Props {}
 
-    if (file) {
-      formData.append("photo", file);
+const Page: React.FC<Props> = () => {
+  const [cropper, setCropper] = useState<Cropper | null>(null);
+  const [image, setImage] = useState<string | undefined>(undefined);
+  const [croppedImage, setCroppedImage] = useState<string | undefined>(undefined);
+  const [showCropper, setShowCropper] = useState<boolean>(false);
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    const file = acceptedFiles[0];
+    if (file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImage(reader.result as string);
+        setShowCropper(true);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      alert("Вы можете перетаскивать только изображения.");
     }
+  }, []);
 
-    const accessToken = Cookies.get("access_token");
-    const refreshToken = Cookies.get("refresh_token");
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
-    const response = await fetch(
-      `https://market-api.titanproject.top/create?name=${adsName}&price_peer_show=${price_peer_show}&total_shows=${sliderValue}`,
-      {
-        method: "POST",
-        body: formData,
-        headers: {
-          ...(accessToken && { accessToken: accessToken }),
-          ...(refreshToken && { refreshToken: refreshToken }),
-        },
-      }
+  const handleCrop = useCallback(() => {
+    if (cropper) {
+      const cropped = cropper.getCroppedCanvas().toDataURL();
+      setCroppedImage(cropped);
+      setShowCropper(false);
+    }
+  }, [cropper, setShowCropper]);
+
+  const handleCancel = useCallback(() => {
+    setImage(undefined);
+    setShowCropper(false);
+    setCroppedImage(undefined);
+  }, [setImage, setShowCropper]);
+
+  const handleCropperClick = useCallback(() => {
+    const inputElement = document.getElementById(
+      "file-input"
+    ) as HTMLInputElement | null;
+    if (inputElement) {
+      inputElement.value = "";
+    }
+  }, []);
+
+  if (croppedImage) {
+    return (
+      <ContinueMarketCreate croppedImage={croppedImage}/>
     );
-
-    setFile(null);
-    setSliderValue(50000);
-    setAdsName("");
-
-    if(response.ok) {
-      router.push("/market")
-    }
-    
-    // console.log("Form submitted with slider value:", sliderValue);
-  };
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      setFile(event.target.files[0]);
-    }
-  };
+  }
 
   return (
-    <div className="w-[95%] m-auto flex justify-center items-center flex-col">
-      <form
-        onSubmit={handleSubmit}
-        className="w-[320px] sm:w-[500px] flex flex-col gap-5"
-      >
-        <h1 className="text-center text-xl">Create your AD'S now!</h1>
-        <Input
-          type="text"
-          placeholder="Your AD'S name"
-          value={adsName}
-          onChange={(event) => setAdsName(event.target.value)}
-        />
-        <Input type="file" name="image" accept="image/*" onChange={handleFileChange} />
-        <Slider
-          value={[sliderValue]}
-          onValueChange={(newValue) =>
-            setSliderValue(newValue as unknown as number)
-          }
-          max={100000}
-          step={500}
-        />
-        <p>Value: {sliderValue}</p>
-
-        <Button type="submit">Create</Button>
-      </form>
+    <div className="w-full h-full flex flex-col justify-center items-center">
+      {!showCropper && (
+        <div
+          {...getRootProps()}
+          className={`w-[300px] h-[250px] md:h-[400px] md:w-[500px] p-8 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer transition-colors duration-300 ${
+            isDragActive ? "border-green-500" : ""
+          }`}
+          onClick={() => document.getElementById("file-input").click()}
+        >
+          <input id="file-input" {...getInputProps()} className="hidden" />
+          {image ? (
+            <div className="flex flex-col items-center">
+              <img
+                src={image}
+                alt="Preview"
+                className="mb-2 rounded-lg w-[300px]"
+              />
+              <Button onClick={handleCancel}>Отмена</Button>
+            </div>
+          ) : (
+            <p className="w-[300px] flex flex-col items-center justify-center gap-2 text-sm font-medium text-gray-500 text-center">
+              {!isDragActive ? (
+                <BadgePlus className="w-[60px] h-[60px]" />
+              ) : (
+                <Upload className="w-[60px] h-[60px]" />
+              )}
+              Перенесите изображение на меня, или нажмите на меня
+            </p>
+          )}
+        </div>
+      )}
+      {showCropper && (
+        <>
+          <div className="relative">
+            <Cropper
+              src={image}
+              style={{ height: 400, width: "400px" }}
+              initialAspectRatio={1}
+              guides={true}
+              viewMode={2}
+              autoCropArea={0.8}
+              dragMode="move"
+              className="mb-2 bg-rose-700"
+              aspectRatio={1}
+              onInitialized={(instance) => {
+                setCropper(instance);
+              }}
+              onClick={handleCropperClick}
+            />
+          </div>
+          <div className="flex gap-2">
+            <Button variant={"outline"} onClick={handleCancel}>
+              Отмена
+            </Button>
+            <Button variant={"outline"} onClick={handleCrop}>
+              Обрезать
+            </Button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

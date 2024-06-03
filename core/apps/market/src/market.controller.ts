@@ -122,4 +122,9 @@ export class MarketController {
     const limitNumber = parseInt(limit, 10);
     return this.marketService.findSimilarProducts(content_id, pageNumber, limitNumber);
   }
+
+  @Get('/get-user-subscriptions')
+  async getUserSubscriptions(@Query('token') token: string) {
+    return this.marketService.getTokenSubscriptions(token)
+  }
 }
