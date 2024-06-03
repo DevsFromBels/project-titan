@@ -44,8 +44,13 @@ async function GetSingleProduct(post_id: string) {
 export default function Page({ params }: PageProps) {
   const marketPost = use(GetSingleProduct(params.id));
 
+  const formatPrice = (price: number) => {
+    const formattedPrice = Math.ceil(price).toFixed(2);
+    return formattedPrice.toString();
+  };
+
   return (
-    <div className="m-auto">
+    <div className="m-auto flex flex-col gap-5">
       <Breadcrumb className="p-2 text-lg">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -67,7 +72,7 @@ export default function Page({ params }: PageProps) {
           alt=""
         />
         <h1 className="text-lg">{marketPost.name}</h1>
-        <p>Цена за показ: {marketPost.price_for_show} BYR</p>
+        <p>Цена за показ: {formatPrice(marketPost.price_for_show)} BYR</p>
         <p>
           Показы: {marketPost.current_shows}/{marketPost.total_shows}
         </p>
