@@ -78,7 +78,6 @@ model UserSubscriptions {
   user     User   @relation(fields: [userId], references: [id])
   marketId String
   market   Market @relation(fields: [marketId], references: [content_id])
-  token    String
   
   @@unique([userId, marketId])
 }

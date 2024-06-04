@@ -208,7 +208,7 @@ export class UsersService {
         userId: user.id,
       },
     });
-
+    
     return { user, response, profile, avatar };
   }
 

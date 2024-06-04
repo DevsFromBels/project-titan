@@ -1,10 +1,14 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "../../../prisma/prisma.service";
 import { Market } from "@prisma/client";
+import { MarketIdService } from "./market-id/market-id.service";
 
 @Injectable()
 export class MarketService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private marketID: MarketIdService
+  ) {}
 
   getHello(): string {
     return "Hello World!";
@@ -101,15 +105,7 @@ export class MarketService {
     const skip = (page - 1) * limit;
 
     if (id) {
-      const post = await this.prisma.market.findFirst({
-        where: { content_id: id },
-      });
-
-      if (!post) {
-        throw new BadRequestException(`This market post is not found`);
-      }
-
-      return post;
+      return this.marketID.getMarketPostByID(id);
     }
 
     const [total, items] = await Promise.all([
@@ -189,33 +185,5 @@ export class MarketService {
       limit,
       totalPages: Math.ceil(total / limit),
     };
-  }
-
-  /**
-   * get market subscriptions by tokens
-   *
-   * @async
-   * @param {string} token
-   * @returns {unknown}
-   */
-  async getTokenSubscriptions(token: string) {
-    const sub_token = await this.prisma.userSubscriptions.findFirst({
-      where: {
-        token: token
-      },
-      include: {
-        user: {
-          include: {
-            userSubscriptions: true
-          }
-        },
-      },
-    });
-  
-    if (!sub_token) {
-      throw new BadRequestException('Token not found');
-    }
-  
-    return sub_token;
   }
 }
