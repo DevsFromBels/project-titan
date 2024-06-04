@@ -186,4 +186,56 @@ export class MarketService {
       totalPages: Math.ceil(total / limit),
     };
   }
+
+  /**
+   * get market subscriptions by tokens
+   *
+   * @async
+   * @param {string} token
+   * @returns {unknown}
+   */
+  async getTokenSubscriptions(token: string) {
+    const sub_token = await this.prisma.userSubscriptions.findFirst({
+      where: {
+        token: token,
+      },
+      include: {
+        user: {
+          include: {
+            userSubscriptions: true,
+          },
+        },
+      },
+    });
+
+    if (!sub_token) {
+      throw new BadRequestException("Token not found");
+    }
+
+    return sub_token;
+  }
+
+  /**
+   * Get top products by views
+   *
+   * @async
+   * @param {number} [limit=5]
+   * @returns {Promise<{items: Market[], total: number}>}
+   */
+  async getTopProductsByViews(
+    limit: number = 5
+  ): Promise<{ items: Market[]; total: number }> {
+    const [total, items] = await Promise.all([
+      this.prisma.market.count(),
+      this.prisma.market.findMany({
+        orderBy: [{ current_shows: "desc" }],
+        take: limit,
+      }),
+    ]);
+
+    return {
+      items,
+      total,
+    };
+  }
 }
