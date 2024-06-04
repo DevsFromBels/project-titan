@@ -7,34 +7,25 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
-import { Input } from "@/components/ui/Input"; // Убедитесь, что этот импорт верный
 import { SEARCH_PROFILE } from "@/graphql/actions/search.action";
 import { useQuery } from "@apollo/client";
+import { useDebounce } from "@uidotdev/usehooks";
 
 const Search = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchResult, setSearchResult] = useState("");
   const [error, setError] = useState(null);
+  const debouncedSearchTerm = useDebounce(searchResult, 300);
 
-  const { loading, data, refetch } = useQuery(SEARCH_PROFILE, {
+  const { loading, data } = useQuery(SEARCH_PROFILE, {
     variables: {
-      userName: searchResult,
+      userName: debouncedSearchTerm,
     },
   });
 
-  useEffect(() => {
-    if (!isLoading) {
-      refetch({ userName: searchResult });
-    }
-  }, [searchResult]);
-
-  const handleChange = (text) => {
-    setSearchResult(text);
-  };
-
   if (loading)
     return (
-      <View>
+      <View className='bg-[#121111] h-screen w-screen flex justify-center items-center'>
         <ActivityIndicator color="white" size="large" />
       </View>
     );
@@ -45,11 +36,11 @@ const Search = () => {
       <TextInput
         placeholderTextColor="white"
         style={styles.input}
-        onChangeText={handleChange}
+        onChangeText={setSearchResult}
         value={searchResult}
         placeholder="Search"
       />
-      {data && data.searchProfile && (
+      {data.searchProfile && (
         <FlatList
           data={data.searchProfile.users || []}
           renderItem={({ item }) => (

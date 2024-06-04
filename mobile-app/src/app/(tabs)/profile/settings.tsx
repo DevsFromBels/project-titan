@@ -19,7 +19,7 @@ const settings = () => {
   }
 
   return (
-    <View className="w-screen h-screen mx-auto flex flex-col gap-2 bg-[#121111] text-white">
+    <View className="w-screen h-screen flex flex-col gap-2 bg-[#121111] text-white mx-2">
       <ProfileSettingsWidget
         info={data.profileSettings.info}
         address={data.profileSettings.address}

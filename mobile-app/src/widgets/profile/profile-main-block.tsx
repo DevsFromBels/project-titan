@@ -11,9 +11,10 @@ import { i18n } from "@/localization/i18n";
 import { DateOptionsWithMonth } from "@/constants/date-output";
 import { Pencil } from "lucide-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { IMarket } from "@/app/(tabs)/market";
-import { Button } from "@/components/ui/Button";
-import { router } from "expo-router";
+import { IGetMarket } from "@/app/(tabs)/market";
+import * as ImagePicker from "expo-image-picker";
+import { Link, router } from "expo-router";
+import { graphqlClient } from "@/graphql/gql.setup";
 
 interface IProfileMainBlockWidget {
   image: string;
@@ -23,23 +24,15 @@ interface IProfileMainBlockWidget {
   registerDateString: string;
 }
 
-async function getData() {
-  const res = await fetch(
-    "https://market-api.titanproject.top/get-all-user-market-products",
+async function getData(user_id: string): Promise<IGetMarket> {
+  const res: IGetMarket = await fetch(
+    `https://market-api.titanproject.top/get-similar-products?user_id=${user_id}&page=1&limit=15`,
     {
       method: "GET",
-      headers: {
-        accessToken: (await AsyncStorage.getItem("access_token")) || "",
-        refreshToken: (await AsyncStorage.getItem("refresh_token")) || "",
-      },
     }
-  );
+  ).then((res) => res.json());
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-  const info: IMarket[] = await res.json();
-  return info;
+  return res;
 }
 
 const ProfileMainBlockWidget = ({
@@ -49,50 +42,96 @@ const ProfileMainBlockWidget = ({
   info,
   registerDateString,
 }: IProfileMainBlockWidget) => {
+  const [data, setData] = useState<IGetMarket | null>();
+  const [imageErrors, setImageErrors] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [hasGalleryPermission, setHasGalleryPermission] = useState<boolean>();
+  const [imageProfile, setImageProfile] = useState<string>();
+
   let porfileImage = "https://avatars-api.titanproject.top" + image;
 
-  if (!image) {
-    porfileImage = "https://titanproject.top/cat.jpeg";
-  }
   const languages = {
     ru: "ru-RU",
     en: "en-US",
   };
+
+  if (!image) {
+    porfileImage = "https://titanproject.top/cat.jpeg";
+  }
 
   const registerDate = new Date(registerDateString).toLocaleString(
     languages[(i18n.locale as keyof typeof languages) ?? "en"],
     DateOptionsWithMonth
   );
 
-  const [data, setData] = useState<IMarket[]>([]);
-  const [imageErrors, setImageErrors] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      const info: IMarket[] = await getData();
-      setData(info);
+    (async () => {
+      const post: IGetMarket = await getData(id);
+      setData(post);
+      const galleryStatus =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      setHasGalleryPermission(galleryStatus.status === "granted");
       setIsLoading(false);
-    };
-    fetchData();
+    })();
   }, []);
 
-  const handleImageError = (contentId: string) => {
-    setImageErrors((prevErrors) => [...prevErrors, contentId]);
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImageProfile(result.assets[0].uri);
+      uploadImage();
+    }
   };
 
-  const formatPrice = (price: number) => {
-    const formattedPrice = price.toFixed(7);
-    return parseFloat(formattedPrice).toString();
+  const uploadImage = async () => {
+    if (!imageProfile) return;
+
+    const data = new FormData();
+
+    data.append("image", {
+      uri: imageProfile,
+      type: "image/png",
+      name: "profile-image",
+    });
+    try {
+      const response = await fetch(
+        "https://avatars-api.titanproject.top/upload",
+        {
+          method: "POST",
+          body: data,
+          headers: new Headers({
+            accessToken: (await AsyncStorage.getItem("access_token")) || "",
+            refreshToken: (await AsyncStorage.getItem("refresh_token")) || "",
+          }),
+        }
+      );
+      if (response.ok) {
+        console.log("Upload successful");
+        graphqlClient.resetStore();
+      } else {
+        throw new Error("Upload failed");
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      setIsLoading(false);
+    }
   };
 
   if (isLoading) {
-    return <ActivityIndicator className="w-[50px] h-[50px]" color="white" />;
+    return (
+      <View className="bg-[#121111] h-screen w-screen flex justify-center items-center">
+        <ActivityIndicator className="w-[50px] h-[50px]" color="white" />
+      </View>
+    );
   }
 
   return (
-    <SafeAreaView className="h-full w-screen bg-[#121111]">
+    <SafeAreaView className="h-screen w-screen bg-[#121111]">
       <View className="relative w-screen flex flex-col justify-center items-center h-[200px] gap-2 bg-black">
         <View className="flex items-start z-10 select-none mt-4">
           <Image
@@ -113,6 +152,7 @@ const ProfileMainBlockWidget = ({
               height: 30,
               left: 60,
             }}
+            onPress={pickImage}
           >
             <Text className="flex text-center" style={{ paddingTop: 4 }}>
               {i18n.t("edit")} <Pencil width={15} height={15} color="black" />
@@ -145,49 +185,62 @@ const ProfileMainBlockWidget = ({
         </View>
       </View>
       <View
-        className="p-2 border border-[#121111] rounded-xl w-[90%]"
+        className="p-2 border border-[#121111] h-auto rounded-xl w-[90%]"
         style={{ margin: 5 }}
       >
         <Text className="text-white text-xl ">Товары на рынке</Text>
-        <View style={{ flex: 1 }} className="h-screen ">
-          {data.map((e) => (
-            <View key={e.content_id} style={{ width: "50%", padding: 10 }}>
-              {!imageErrors.includes(e.content_id) && (
-                <View
-                  style={{ position: "relative", width: "100%", height: 200 }}
+        <View style={{ flex: 1 }} className="h-full ">
+          {data &&
+            data.items &&
+            data.items.map((e) => (
+              <View key={e.content_id} style={{ padding: 10 }}>
+                <Pressable
+                  onPress={() =>
+                    router.replace(`/(tabs)/market/${e.content_id}`)
+                  }
                 >
-                  <Image
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      resizeMode: "cover",
-                    }}
-                    source={{
-                      uri: `https://market-api.titanproject.top${e.content}`,
-                    }}
-                    onError={() => console.log("Image error")}
-                  />
                   <View
                     style={{
-                      position: "absolute",
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      backgroundColor: "rgba(0,0,0,0.5)",
-                      padding: 10,
+                      position: "relative",
+                      width: "100%",
+                      height: 200,
                     }}
+                    className="rounded-xl grid grid-cols-2"
                   >
-                    <Text style={{ color: "#fff", fontSize: 16 }}>
-                      {e.name}
-                    </Text>
-                    <Text style={{ color: "#fff", fontSize: 14 }}>
-                      Осталось показов: {e.current_shows} / {e.total_shows}
-                    </Text>
+                    <Image
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        resizeMode: "cover",
+                      }}
+                      className="rounded-xl"
+                      source={{
+                        uri: `https://market-api.titanproject.top${e.content}`,
+                      }}
+                      onError={() => console.log("Image error")}
+                    />
+                    <View
+                      style={{
+                        position: "absolute",
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        backgroundColor: "rgba(0,0,0,0.5)",
+                        padding: 10,
+                      }}
+                      className="rounded-xl"
+                    >
+                      <Text style={{ color: "#fff", fontSize: 16 }}>
+                        {e.name}
+                      </Text>
+                      <Text style={{ color: "#fff", fontSize: 14 }}>
+                        Осталось показов: {e.current_shows} / {e.total_shows}
+                      </Text>
+                    </View>
                   </View>
-                </View>
-              )}
-            </View>
-          ))}
+                </Pressable>
+              </View>
+            ))}
         </View>
       </View>
     </SafeAreaView>

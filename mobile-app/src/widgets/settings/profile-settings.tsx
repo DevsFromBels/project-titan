@@ -20,17 +20,8 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
   const [tempInfo, setTempInfo] = useState(info);
   const [tempAddress, setTempAddress] = useState(address);
 
-  const [
-    updateUserAddress,
-    { loading: loadingUpdateAddress, data: updatedAddress },
-  ] = useMutation(USER_UPDATE_SETTINGS_ADDRESS);
-
   const [updateUserInfo, { loading: loadingUpdateInfo, data: updatedInfo }] =
     useMutation(USER_UPDATE_SETTINGS);
-
-  const handleInfoChange = (e) => {
-    setTempInfo(e.target.value);
-  };
 
   const handleSaveInfo = async () => {
     try {
@@ -50,42 +41,14 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
     setEditingInfo(false);
   };
 
-  const handleSaveAddress = async () => {
-    try {
-      const { data } = await updateUserAddress({
-        variables: {
-          address: tempAddress,
-        },
-      });
-      if (data && data.settingsUpdateUserAddress) {
-        setTempAddress(data.settingsUpdateUserAddress.profileSettings.address);
-      }
-      console.log(data);
-      graphqlClient.resetStore();
-    } catch (error) {
-      console.error(error);
-    }
-    setEditingAddress(false);
-  };
-
   const handleCancelInfo = () => {
     setTempInfo(info);
     setEditingInfo(false);
   };
 
-  const handleCancelAddress = () => {
-    setTempAddress(address);
-    setEditingAddress(false);
-  };
-
   const handleEditInfo = () => {
     setEditingInfo(true);
     setTempInfo(info);
-  };
-
-  const handleEditAddress = () => {
-    setEditingAddress(true);
-    setTempAddress(address);
   };
 
   return (
@@ -95,7 +58,6 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
         <Text className="text-xl text-white">{i18n.t("block_name")}</Text>
       </View>
       <View className="flex flex-col gap-2">
-        <Text className="text-white text-xl">{i18n.t("info")}</Text>
         {!editingInfo &&
           updatedInfo?.settingsUpdateUserInfo?.profileSettings.info && (
             <View className="flex justify-between">
@@ -117,7 +79,7 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
           <View className="flex flex-col gap-2">
             <Input
               value={tempInfo}
-              onChange={handleInfoChange}
+              onChangeText={setTempInfo}
               style={{
                 borderWidth: 1,
                 borderRadius: 6,
@@ -140,11 +102,14 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
         {!editingInfo &&
           !info &&
           !updatedInfo?.settingsUpdateUserInfo?.profileSettings.info && (
-            <Button
-              label="Add info"
-              className="w-[120px]"
-              onPress={() => setEditingInfo(true)}
-            />
+            <View>
+              <Text className="text-white text-xl">{i18n.t("info")}</Text>
+              <Button
+                label="Add info"
+                className="w-[120px]"
+                onPress={() => setEditingInfo(true)}
+              />
+            </View>
           )}
       </View>
     </View>

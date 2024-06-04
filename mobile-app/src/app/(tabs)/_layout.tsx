@@ -2,7 +2,14 @@ import { Link, Tabs, router } from "expo-router";
 import { SafeAreaView, Text } from "react-native";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { i18n } from "@/localization/i18n";
-import { Home, Plus, CircleDollarSignIcon, Bell, Settings, Search } from "lucide-react-native";
+import {
+  Home,
+  Plus,
+  CircleDollarSignIcon,
+  Bell,
+  Settings,
+  Search,
+} from "lucide-react-native";
 import { GET_SETTIGNS } from "@/graphql/actions/settings/get-settings";
 import { IGetSettings } from "@/types/settings.types";
 import { useQuery } from "@apollo/client";
@@ -11,6 +18,8 @@ const TabsLayout = () => {
   const { loading, data } = useQuery<IGetSettings>(GET_SETTIGNS, {
     variables: {},
   });
+
+  const profileImage = `https://avatars-api.titanproject.top${data?.getSettings.avatar_url}`;
 
   return (
     <SafeAreaView className="h-full w-screen">
@@ -76,9 +85,11 @@ const TabsLayout = () => {
             title: `${i18n.t("profile")}`,
             tabBarIcon: () => (
               <Avatar className="w-[30px] h-[30px] rounded-full">
-                <AvatarImage src={`https://avatars-api.titanproject.top${data?.getSettings.avatar_url}`} />
+                <AvatarImage src={profileImage} />
                 <AvatarFallback>
-                  {data?.getSettings.userSettings.name.slice(0,2).toUpperCase()}
+                  {data?.getSettings.userSettings.name
+                    .slice(0, 2)
+                    .toUpperCase()}
                 </AvatarFallback>
               </Avatar>
             ),

@@ -1,13 +1,8 @@
-import { Button } from "@/components/ui/Button";
-import {
-  router,
-  useGlobalSearchParams,
-  useLocalSearchParams,
-  useRouter,
-} from "expo-router";
+import { useGlobalSearchParams } from "expo-router";
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, ScrollView, ActivityIndicator } from "react-native";
-import { IMarket } from ".";
+import { IGetMarket } from ".";
+import SimilarProducts from "./Similar";
 
 async function getDataById(id?: string) {
   const res = await fetch(
@@ -16,21 +11,26 @@ async function getDataById(id?: string) {
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }
-  const data: IMarket = await res.json();
+  const data: IGetMarket = await res.json();
   return data;
 }
 
 const MarketItem = () => {
   const glob = useGlobalSearchParams<{ id?: string }>();
-  const [data, setData] = useState<IMarket | null>(null);
+  const [data, setData] = useState<IGetMarket | null>(null);
   const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
   const id = glob.id;
+
+  if (typeof id === "undefined") {
+    return null;
+  }
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      const data: IMarket = await getDataById(id);
+      const data = await getDataById(id);
       setData(data);
       setIsLoading(false);
     };
@@ -48,8 +48,8 @@ const MarketItem = () => {
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center">
-        <ActivityIndicator size="large" color="white" />
+      <View className="bg-[#121111] h-screen w-screen flex justify-center items-center">
+        <ActivityIndicator className="w-[50px] h-[50px]" color="white" />
       </View>
     );
   }
@@ -71,8 +71,8 @@ const MarketItem = () => {
   }
 
   return (
-    <ScrollView className="bg-[#121111] h-screen">
-      <View className="w-full h-screen max-h-[430px] break-all flex flex-col gap-2 p-2">
+    <ScrollView className="bg-[#121111] mb-6"  style={{ maxHeight: "100%" }} contentContainerStyle={{ flexGrow: 1 }}>
+      <View className="w-full break-all flex flex-col gap-2 p-2">
         <View className="w-full h-[300px]">
           <Image
             className="w-full h-full object-cover rounded"
@@ -83,15 +83,12 @@ const MarketItem = () => {
             onError={handleImageError}
           />
         </View>
-        <View className="h-full flex flex-col gap-2 p-2">
+        <View className="flex flex-col gap-2 p-2">
           <Text className=" text-ellipsis text-xl overflow-hidden text-white">
-            Название: <Text className="text-white">{data.name}</Text>
+            Название: {data.name}
           </Text>
           <Text className="text-ellipsis text-xl overflow-hidden text-white">
-            Цена за показ:{" "}
-            <Text className="text-white ">
-              {formatPrice(data.price_for_show)}$
-            </Text>
+            Цена за показ: {formatPrice(data.price_for_show)} BYR
           </Text>
           <Text className="text-ellipsis text-xl overflow-hidden text-white">
             Создатель: {data.user_id}
@@ -104,6 +101,10 @@ const MarketItem = () => {
               Категория: {data.category}
             </Text>
           )}
+          <Text className="text-ellipsis text-xl overflow-hidden text-white">
+            Похожие товары
+          </Text>
+          <SimilarProducts post_id={id} />
         </View>
       </View>
     </ScrollView>

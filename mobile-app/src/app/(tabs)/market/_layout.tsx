@@ -12,6 +12,7 @@ const _layout = () => {
           headerShadowVisible: false,
           headerTitle: "",
           headerStyle: { backgroundColor: "#121111" },
+          contentStyle: { backgroundColor: "#121111" },
           headerTintColor: "white",
         }}
       />
