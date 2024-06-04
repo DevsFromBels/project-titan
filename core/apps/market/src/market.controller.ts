@@ -127,4 +127,11 @@ export class MarketController {
   async getUserSubscriptions(@Query('token') token: string) {
     return this.marketService.getTokenSubscriptions(token)
   }
+
+  @Get('/get-top-products-by-views')
+  async getTopProductsByViews(
+    @Query("limit") limit: string = "5"
+  ) {
+    return this.marketService.getTopProductsByViews()
+  }
 }
