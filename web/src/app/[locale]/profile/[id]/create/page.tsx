@@ -72,7 +72,12 @@ const Page: React.FC<Props> = () => {
           className={`w-[300px] h-[250px] md:h-[400px] md:w-[500px] p-8 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer transition-colors duration-300 ${
             isDragActive ? "border-green-500" : ""
           }`}
-          onClick={() => document.getElementById("file-input").click()}
+          onClick={() => {
+            const inputElement = document.getElementById("file-input");
+            if (inputElement) {
+              inputElement.click();
+            }
+          }}
         >
           <input id="file-input" {...getInputProps()} className="hidden" />
           {image ? (

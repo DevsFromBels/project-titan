@@ -14,10 +14,10 @@ import * as fs from "fs";
 import { MarketService } from "./market.service";
 import { extname, join } from "path";
 import { uuidv7 } from "uuidv7";
-import sharp from 'sharp';
-
+import sharp from "sharp";
 
 import { HeadersGuard } from "./auth.guard";
+import { MarketSubscriptionsService } from "./market-subscriptions/market-subscriptions.service";
 const pump = util.promisify(pipeline);
 
 declare module "fastify" {
@@ -28,7 +28,10 @@ declare module "fastify" {
 
 @Controller()
 export class MarketController {
-  constructor(private readonly marketService: MarketService) {}
+  constructor(
+    private readonly marketService: MarketService,
+    private readonly marketSubscriptions: MarketSubscriptionsService
+  ) {}
 
   @Get()
   getHello(): string {
@@ -50,20 +53,20 @@ export class MarketController {
     const filePath = join(uploadDir, fileName);
     try {
       const user_id = req.user.id;
-  
+
       if (!fs.existsSync(uploadDir)) {
         fs.mkdirSync(uploadDir, { recursive: true });
       }
       await pump(data.file, fs.createWriteStream(filePath));
-  
+
       // Конвертация изображения в WebP
       const webpPath = join(uploadDir, `${fileName}.webp`);
       await sharp(filePath)
-       .webp({ quality: 80 }) // Настройка качества изображения
-       .toFile(webpPath); // Сохранение результата
-  
+        .webp({ quality: 80 }) // Настройка качества изображения
+        .toFile(webpPath); // Сохранение результата
+
       const fileUrl = `/uploads/market/${fileName}.webp`;
-  
+
       const product = await this.marketService.createProduct(
         fileUrl,
         name,
@@ -71,7 +74,7 @@ export class MarketController {
         pricePeerShow,
         totalShows
       );
-  
+
       return reply.status(200).send(product);
     } catch (err) {
       if (data.file.truncated) {
@@ -81,7 +84,6 @@ export class MarketController {
       }
     }
   }
-  
 
   /**
    * Controller for get user market data
@@ -90,7 +92,7 @@ export class MarketController {
    * @param {string} user_id
    * @returns {unknown}
    */
-  @Get('/get-all-user-market-products')
+  @Get("/get-all-user-market-products")
   async getAllUserMarketProducts(@Query("user_id") user_id: string) {
     return this.marketService.getAllUserMarketProducts(user_id);
   }
@@ -112,7 +114,7 @@ export class MarketController {
     return await this.marketService.getMarket(id, pageNumber, limitNumber);
   }
 
-  @Get('/get-similar-products')
+  @Get("/get-similar-products")
   async getSimilarProducts(
     @Query("content_id") content_id: string,
     @Query("page") page: string = "1",
@@ -120,7 +122,27 @@ export class MarketController {
   ) {
     const pageNumber = parseInt(page, 10);
     const limitNumber = parseInt(limit, 10);
-    return this.marketService.findSimilarProducts(content_id, pageNumber, limitNumber);
+    return this.marketService.findSimilarProducts(
+      content_id,
+      pageNumber,
+      limitNumber
+    );
+  }
+
+  @Get("/get-user-subscriptions")
+  async getUserSubscriptions(@Query("token") token: string) {
+    return this.marketSubscriptions.getTokenSubscriptions(token);
+  }
+
+  @UseGuards(HeadersGuard)
+  @Post("/subscribe")
+  async subscribeUser(
+    @Req() req: FastifyRequest,
+    @Query("product_id") product_id: string
+  ) {
+    const user_id = req.user.id;
+
+    return this.marketSubscriptions.subscribe(product_id, user_id);
   }
 
   @Get('/get-user-subscriptions')
