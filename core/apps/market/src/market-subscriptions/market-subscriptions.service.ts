@@ -10,21 +10,26 @@ export class MarketSubscriptionsService {
       where: { id: user_id },
     });
 
-    const sub_token = await this.prisma.userSubscriptions.findFirst({
-      where: {
-        userId: user.id,
-      },
-    });
 
-    if (!sub_token.token) {
-      throw new BadRequestException("Token not found");
+    const post_id = await this.prisma.market.findFirst({
+      where: {
+        content_id: product_id
+      }
+    })
+
+    if (!post_id) {
+      throw new BadRequestException("Product not found!");
     }
+    
+    if(!user) {
+      throw new BadRequestException("User not found!");
+    }
+  
 
     await this.prisma.userSubscriptions.create({
       data: {
         userId: user.id,
-        marketId: product_id,
-        token: user.id,
+        marketId: post_id.content_id,
       },
     });
 
