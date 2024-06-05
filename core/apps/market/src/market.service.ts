@@ -1,10 +1,14 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "../../../prisma/prisma.service";
 import { Market } from "@prisma/client";
+import { MarketIdService } from "./market-id/market-id.service";
 
 @Injectable()
 export class MarketService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private marketID: MarketIdService
+  ) {}
 
   getHello(): string {
     return "Hello World!";
@@ -89,59 +93,149 @@ export class MarketService {
   }
 
   /**
-   * getMarket route
+   * Get all market products with pagination
    *
    * @async
    * @param {?string} [id]
+   * @param {number} [page=1]
+   * @param {number} [limit=10]
    * @returns {unknown}
    */
-  async getMarket(id?: string) {
+  async getMarket(id?: string, page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+
     if (id) {
-      const post = await this.prisma.market.findFirst({
-        where: {
-          content_id: id,
-        },
-      });
-
-      if (!post) {
-        throw new BadRequestException(`This market post is not found`);
-      }
-
-      return post;
+      return this.marketID.getMarketPostByID(id);
     }
 
-    return this.prisma.market.findMany();
+    const [total, items] = await Promise.all([
+      this.prisma.market.count(),
+      this.prisma.market.findMany({
+        skip,
+        take: limit,
+        orderBy: { current_shows: "desc" },
+      }),
+    ]);
+
+    return {
+      items,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   /**
    * Find a similar products by price +-10%
    * and category
-   * 
+   *
    * @async
    * @param {string} contentId
    * @returns {Promise<Market[]>}
    */
-  async findSimilarProducts(contentId: string): Promise<Market[]> {
+  async findSimilarProducts(
+    contentId: string,
+    page: number = 1,
+    limit: number = 10
+  ): Promise<{
+    items: Market[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  }> {
     const baseProduct = await this.prisma.market.findUnique({
-      where: {
-        content_id: contentId,
-      },
+      where: { content_id: contentId },
     });
-  
+
     if (!baseProduct) {
       throw new BadRequestException(`Base product not found`);
     }
-  
-    const similarProducts = await this.prisma.market.findMany({
-      where: {
-        category: baseProduct.category,
-        AND: [
-          { price_for_show: { gte: baseProduct.price_for_show } },
-          { price_for_show: { lte: baseProduct.price_for_show + 10 } },
+
+    const skip = (page - 1) * limit;
+
+    const whereClause = {
+      category: baseProduct.category,
+      NOT: { content_id: contentId }, // Исключаем сам базовый товар
+      AND: [
+        { price_for_show: { gte: baseProduct.price_for_show * 0.9 } },
+        { price_for_show: { lte: baseProduct.price_for_show * 1.1 } },
+      ],
+    };
+
+    const [total, items] = await Promise.all([
+      this.prisma.market.count({ where: whereClause }),
+      this.prisma.market.findMany({
+        where: whereClause,
+        skip,
+        take: limit,
+        orderBy: [
+          { category: "asc" },
+          { price_for_show: "asc" },
+          { total_shows: "desc" },
         ],
+      }),
+    ]);
+
+    return {
+      items,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
+  /**
+   * get market subscriptions by tokens
+   *
+   * @async
+   * @param {string} token
+   * @returns {unknown}
+   */
+  async getTokenSubscriptions(token: string) {
+    const sub_token = await this.prisma.userSubscriptions.findFirst({
+      where: {
+        token: token,
+      },
+      include: {
+        user: {
+          include: {
+            userSubscriptions: true,
+          },
+        },
       },
     });
-  
-    return similarProducts;
+
+    if (!sub_token) {
+      throw new BadRequestException("Token not found");
+    }
+
+    return sub_token;
+  }
+
+  /**
+   * Get top products by views
+   *
+   * @async
+   * @param {number} [limit=5]
+   * @returns {Promise<{items: Market[], total: number}>}
+   */
+  async getTopProductsByViews(
+    limit: number = 5
+  ): Promise<{ items: Market[]; total: number }> {
+    const [total, items] = await Promise.all([
+      this.prisma.market.count(),
+      this.prisma.market.findMany({
+        orderBy: [{ current_shows: "desc" }],
+        take: limit,
+      }),
+    ]);
+
+    return {
+      items,
+      total,
+    };
   }
 }

@@ -8,8 +8,7 @@ export const ProfileSkeleton = () => {
       <Skeleton className="w-[100px] h-[16px]"/>
     </div>
     <div>
-      <Skeleton className="w-[100px] h-[16px]"/>
-      <Skeleton className="w-[100px] h-[16px]"/>
+      <Skeleton className="w-[98%] m-auto h-[180px]"/>
     </div>
   </div>
   )

@@ -6,8 +6,6 @@ import { ActivationDto, LoginDto, RegisterDto } from "./dto/user.dto";
 import { EmailService } from "./email/email.service";
 import * as bcrypt from "bcrypt";
 import { TokenSender } from "./utils/sendToken";
-import { User } from "@prisma/client";
-import { OmitType } from "@nestjs/graphql";
 
 interface UserData {
   name: string;
@@ -88,7 +86,7 @@ export class UsersService {
     }
 
     if (isEmailExists) {
-      throw new BadRequestException("User allready exists with this email");
+      throw new BadRequestException("User already exists with this email");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -210,7 +208,7 @@ export class UsersService {
         userId: user.id,
       },
     });
-
+    
     return { user, response, profile, avatar };
   }
 

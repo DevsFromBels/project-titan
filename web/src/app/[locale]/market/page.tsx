@@ -1,64 +1,108 @@
 "use client";
-import React, { useEffect } from "react";
-import marketStore from "@/features/store/market.store";
-import { Button } from "@/shared/components/ui/button";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { observer } from "mobx-react-lite";
+import getMarketAPI, { IGetMarket } from "@/features/api/market-api";
+import { Store } from "lucide-react";
 
 const Page = () => {
-  const { getMarketPosts, marketPosts } = marketStore;
+  const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    getMarketPosts();
-  }, []);
+  const [marketPosts, setMarketPosts] = useState<IGetMarket | null>();
+  const loadMoreRef = useRef(null);
 
   const formatPrice = (price: number) => {
-    const formattedPrice = price.toFixed(7);
-    return parseFloat(formattedPrice).toString();
+    const formattedPrice = Math.ceil(price).toFixed(2);
+    return formattedPrice.toString();
   };
 
-  if (!marketPosts) {
-    return <h1>Рынок пока пуст</h1>;
+  useEffect(() => {
+    const fetchData = async () => {
+      // setIsLoading(true); // установка состояния загрузки в true
+      const newData = await getMarketAPI(page);
+      setMarketPosts((prevData) => ({ ...prevData, ...newData }));
+      setIsLoading(false); // установка состояния загрузки в false после завершения загрузки данных
+    };
+    fetchData();
+  }, [page]);
+
+  const loadMorePosts = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
+
+  useLayoutEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMorePosts();
+        }
+      },
+      { threshold: 1 }
+    );
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="relative h-full w-full flex flex-col gap-2 items-center justify-center">
+        <Store className="w-[50px] h-[50px]" />
+        <h1>Рынок загружаеться</h1>
+      </div>
+    );
   }
 
-  return marketPosts?.case({
-    pending: () => <div>Loading...</div>,
-    rejected: () => <div>Не удалось получить рынок</div>,
-    fulfilled: (value) => (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-5 overflow-y-auto justify-center">
-        {value.map((e) => (
-          <React.Fragment key={e.content_id}>
-            <div className="w-full h-auto max-h-[430px] sm:max-w-[400px] sm:w-full break-all flex flex-col gap-2 border rounded-xl p-1 justify-center">
-              <div className="w-full h-[200px]">
-                <img
-                  className="w-full h-full object-cover rounded"
-                  draggable={false}
-                  alt="Image"
-                  src={`https://market-api.titanproject.top${e.content}`}
-                  // layout="responsive"
-                  width={300}
-                  height={300}
-                />
-              </div>
-              <div className="flex flex-col gap-2 p-2">
-                <h1 className="w-full break-normal text-ellipsis overflow-hidden mb-5">
-                  <p>{e.name}</p>
-                </h1>
-                <p className="w-full text-ellipsis overflow-hidden mb-5">
-                  Цена за показ:
-                  <p>{formatPrice(e.price_for_show)}$</p>
-                </p>
-              </div>
-              <Button asChild>
-                <Link href="/">Подключить</Link>
-              </Button>
+  if (!marketPosts?.items) {
+    return (
+      <div className="relative h-full w-full flex flex-col gap-2 items-center justify-center">
+        <Store className="w-[50px] h-[50px]" />
+        <h1>Товаров на рынке не найдено</h1>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-[95%] mt-2 mx-auto">
+      <div
+        className="grid p-2 gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 pb-16"
+        ref={loadMoreRef}
+      >
+        {marketPosts.items.map((post, index) => (
+          <Link
+            href={`/market/${post.content_id}`}
+            key={index}
+            className="relative max-w-[250px] h-[200px] cursor-pointer lg:hover:scale-[101%]"
+          >
+            <div className="w-full h-full relative">
+              <Image
+                src={`https://market-api.titanproject.top${post.content}`}
+                alt=""
+                fill
+                draggable={false}
+                sizes="250px"
+                // priority
+                className="object-cover rounded-lg"
+              />
             </div>
-          </React.Fragment>
+            <div className="absolute bottom-0 left-0 right-0 p-2 bg-black bg-opacity-50 text-white rounded-b-lg">
+              <p className="text-sm font-semibold truncate">{post.name}</p>
+              <p className="text-sm truncate">
+                {formatPrice(post.price_for_show)} BYR за показ
+              </p>
+              <p className="text-xs">
+                {post.current_shows} / {post.total_shows} показов
+              </p>
+            </div>
+          </Link>
         ))}
       </div>
-    ),
-  });
+    </div>
+  );
 };
 
-export default observer(Page);
+export default Page;

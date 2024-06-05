@@ -4,7 +4,7 @@ import { graphqlClient } from "@/features/graphql/client/gql.setup";
 import { Button } from "@/shared/components/ui/button";
 import { SelectItem } from "@/shared/components/ui/select";
 import { Textarea } from "@/shared/components/ui/textarea";
-import { useMutation } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import {
   Select,
   SelectContent,
@@ -15,7 +15,8 @@ import {
 } from "@/shared/components/ui/select";
 import { SlidersHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
+import Cookies from "js-cookie";
 
 interface IProfileSettingsWidget {
   info: string;
@@ -100,6 +101,21 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
   const handleEditAddress = () => {
     setEditingAddress(true);
     setTempAddress(address);
+  };
+
+  const handleLogout = async () => {
+    try {
+      Cookies.remove("access_token", {
+        domain: 'localhost'
+      });
+      Cookies.remove("refresh_token", {
+        domain: 'localhost'
+      });
+
+      location.reload();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -231,6 +247,11 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
             Add address
           </Button>
         )}
+      </div>
+      <div>
+        <Button onClick={handleLogout} variant="destructive">
+          Выйти с аккаунта
+        </Button>
       </div>
     </div>
   );

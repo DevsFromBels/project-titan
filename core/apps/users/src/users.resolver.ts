@@ -14,6 +14,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { AuthGuard } from "./guards/auth.guard";
+import { GetUserByName } from "./entities/user.entity";
 
 @Resolver("User")
 export class UsersResolver {
@@ -64,7 +65,7 @@ export class UsersResolver {
     return this.userService.Logout(context.req);
   }
 
-  @Query(() => UserByEmail)
+  @Query(() => GetUserByName)
   async getUserByName(@Args("email") email: string) {
     return this.userService.getUserByEmail(email);
   }
