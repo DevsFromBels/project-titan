@@ -73,7 +73,7 @@ const MarketItem = () => {
   return (
     <ScrollView className="bg-[#121111] mb-6"  style={{ maxHeight: "100%" }} contentContainerStyle={{ flexGrow: 1 }}>
       <View className="w-full break-all flex flex-col gap-2 p-2">
-        <View className="w-full h-[300px]">
+        <View className="w-full h-[300px]" style={{ height: 300}}>
           <Image
             className="w-full h-full object-cover rounded"
             alt="Image"

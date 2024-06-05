@@ -107,11 +107,11 @@ const SignInPage = () => {
           <Text className="text-2xl text-black">{i18n.t("signin")}</Text>
         </Pressable>
       </View>
-      <View className="flex justify-center items-center absolute h-screen w-screen " style={{ marginTop: 80 }}>
+      {/* <View className="flex justify-center items-center absolute h-screen w-screen " style={{ marginTop: 80 }}>
         <Text className="text-white">
           <Link href="/ch-pass">Забыли пароль?</Link>
         </Text>
-      </View>
+      </View> */}
     </SafeAreaView>
   );
 };

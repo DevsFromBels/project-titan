@@ -67,9 +67,6 @@ export default function TabSearchScreen() {
 
   return (
     <View className="flex-1 justify-center items-center h-screen w-screen bg-[#121111]">
-      <Text className="text-white relative z-10 h-screen flex justify-start items-center">
-        Создайте свою рекламу
-      </Text>
       <Button label="Выберите изображение" onPress={handleSubmit} />
       {image && (
         <View className="absolute h-screen w-screen bg-[#121111] flex justify-center items-center gap-2">

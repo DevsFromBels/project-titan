@@ -1,7 +1,7 @@
+import { Button } from "@/components/ui/Button";
 import { Link, router, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { View, Image, Text, ScrollView, ActivityIndicator } from "react-native";
-import { Button } from "@/components/ui/Button";
 
 export interface IGetMarket {
   items: Item[];
@@ -83,7 +83,8 @@ const market = () => {
   return (
     <ScrollView
       ref={scrollViewRef}
-      className="bg-[#121111] grid grid-cols-1 gap-5 p-5 overflow-y-auto overflow-hidden max-h-full mb-14"
+      className="bg-[#121111] grid grid-cols-1 gap-5 p-5 overflow-y-auto overflow-hidden max-h-full"
+      style={{marginBottom: 50}}
       onScroll={({ nativeEvent }) => {
         if (
           nativeEvent.contentOffset.y + nativeEvent.layoutMeasurement.height >=
@@ -98,7 +99,10 @@ const market = () => {
         {data?.items.map((e) => (
           <React.Fragment key={e.content_id}>
             {!imageErrors.includes(e.content_id) && (
-              <View className="w-full h-auto max-h-[430px] break-all flex flex-col border-white border rounded-xl p-2 mb-5">
+              <View
+                className="w-full h-auto max-h-[430px] break-all flex flex-col border-white border rounded-xl p-2 mb-5"
+                
+              >
                 <View className="w-full h-[200px]">
                   <Image
                     className="w-full h-full object-cover rounded"
