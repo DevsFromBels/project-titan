@@ -1,8 +1,17 @@
-import { useGlobalSearchParams } from "expo-router";
-import React, { useState, useEffect } from "react";
-import { View, Text, Image, ScrollView, ActivityIndicator } from "react-native";
-import { IGetMarket } from ".";
+import { IGetMarket, Item } from ".";
 import SimilarProducts from "./Similar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useGlobalSearchParams } from "expo-router";
+import { Bell, BellRing } from "lucide-react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+  Pressable,
+} from "react-native";
 
 async function getDataById(id?: string) {
   const res = await fetch(
@@ -20,6 +29,7 @@ const MarketItem = () => {
   const [data, setData] = useState<IGetMarket | null>(null);
   const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [subscribed, setSubscribed] = useState<boolean>();
 
   const id = glob.id;
 
@@ -42,8 +52,28 @@ const MarketItem = () => {
   };
 
   const formatPrice = (price: number) => {
-    const formattedPrice = price.toFixed(7);
+    const formattedPrice = price.toFixed(2);
     return parseFloat(formattedPrice).toString();
+  };
+
+  const handelSubscriptions = async () => {
+    try {
+      const res = await fetch(
+        `https://market-api.titanproject.top/subscribe?product_id=${id}`,
+        {
+          method: "POST",
+          headers: new Headers({
+            accessToken: (await AsyncStorage.getItem("access_token")) || "",
+            refreshToken: (await AsyncStorage.getItem("refresh_token")) || "",
+          }),
+        }
+      );
+      if (res.ok) {
+        setSubscribed(true);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   if (isLoading) {
@@ -71,9 +101,13 @@ const MarketItem = () => {
   }
 
   return (
-    <ScrollView className="bg-[#121111] mb-6"  style={{ maxHeight: "100%" }} contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView
+      className="bg-[#121111] mb-6"
+      style={{ maxHeight: "100%" }}
+      contentContainerStyle={{ flexGrow: 1 }}
+    >
       <View className="w-full break-all flex flex-col gap-2 p-2">
-        <View className="w-full h-[300px]" style={{ height: 300}}>
+        <View className="w-full h-[300px]" style={{ height: 300 }}>
           <Image
             className="w-full h-full object-cover rounded"
             alt="Image"
@@ -83,6 +117,26 @@ const MarketItem = () => {
             onError={handleImageError}
           />
         </View>
+        <View className="w-screen flex justify-center items-center">
+          <Pressable
+            className="w-[300px] h-[50px] flex justify-center items-center bg-white rounded-3xl gap-2 flex-row"
+            onPress={handelSubscriptions}
+          >
+            <Bell color="black" />
+            <Text className="text-black">Подписаться</Text>
+          </Pressable>
+        </View>
+        {subscribed === true && (
+          <View className="w-screen flex justify-center items-center">
+            <Pressable
+              disabled
+              className="w-[300px] h-[50px] flex justify-center items-center bg-gray-700 rounded-3xl gap-2 flex-row"
+            >
+              <BellRing color="black" />
+              <Text className="text-black">Вы подписаны</Text>
+            </Pressable>
+          </View>
+        )}
         <View className="flex flex-col gap-2 p-2">
           <Text className=" text-ellipsis text-xl overflow-hidden text-white">
             Название: {data.name}

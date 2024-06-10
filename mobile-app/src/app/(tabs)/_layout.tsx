@@ -19,7 +19,11 @@ const TabsLayout = () => {
     variables: {},
   });
 
-  const profileImage = `https://avatars-api.titanproject.top${data?.getSettings.avatar_url}`;
+  let profileImage = `https://avatars-api.titanproject.top${data?.getSettings.avatar_url}`;
+
+  if (!data?.getSettings.avatar_url) {
+    profileImage = "https://titanproject.top/cat.jpeg";
+  }
 
   return (
     <SafeAreaView className="h-full w-screen">
@@ -85,7 +89,7 @@ const TabsLayout = () => {
             title: `${i18n.t("profile")}`,
             tabBarIcon: () => (
               <Avatar className="w-[30px] h-[30px] rounded-full">
-                <AvatarImage src={profileImage} />
+                <AvatarImage src={profileImage}  width={30} height={30}/>
                 <AvatarFallback>
                   {data?.getSettings.userSettings.name
                     .slice(0, 2)

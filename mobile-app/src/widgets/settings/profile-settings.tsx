@@ -1,13 +1,14 @@
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { USER_UPDATE_SETTINGS_ADDRESS } from "@/graphql/actions/settings/user-update-address";
 import { USER_UPDATE_SETTINGS } from "@/graphql/actions/settings/user-update-info";
 import { graphqlClient } from "@/graphql/gql.setup";
-import { Button } from "@/components/ui/Button";
+import { i18n } from "@/localization/i18n";
 import { useMutation } from "@apollo/client";
+import { router } from "expo-router";
 import { SlidersHorizontal } from "lucide-react-native";
 import React, { useState } from "react";
-import { i18n } from "@/localization/i18n";
 import { View, Text } from "react-native";
-import { Input } from "@/components/ui/Input";
 
 interface IProfileSettingsWidget {
   info: string;
@@ -33,7 +34,6 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
       if (data && data.settingsUpdateUserInfo) {
         setTempInfo(data.settingsUpdateUserInfo.profileSettings.info);
       }
-
       graphqlClient.resetStore();
     } catch (error) {
       console.error(error);
@@ -60,7 +60,7 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
       <View className="flex flex-col gap-2">
         {!editingInfo &&
           updatedInfo?.settingsUpdateUserInfo?.profileSettings.info && (
-            <View className="flex justify-between">
+            <View className="flex justify-between p-2 gap-2">
               <Text className="text-white">
                 {updatedInfo.settingsUpdateUserInfo.profileSettings.info}
               </Text>
@@ -70,7 +70,7 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
         {!editingInfo &&
           info &&
           !updatedInfo?.settingsUpdateUserInfo?.profileSettings.info && (
-            <View className="flex justify-between">
+            <View className="flex justify-between p-2 gap-2">
               <Text className="text-white">{info}</Text>
               <Button label="Edit" onPress={handleEditInfo} />
             </View>
@@ -102,7 +102,7 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
         {!editingInfo &&
           !info &&
           !updatedInfo?.settingsUpdateUserInfo?.profileSettings.info && (
-            <View>
+            <View className="p-5">
               <Text className="text-white text-xl">{i18n.t("info")}</Text>
               <Button
                 label="Add info"

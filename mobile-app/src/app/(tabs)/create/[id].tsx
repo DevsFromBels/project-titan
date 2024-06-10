@@ -1,16 +1,21 @@
 import { Button } from "@/components/ui/Button";
-import { useState } from "react";
-import { View, Text, Image } from "react-native";
-import * as ImagePicker from "expo-image-picker";
 import { Input } from "@/components/ui/Input";
+import { graphqlClient } from "@/graphql/gql.setup";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Picker } from "@react-native-picker/picker";
+import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
+import { MoveLeft } from "lucide-react-native";
+import { useState } from "react";
+import { View, Text, Image, Pressable } from "react-native";
 
 export default function TabSearchScreen() {
   const [hasGalleryPermission, setHasGalleryPermission] = useState<boolean>();
   const [image, setImage] = useState<string>();
   const [totalShows, setTotalShows] = useState("");
   const [name, setName] = useState("");
+  const [category, setCategory] = useState();
+  const [webSiteLink, setWebSiteLink] = useState("");
 
   const handleSubmit = async () => {
     const galleryStatus =
@@ -27,7 +32,7 @@ export default function TabSearchScreen() {
     }
   };
 
-  const balance = 100;
+  const balance = 10000;
 
   const priceShow = balance / +totalShows;
 
@@ -40,7 +45,7 @@ export default function TabSearchScreen() {
         name: "name",
       });
       const response = await fetch(
-        `https://market-api.titanproject.top/create?name=${name}&price_peer_show=${priceShow}&total_shows=${totalShows}`,
+        `https://market-api.titanproject.top/create?name=${name}&price_peer_show=${priceShow}&total_shows=${totalShows}&link=${webSiteLink}&category=${category}`,
         {
           method: "POST",
           body: formData,
@@ -56,6 +61,7 @@ export default function TabSearchScreen() {
         setName("");
         setTotalShows("");
         setImage("");
+        graphqlClient.resetStore();
         router.replace("/(tabs)/market");
       } else {
         throw new Error("Upload failed");
@@ -84,28 +90,80 @@ export default function TabSearchScreen() {
             value={name}
             onChangeText={setName}
             placeholder="Введите название"
-            className="w-[250px]"
+            className="w-[300px]"
+          />
+          <Input
+            value={webSiteLink}
+            onChangeText={setWebSiteLink}
+            placeholder="Введите ссылку на свой сайт"
+            className="w-[300px]"
           />
           <Input
             value={totalShows}
             keyboardType="numeric"
             onChangeText={setTotalShows}
             placeholder="Введите количество показов"
-            className="w-[250px]"
+            className="w-[300px]"
           />
+          <View
+            style={{
+              borderColor: "white",
+              borderWidth: 1,
+              borderRadius: 10,
+            }}
+          >
+            <Picker
+              style={{
+                width: 300,
+                color: "white",
+                alignItems: "center",
+                borderColor: "black",
+                borderWidth: 1,
+                borderRadius: 10,
+              }}
+              selectedValue={category}
+              onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
+            >
+              <Picker.Item label="Веб-Сайт" value="Веб-Сайт" />
+              <Picker.Item
+                label="Социальная сеть (telegram)"
+                value="Социальная сеть (telegram)"
+              />
+              <Picker.Item
+                label="Социальная сеть (whatsapp)"
+                value="Социальная сеть (whatsapp)"
+              />
+              <Picker.Item
+                label="Социальная сеть (instagram)"
+                value="Социальная сеть (instagram)"
+              />
+              <Picker.Item
+                label="Социальная сеть (twitter)"
+                value="Социальная сеть (twitter)"
+              />
+            </Picker>
+          </View>
           <Text className="text-white ">
-            Цена за один показ: {!priceShow ? 0 : priceShow}
+            Цена за один показ:{" "}
+            {priceShow == Infinity ? 0 : Math.floor(priceShow).toFixed(2)}
           </Text>
-
-          <Button label="Создать предложение" onPress={handleCreate} />
-          <View className="">
-            <Button
-              label="Отмена"
+          <View className="absolute h-screen w-screen items-center justify-end flex pb-16">
+            <Pressable
+              className="w-[350] h-[70] rounded-[15] flex justify-center items-center bg-white"
+              onPress={handleCreate}
+            >
+              <Text className="text-2xl text-black">Создать предложение</Text>
+            </Pressable>
+          </View>
+          <View className="absolute h-screen w-screen flex p-2">
+            <Pressable
               onPress={() => {
                 setImage("");
               }}
-              className="w-[250px] mt-5 "
-            />
+              className="w-[250px]"
+            >
+              <MoveLeft color="white" />
+            </Pressable>
           </View>
         </View>
       )}

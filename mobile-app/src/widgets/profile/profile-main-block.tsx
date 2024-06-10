@@ -1,3 +1,11 @@
+import { IGetMarket } from "@/app/(tabs)/market";
+import { DateOptionsWithMonth } from "@/constants/date-output";
+import { graphqlClient } from "@/graphql/gql.setup";
+import { i18n } from "@/localization/i18n";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ImagePicker from "expo-image-picker";
+import { Link, router } from "expo-router";
+import { Pencil } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -7,14 +15,6 @@ import {
   Pressable,
   ActivityIndicator,
 } from "react-native";
-import { i18n } from "@/localization/i18n";
-import { DateOptionsWithMonth } from "@/constants/date-output";
-import { Pencil } from "lucide-react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { IGetMarket } from "@/app/(tabs)/market";
-import * as ImagePicker from "expo-image-picker";
-import { Link, router } from "expo-router";
-import { graphqlClient } from "@/graphql/gql.setup";
 
 interface IProfileMainBlockWidget {
   image: string;
@@ -24,9 +24,21 @@ interface IProfileMainBlockWidget {
   registerDateString: string;
 }
 
-async function getData(user_id: string): Promise<IGetMarket> {
-  const res: IGetMarket = await fetch(
-    `https://market-api.titanproject.top/get-similar-products?user_id=${user_id}&page=1&limit=15`,
+interface UserMarketAPI {
+  content_id: string;
+  content: string;
+  name: string;
+  link: string;
+  user_id: string;
+  price_for_show: number;
+  total_shows: number;
+  current_shows: number;
+  category: string | null;
+}
+
+async function getData(user_id: string) {
+  const res: UserMarketAPI = await fetch(
+    `https://market-api.titanproject.top/get-all-user-market-products?user_id=${user_id}`,
     {
       method: "GET",
     }
@@ -42,7 +54,7 @@ const ProfileMainBlockWidget = ({
   info,
   registerDateString,
 }: IProfileMainBlockWidget) => {
-  const [data, setData] = useState<IGetMarket | null>();
+  const [dataMarket, setDataMarket] = useState<UserMarketAPI[]>();
   const [imageErrors, setImageErrors] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasGalleryPermission, setHasGalleryPermission] = useState<boolean>();
@@ -66,8 +78,8 @@ const ProfileMainBlockWidget = ({
 
   useEffect(() => {
     (async () => {
-      const post: IGetMarket = await getData(id);
-      setData(post);
+      const post: UserMarketAPI[] = await getData(id);
+      setDataMarket(post);
       const galleryStatus =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
       setHasGalleryPermission(galleryStatus.status === "granted");
@@ -184,63 +196,71 @@ const ProfileMainBlockWidget = ({
           </Text>
         </View>
       </View>
-      <View
-        className="p-2 border border-[#121111] h-auto rounded-xl w-[90%]"
-        style={{ margin: 5 }}
-      >
+      <View className="p-2 h-auto rounded-xl w-[90%]">
         <Text className="text-white text-xl ">Товары на рынке</Text>
-        <View style={{ flex: 1 }} className="h-full ">
-          {data &&
-            data.items &&
-            data.items.map((e) => (
-              <View key={e.content_id} style={{ padding: 10 }}>
-                <Pressable
-                  onPress={() =>
-                    router.replace(`/(tabs)/market/${e.content_id}`)
-                  }
-                >
-                  <View
-                    style={{
-                      position: "relative",
-                      width: "100%",
-                      height: 200,
-                    }}
-                    className="rounded-xl grid grid-cols-2"
+        <View style={{ flex: 1 }} className="h-full mt-5">
+          {!dataMarket && (
+            <View className="flex justify-center items-center">
+              <Text className="text-white">
+                У пользователя нет товаров на рынке
+              </Text>
+            </View>
+          )}
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
+            {dataMarket?.map((e) => (
+              <React.Fragment key={e.content_id}>
+                {!imageErrors.includes(e.content_id) && (
+                  <Pressable
+                    onPress={() =>
+                      router.replace(`/(tabs)/market/${e.content_id}`)
+                    }
+                    style={{ width: "48%" }}
                   >
-                    <Image
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        resizeMode: "cover",
-                      }}
-                      className="rounded-xl"
-                      source={{
-                        uri: `https://market-api.titanproject.top${e.content}`,
-                      }}
-                      onError={() => console.log("Image error")}
-                    />
                     <View
                       style={{
-                        position: "absolute",
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        backgroundColor: "rgba(0,0,0,0.5)",
-                        padding: 10,
+                        position: "relative",
+                        width: "100%",
+                        height: 200,
+                        marginBottom: 10,
                       }}
-                      className="rounded-xl"
+                      className="rounded-xl grid grid-cols-2"
                     >
-                      <Text style={{ color: "#fff", fontSize: 16 }}>
-                        {e.name}
-                      </Text>
-                      <Text style={{ color: "#fff", fontSize: 14 }}>
-                        Осталось показов: {e.current_shows} / {e.total_shows}
-                      </Text>
+                      <Image
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          resizeMode: "cover",
+                        }}
+                        className="rounded-xl"
+                        source={{
+                          uri: `https://market-api.titanproject.top${e.content}`,
+                        }}
+                        onError={() => console.log("Image error")}
+                      />
+                      <View
+                        style={{
+                          position: "absolute",
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          backgroundColor: "rgba(0,0,0,0.5)",
+                          padding: 10,
+                        }}
+                        className="rounded-xl"
+                      >
+                        <Text style={{ color: "#fff", fontSize: 16 }}>
+                          {e.name}
+                        </Text>
+                        <Text style={{ color: "#fff", fontSize: 14 }}>
+                          Осталось показов: {e.current_shows} / {e.total_shows}
+                        </Text>
+                      </View>
                     </View>
-                  </View>
-                </Pressable>
-              </View>
+                  </Pressable>
+                )}
+              </React.Fragment>
             ))}
+          </View>
         </View>
       </View>
     </SafeAreaView>

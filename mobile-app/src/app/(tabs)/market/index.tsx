@@ -62,7 +62,7 @@ const market = () => {
   };
 
   const formatPrice = (price: number) => {
-    const formattedPrice = price.toFixed(7);
+    const formattedPrice = price.toFixed(2);
     return parseFloat(formattedPrice).toString();
   };
 
@@ -84,7 +84,7 @@ const market = () => {
     <ScrollView
       ref={scrollViewRef}
       className="bg-[#121111] grid grid-cols-1 gap-5 p-5 overflow-y-auto overflow-hidden max-h-full"
-      style={{marginBottom: 50}}
+      style={{ marginBottom: 50 }}
       onScroll={({ nativeEvent }) => {
         if (
           nativeEvent.contentOffset.y + nativeEvent.layoutMeasurement.height >=
@@ -99,10 +99,7 @@ const market = () => {
         {data?.items.map((e) => (
           <React.Fragment key={e.content_id}>
             {!imageErrors.includes(e.content_id) && (
-              <View
-                className="w-full h-auto max-h-[430px] break-all flex flex-col border-white border rounded-xl p-2 mb-5"
-                
-              >
+              <View className="w-full h-auto max-h-[430px] break-all flex flex-col border-white border rounded-xl p-2 mb-5">
                 <View className="w-full h-[200px]">
                   <Image
                     className="w-full h-full object-cover rounded"
