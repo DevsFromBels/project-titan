@@ -160,7 +160,7 @@ const ProfileMainBlockWidget = ({
               position: "absolute",
               right: 0,
               bottom: 0,
-              width: 60,
+              width: 100,
               height: 30,
               left: 60,
             }}
