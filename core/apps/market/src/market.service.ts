@@ -23,6 +23,8 @@ export class MarketService {
    * @param {string} userID
    * @param {string} price_per_show
    * @param {string} total_shows
+   * @param {string} link
+   * @param {string} category
    * @returns {unknown}
    */
   async createProduct(
@@ -30,7 +32,9 @@ export class MarketService {
     name: string,
     userID: string,
     price_per_show: string,
-    total_shows: string
+    total_shows: string,
+    link: string,
+    category: string
   ) {
     const user = await this.prisma.user.findFirst({
       where: {
@@ -50,14 +54,19 @@ export class MarketService {
       return new BadRequestException("Price not found");
     }
 
+    if(!link) {
+      return new BadRequestException("Link is not found")
+    }
+
     return await this.prisma.market.create({
       data: {
         content: image,
         name: name,
-        link: "",
+        link: link,
         user_id: userID,
         price_for_show: parseFloat(price_per_show),
         total_shows: parseInt(total_shows),
+        category: category,
         current_shows: 0,
       },
     });
@@ -185,34 +194,6 @@ export class MarketService {
       limit,
       totalPages: Math.ceil(total / limit),
     };
-  }
-
-  /**
-   * get market subscriptions by tokens
-   *
-   * @async
-   * @param {string} token
-   * @returns {unknown}
-   */
-  async getTokenSubscriptions(token: string) {
-    const sub_token = await this.prisma.userSubscriptions.findFirst({
-      where: {
-        token: token,
-      },
-      include: {
-        user: {
-          include: {
-            userSubscriptions: true,
-          },
-        },
-      },
-    });
-
-    if (!sub_token) {
-      throw new BadRequestException("Token not found");
-    }
-
-    return sub_token;
   }
 
   /**

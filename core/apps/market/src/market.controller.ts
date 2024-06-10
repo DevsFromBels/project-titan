@@ -45,7 +45,9 @@ export class MarketController {
     @Res() reply: FastifyReply,
     @Query("name") name: string,
     @Query("price_peer_show") pricePeerShow: string,
-    @Query("total_shows") totalShows: string
+    @Query("total_shows") totalShows: string,
+    @Query("link") link: string,
+    @Query("category") category: string
   ) {
     const data = await req.file();
     const fileName = `${uuidv7()}${extname(data.filename)}`;
@@ -72,7 +74,9 @@ export class MarketController {
         name,
         user_id,
         pricePeerShow,
-        totalShows
+        totalShows,
+        link,
+        category
       );
 
       return reply.status(200).send(product);
@@ -145,10 +149,8 @@ export class MarketController {
     return this.marketSubscriptions.subscribe(product_id, user_id);
   }
 
-  @Get('/get-top-products-by-views')
-  async getTopProductsByViews(
-    @Query("limit") limit: string = "5"
-  ) {
-    return this.marketService.getTopProductsByViews()
+  @Get("/get-top-products-by-views")
+  async getTopProductsByViews(@Query("limit") limit: string = "5") {
+    return this.marketService.getTopProductsByViews();
   }
 }
