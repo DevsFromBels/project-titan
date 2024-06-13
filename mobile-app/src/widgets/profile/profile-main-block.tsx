@@ -196,7 +196,7 @@ const ProfileMainBlockWidget = ({
           </Text>
         </View>
       </View>
-      <View className="p-2 h-auto rounded-xl w-[90%]">
+      <View className="p-2 rounded-xl w-[90%] ">
         <Text className="text-white text-xl ">Товары на рынке</Text>
         <View style={{ flex: 1 }} className="h-full mt-5">
           {!dataMarket && (
@@ -206,7 +206,7 @@ const ProfileMainBlockWidget = ({
               </Text>
             </View>
           )}
-          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }} className="">
             {dataMarket?.map((e) => (
               <React.Fragment key={e.content_id}>
                 {!imageErrors.includes(e.content_id) && (

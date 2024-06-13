@@ -4,8 +4,8 @@ import { IGetSettings } from "@/types/settings.types";
 import ProfileMainBlockWidget from "@/widgets/profile/profile-main-block";
 import { useQuery } from "@apollo/client";
 import { router } from "expo-router";
-import { SafeAreaView, View, Text, Image, ScrollView } from "react-native";
 import React from "react";
+import { SafeAreaView, View, Text, Image, ScrollView } from "react-native";
 
 export default function TabProfileScreen() {
   try {

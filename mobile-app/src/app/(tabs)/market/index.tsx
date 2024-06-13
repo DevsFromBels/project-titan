@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/Button";
+import { Picker } from "@react-native-picker/picker";
 import { Link, router, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { View, Image, Text, ScrollView, ActivityIndicator } from "react-native";
@@ -25,7 +26,7 @@ export interface Item {
 
 async function getData(page: number): Promise<IGetMarket> {
   const res: IGetMarket = await fetch(
-    `https://market-api.titanproject.top/getMarket?page=${page}&limit=10`
+    `https://market-api.titanproject.top/getMarket?page=${page}&limit=20`
   ).then((res) => res.json());
 
   return res;
@@ -36,7 +37,8 @@ const market = () => {
   const [page, setPage] = useState(1);
   const [imageErrors, setImageErrors] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const scrollViewRef = useRef(null);
+  const [selectedSocialNetwork, setSelectedSocialNetwork] = useState("");
+  const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,6 +47,13 @@ const market = () => {
       let combinedData = data
         ? [...data.items, ...newData.items]
         : newData.items;
+
+      if (selectedSocialNetwork) {
+        combinedData = combinedData.filter(
+          (item) => item.category === selectedSocialNetwork
+        );
+      }
+
       setData({
         items: combinedData,
         total: newData.total,
@@ -55,7 +64,7 @@ const market = () => {
       setIsLoading(false);
     };
     fetchData();
-  }, [page]);
+  }, [page, selectedSocialNetwork]);
 
   const handleImageError = (contentId: string) => {
     setImageErrors((prevErrors) => [...prevErrors, contentId]);
@@ -70,6 +79,13 @@ const market = () => {
     if (!isLoading) {
       setPage((prevPage) => prevPage + 1);
     }
+  };
+
+  const handleSocialNetworkChange = (itemValue: string) => {
+    setSelectedSocialNetwork(itemValue);
+    setPage(1);
+    setData(null);
+    scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
   };
 
   if (isLoading) {
@@ -95,6 +111,20 @@ const market = () => {
       }}
       scrollEventThrottle={400}
     >
+      <View className="border border-white rounded-xl m-2 ">
+        <Picker
+          selectedValue={selectedSocialNetwork}
+          onValueChange={handleSocialNetworkChange}
+          style={{ color: "white" }}
+        >
+          <Picker.Item label="Все" value="" />
+          <Picker.Item label="Веб-Сайт" value="Веб-Сайт" />
+          <Picker.Item label="Социальная сеть (telegram)" value="Социальная сеть (telegram)" />
+          <Picker.Item label="Социальная сеть (whatsapp)" value="Социальная сеть (whatsapp)" />
+          <Picker.Item label="Социальная сеть (instagram)" value="Социальная сеть (instagram)" />
+          <Picker.Item label="Социальная сеть (twitter)" value="Социальная сеть (twitter)" />
+        </Picker>
+      </View>
       <View className="grid grid-cols-1 overflow-y-auto overflow-hidden">
         {data?.items.map((e) => (
           <React.Fragment key={e.content_id}>
