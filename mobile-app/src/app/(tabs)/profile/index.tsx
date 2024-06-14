@@ -23,7 +23,7 @@ export default function TabProfileScreen() {
 
     return (
       <SafeAreaView className="h-screen">
-        <ScrollView>
+        <ScrollView className="overflow-y-auto overflow-hidden max-h-full">
           <ProfileMainBlockWidget
             image={data.getSettings.avatar_url}
             username={data.getSettings.userSettings.name}

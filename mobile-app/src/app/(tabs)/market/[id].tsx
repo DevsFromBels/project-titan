@@ -119,24 +119,21 @@ const MarketItem = () => {
         </View>
         <View className="w-screen flex justify-center items-center">
           <Pressable
-            className="w-[300px] h-[50px] flex justify-center items-center bg-white rounded-3xl gap-2 flex-row"
+            className={
+              subscribed
+                ? "w-[300px] h-[50px] flex justify-center items-center bg-gray-700 rounded-3xl gap-2 flex-row"
+                : "w-[300px] h-[50px] flex justify-center items-center bg-white rounded-3xl gap-2 flex-row"
+            }
             onPress={handelSubscriptions}
           >
-            <Bell color="black" />
-            <Text className="text-black">Подписаться</Text>
+            {subscribed ? <BellRing color="black" /> : <Bell color="black" />}
+            {subscribed ? (
+              <Text className="text-black">Вы подписаны</Text>
+            ) : (
+              <Text className="text-black">Подписаться</Text>
+            )}
           </Pressable>
         </View>
-        {subscribed === true && (
-          <View className="w-screen flex justify-center items-center">
-            <Pressable
-              disabled
-              className="w-[300px] h-[50px] flex justify-center items-center bg-gray-700 rounded-3xl gap-2 flex-row"
-            >
-              <BellRing color="black" />
-              <Text className="text-black">Вы подписаны</Text>
-            </Pressable>
-          </View>
-        )}
         <View className="flex flex-col gap-2 p-2">
           <Text className=" text-ellipsis text-xl overflow-hidden text-white">
             Название: {data.name}
