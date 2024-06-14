@@ -2,10 +2,10 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { GET_SETTIGNS } from "@/graphql/actions/settings/get-settings";
 import { IGetSettings } from "@/types/settings.types";
 import ProfileMainBlockWidget from "@/widgets/profile/profile-main-block";
-import ProfileStatusWidget from "@/widgets/profile/profile-status";
 import { useQuery } from "@apollo/client";
 import { router } from "expo-router";
-import { SafeAreaView } from "react-native";
+import React from "react";
+import { SafeAreaView, View, Text, Image, ScrollView } from "react-native";
 
 export default function TabProfileScreen() {
   try {
@@ -18,18 +18,20 @@ export default function TabProfileScreen() {
     }
 
     if (!data?.getSettings.userSettings.id) {
-      return router.replace('/')
+      return router.replace("/");
     }
 
     return (
-      <SafeAreaView className='h-screen'>
-        <ProfileMainBlockWidget
-          image={data.getSettings.avatar_url}
-          username={data.getSettings.userSettings.name}
-          id={data.getSettings.userSettings.id}
-          info={data.getSettings.profileSettings.info}
-          registerDateString={data.getSettings.userSettings.createdAt}
-        />
+      <SafeAreaView className="h-screen">
+        <ScrollView className="overflow-y-auto overflow-hidden max-h-full">
+          <ProfileMainBlockWidget
+            image={data.getSettings.avatar_url}
+            username={data.getSettings.userSettings.name}
+            id={data.getSettings.userSettings.id}
+            info={data.getSettings.profileSettings.info}
+            registerDateString={data.getSettings.userSettings.createdAt}
+          />
+        </ScrollView>
       </SafeAreaView>
     );
   } catch (error) {

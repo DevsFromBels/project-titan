@@ -1,12 +1,13 @@
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { USER_UPDATE_SETTINGS_ADDRESS } from "@/graphql/actions/settings/user-update-address";
 import { USER_UPDATE_SETTINGS } from "@/graphql/actions/settings/user-update-info";
 import { graphqlClient } from "@/graphql/gql.setup";
-import { Button } from "@/components/ui/Button";
-import { useMutation } from "@apollo/client";
-import { SlidersHorizontal } from "lucide-react-native";
-import React, { useCallback, useState } from "react";
 import { i18n } from "@/localization/i18n";
-import { TextArea } from "native-base";
+import { useMutation } from "@apollo/client";
+import { router } from "expo-router";
+import { SlidersHorizontal } from "lucide-react-native";
+import React, { useState } from "react";
 import { View, Text } from "react-native";
 
 interface IProfileSettingsWidget {
@@ -20,17 +21,8 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
   const [tempInfo, setTempInfo] = useState(info);
   const [tempAddress, setTempAddress] = useState(address);
 
-  const [
-    updateUserAddress,
-    { loading: loadingUpdateAddress, data: updatedAddress },
-  ] = useMutation(USER_UPDATE_SETTINGS_ADDRESS);
-
   const [updateUserInfo, { loading: loadingUpdateInfo, data: updatedInfo }] =
     useMutation(USER_UPDATE_SETTINGS);
-
-  const handleInfoChange = (e) => {
-    setTempInfo(e.target.value);
-  };
 
   const handleSaveInfo = async () => {
     try {
@@ -42,30 +34,11 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
       if (data && data.settingsUpdateUserInfo) {
         setTempInfo(data.settingsUpdateUserInfo.profileSettings.info);
       }
-
       graphqlClient.resetStore();
     } catch (error) {
       console.error(error);
     }
     setEditingInfo(false);
-  };
-
-  const handleSaveAddress = async () => {
-    try {
-      const { data } = await updateUserAddress({
-        variables: {
-          address: tempAddress,
-        },
-      });
-      if (data && data.settingsUpdateUserAddress) {
-        setTempAddress(data.settingsUpdateUserAddress.profileSettings.address);
-      }
-      console.log(data);
-      graphqlClient.resetStore();
-    } catch (error) {
-      console.error(error);
-    }
-    setEditingAddress(false);
   };
 
   const handleCancelInfo = () => {
@@ -73,49 +46,40 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
     setEditingInfo(false);
   };
 
-  const handleCancelAddress = () => {
-    setTempAddress(address);
-    setEditingAddress(false);
-  };
-
   const handleEditInfo = () => {
     setEditingInfo(true);
     setTempInfo(info);
   };
 
-  const handleEditAddress = () => {
-    setEditingAddress(true);
-    setTempAddress(address);
-  };
-
   return (
     <View className="border rounded-xl mt-5 p-4 flex flex-col gap-2 border-white">
       <View className="flex gap-2 flex-row">
-        <SlidersHorizontal color='white' />
+        <SlidersHorizontal color="white" />
         <Text className="text-xl text-white">{i18n.t("block_name")}</Text>
       </View>
       <View className="flex flex-col gap-2">
-        <Text className='text-white text-xl'>{i18n.t("info")}</Text>
         {!editingInfo &&
           updatedInfo?.settingsUpdateUserInfo?.profileSettings.info && (
-            <View className="flex justify-between">
-              <Text className='text-white'>{updatedInfo.settingsUpdateUserInfo.profileSettings.info}</Text>
+            <View className="flex justify-between p-2 gap-2">
+              <Text className="text-white">
+                {updatedInfo.settingsUpdateUserInfo.profileSettings.info}
+              </Text>
               <Button label="Edit" onPress={handleEditInfo} />
             </View>
           )}
         {!editingInfo &&
           info &&
           !updatedInfo?.settingsUpdateUserInfo?.profileSettings.info && (
-            <View className="flex justify-between">
-              <Text className='text-white'>{info}</Text>
+            <View className="flex justify-between p-2 gap-2">
+              <Text className="text-white">{info}</Text>
               <Button label="Edit" onPress={handleEditInfo} />
             </View>
           )}
         {editingInfo && (
           <View className="flex flex-col gap-2">
-            <TextArea
+            <Input
               value={tempInfo}
-              onChange={handleInfoChange}
+              onChangeText={setTempInfo}
               style={{
                 borderWidth: 1,
                 borderRadius: 6,
@@ -124,7 +88,6 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
                 paddingTop: 4,
                 paddingBottom: 4,
               }}
-              autoCompleteType={undefined}
             />
             <Button
               label={loadingUpdateInfo ? "Saving..." : "Save"}
@@ -139,11 +102,14 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
         {!editingInfo &&
           !info &&
           !updatedInfo?.settingsUpdateUserInfo?.profileSettings.info && (
-            <Button
-              label="Add info"
-              className="w-[120px]"
-              onPress={() => setEditingInfo(true)}
-            />
+            <View className="p-5">
+              <Text className="text-white text-xl">{i18n.t("info")}</Text>
+              <Button
+                label="Add info"
+                className="w-[120px]"
+                onPress={() => setEditingInfo(true)}
+              />
+            </View>
           )}
       </View>
     </View>

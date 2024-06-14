@@ -5,6 +5,8 @@ import { router } from "expo-router";
 import useSettings from "@/hooks/use-settings";
 import UserSettingsWidget from "@/widgets/settings/user-settings";
 import { Fingerprint } from "lucide-react-native";
+import { Button } from "@/components/ui/Button";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const settings = () => {
   const { data, loading } = useSettings();
@@ -18,8 +20,17 @@ const settings = () => {
     return router.replace("/sign-in");
   }
 
+  const handlelogout = async () => {
+    try {
+      await AsyncStorage.clear();
+      router.replace("/");
+    } catch(error) {
+      console.error(error)
+    }
+  }
+
   return (
-    <View className="w-screen h-screen mx-auto flex flex-col gap-2 bg-[#121111] text-white">
+    <View className="w-screen h-screen flex flex-col gap-2 bg-[#121111] text-white ">
       <ProfileSettingsWidget
         info={data.profileSettings.info}
         address={data.profileSettings.address}
@@ -39,6 +50,9 @@ const settings = () => {
           <Text className='text-white text-xl'>Is Profile Public</Text>
           <View>{data?.profileSettings.isPublic ? true : false}</View>
         </View>
+      </View>
+      <View>
+        <Button variant='destructive' onPress={handlelogout} label='Выход с аккаунта' />
       </View>
     </View>
   );

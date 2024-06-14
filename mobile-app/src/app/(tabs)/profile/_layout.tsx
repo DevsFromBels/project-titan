@@ -1,49 +1,43 @@
-import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import { Link, Stack, router } from "expo-router";
-import { MoveLeft, Settings } from "lucide-react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Drawer } from "expo-router/drawer";
 
 const _layout = () => {
   return (
-    <Stack>
-      <Stack.Screen
-        name="index"
-        options={{
-          headerRight: ({ tintColor }) => (
-            <View>
-              <TouchableOpacity
-                onPress={() => router.replace("profile/settings")}
-              >
-                <Settings color={tintColor} />
-              </TouchableOpacity>
-            </View>
-          ),
-          headerShown: true,
-          headerTitle: "Profile",
-          headerTitleAlign: "center",
-          headerStyle: {
-            backgroundColor: "#121111",
-          },
-          headerTintColor: "white",
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Drawer
+        screenOptions={{
           headerShadowVisible: false,
+          headerTintColor: "white",
+          drawerLabelStyle: { color: "white" },
+          headerTitleStyle: { color: "white" },
+          drawerStyle: { backgroundColor: "#121111" },
+          headerStyle: { backgroundColor: "#121111" },
         }}
-      />
-      <Stack.Screen name="settings" options={{
-        headerTitle: '',
-        headerLeft: ({tintColor}) => (
-            <TouchableOpacity
-              onPress={() => router.replace('profile')}
-            >
-              <MoveLeft color={tintColor}/>
-            </TouchableOpacity>
-        ),
-        headerShadowVisible: false,
-        headerStyle: {
-            backgroundColor: '#121111',
-        },
-        headerTintColor: 'white'
-      }} />
-    </Stack>
+      >
+        <Drawer.Screen
+          name="index"
+          options={{
+            drawerLabel: "Profile",
+            title: "Profile",
+          }}
+        />
+        <Drawer.Screen
+          name="settings"
+          options={{
+            drawerLabel: "Settings",
+            title: "Settings",
+          }}
+        />
+        <Drawer.Screen
+          name="notification"
+          options={{
+            drawerLabel: "Notification",
+            title: "Notification",
+          }}
+        />
+      </Drawer>
+    </GestureHandlerRootView>
   );
 };
 
