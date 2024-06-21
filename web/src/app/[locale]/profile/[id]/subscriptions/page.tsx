@@ -83,11 +83,18 @@ const Page = () => {
     router.push("/sign-in");
   }
 
+  if(!subs?.length) {
+    return <div className="w-full flex justify-center items-center">
+      <h2>У вас нет подписок</h2>
+    </div>
+  }
+
   return (
     <div className="w-[95%] mt-2 mx-auto">
       <div className="w-[300px] h-[200px] m-auto text-center gap-2 flex flex-col items-center justify-center">
         <h1 className="text-center text-lg ">Ваши подписки</h1>
         <p>Нажмите на получить код, чтобы вставить фрагмент кода на ваш сайт</p>
+        {subs.length && (
         <Dialog>
           <DialogTrigger asChild>
             <Button>Получить код</Button>
@@ -108,6 +115,7 @@ const Page = () => {
             </div>
           </DialogContent>
         </Dialog>
+        )}
       </div>
       <div className="grid p-2 border-t-[1px] gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 pb-16">
         {subs?.map((post, index) => (

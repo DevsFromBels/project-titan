@@ -153,4 +153,11 @@ export class MarketController {
   async getTopProductsByViews(@Query("limit") limit: string = "5") {
     return this.marketService.getTopProductsByViews();
   }
+
+  @Get('/moderations')
+  async getModerations(@Query('id') moderationID: string) {
+
+
+    return this.marketService.getModerations(moderationID)
+  }
 }
