@@ -1,13 +1,23 @@
-"use client";
-import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+"use client"
+import React, { useState, useEffect, useRef, useLayoutEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import getMarketAPI, { IGetMarket } from "@/features/api/market-api";
-import { Store } from "lucide-react";
+import getMarketAPI, { IGetMarket, Item } from "@/features/api/market-api";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/components/ui/select";
+import { ArrowDownToLine, ArrowUpToLine, Store } from "lucide-react";
+import { Button } from "@/shared/components/ui/button";
 
 const Page = () => {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [category, setCategory] = useState("");
+  const [sortOrder, setSortOrder] = useState("none");
 
   const [marketPosts, setMarketPosts] = useState<IGetMarket | null>();
   const loadMoreRef = useRef(null);
@@ -19,10 +29,9 @@ const Page = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // setIsLoading(true); // установка состояния загрузки в true
       const newData = await getMarketAPI(page);
       setMarketPosts((prevData) => ({ ...prevData, ...newData }));
-      setIsLoading(false); // установка состояния загрузки в false после завершения загрузки данных
+      setIsLoading(false);
     };
     fetchData();
   }, [page]);
@@ -48,6 +57,31 @@ const Page = () => {
     return () => observer.disconnect();
   }, []);
 
+  const filteredAndSortedPosts = useMemo(() => {
+    if (!marketPosts?.items) {
+      return [];
+    }
+  
+    let filteredPosts = marketPosts.items;
+  
+    if (category && category !== "none") { 
+      filteredPosts = filteredPosts.filter((post: Item) => post.category === category);
+    }
+  
+    if (sortOrder !== "none") {
+      filteredPosts.sort((a: Item, b: Item) => {
+        if (sortOrder === "asc") {
+          return a.price_for_show - b.price_for_show;
+        } else {
+          return b.price_for_show - a.price_for_show;
+        }
+      });
+    }
+  
+    return filteredPosts;
+  }, [marketPosts, category, sortOrder]);
+  
+
   if (isLoading) {
     return (
       <div className="relative h-full w-full flex flex-col gap-2 items-center justify-center">
@@ -67,12 +101,55 @@ const Page = () => {
   }
 
   return (
-    <div className="w-[95%] mt-2 mx-auto">
+    <div className="w-[95%] mb-4 mx-auto">
+      <div className="h-[50px] m-auto p-2 flex items-center gap-2 border-b-[1px]">
+        <Select onValueChange={(value) => setCategory(value)}>
+          <SelectTrigger className="w-[200px] h-[35px]">
+            <SelectValue placeholder="Категория" />
+          </SelectTrigger>
+          <SelectContent className="w-[200px] z-20">
+            <SelectItem value="none">Категория</SelectItem>
+            <SelectItem value="Веб-Сайт">Веб-Сайт</SelectItem>
+            <SelectItem value="Социальная сеть (telegram)">
+              Социальная сеть (telegram)
+            </SelectItem>
+            <SelectItem value="Социальная сеть (youtube)">
+              Социальная сеть (youtube)
+            </SelectItem>
+            <SelectItem value="Социальная сеть (whatsapp)">
+              Социальная сеть (whatsapp)
+            </SelectItem>
+            <SelectItem value="Социальная сеть (instagram)">
+              Социальная сеть (instagram)
+            </SelectItem>
+            <SelectItem value="Социальная сеть (twitter)">
+              Социальная сеть (twitter)
+            </SelectItem>
+          </SelectContent>
+        </Select>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            className="flex justify-center items-center p-2"
+            onClick={() => setSortOrder("asc")}
+          >
+            <ArrowDownToLine width={20} height={20} />
+          </Button>
+          <Button
+            variant="outline"
+            className="flex justify-center items-center p-2"
+            onClick={() => setSortOrder("desc")}
+          >
+            <ArrowUpToLine width={20} height={20} />
+          </Button>
+        </div>
+      </div>
+
       <div
         className="grid p-2 gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 pb-16"
         ref={loadMoreRef}
       >
-        {marketPosts.items.map((post, index) => (
+        {filteredAndSortedPosts.map((post, index) => (
           <Link
             href={`/market/${post.content_id}`}
             key={index}
@@ -85,7 +162,6 @@ const Page = () => {
                 fill
                 draggable={false}
                 sizes="250px"
-                // priority
                 className="object-cover rounded-lg"
               />
             </div>

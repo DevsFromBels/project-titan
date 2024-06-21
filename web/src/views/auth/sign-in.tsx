@@ -60,7 +60,7 @@ const SignInPage = () => {
           />
           <Button type="submit">Sign In</Button>
         </form>
-        <QRCodeSignIn url={qrcode_url} theme={theme}/>
+        {/* <QRCodeSignIn url={qrcode_url} theme={theme}/> */}
       </div>
       <AnimatedGridPattern
       maxOpacity={0.4}

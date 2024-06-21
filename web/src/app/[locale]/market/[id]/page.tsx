@@ -1,6 +1,5 @@
-import ImageBackgroundDetector from "@/shared/components/maleculas/ImageWithShadow";
 import ProfileMarketSkeleton from "@/shared/components/maleculas/skeletons/profile-market-skeleton";
-import AnimatedGridPattern from "@/shared/components/ui/animated-grid-pattern";
+import SubscribeButton from "@/shared/components/maleculas/subscribe-button";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -74,8 +73,12 @@ export default function Page({ params }: PageProps) {
         <h1 className="text-lg">{marketPost.name}</h1>
         <p>Цена за показ: {formatPrice(marketPost.price_for_show)} BYR</p>
         <p>
+          Категория: {marketPost.category}
+        </p>
+        <p>
           Показы: {marketPost.current_shows}/{marketPost.total_shows}
         </p>
+        <SubscribeButton postId={marketPost.content_id}/>
       </div>
       <div>
         <SimilarProducts post_id={params.id} />
