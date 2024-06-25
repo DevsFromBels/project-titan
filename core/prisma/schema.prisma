@@ -43,7 +43,7 @@ model User {
   profileId         String?             @unique
   role              Role                @default(User)
   createdAt         DateTime
-  balance           Int
+  balance           Int                 @default(0)
   notifications     Notification[]
   userSubscriptions UserSubscriptions[]
 }
