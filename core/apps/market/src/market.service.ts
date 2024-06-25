@@ -58,18 +58,30 @@ export class MarketService {
       return new BadRequestException("Link is not found")
     }
 
-    return await this.prisma.market.create({
+    return await this.prisma.moderation.create({
       data: {
-        content: image,
-        name: name,
+        text: name,
+        photo: image,
         link: link,
         user_id: userID,
         price_for_show: parseFloat(price_per_show),
-        total_shows: parseInt(total_shows),
         category: category,
-        current_shows: 0,
-      },
-    });
+        total_shows: parseInt(total_shows)
+      }
+    })
+
+    // return await this.prisma.market.create({
+    //   data: {
+    //     content: image,
+    //     name: name,
+    //     link: link,
+    //     user_id: userID,
+    //     price_for_show: parseFloat(price_per_show),
+    //     total_shows: parseInt(total_shows),
+    //     category: category,
+    //     current_shows: 0,
+    //   },
+    // });
   }
 
   /**
@@ -218,5 +230,23 @@ export class MarketService {
       items,
       total,
     };
+  }
+
+  /**
+   * Return moderaions
+   *
+   * @param {string} moderationID
+   * @returns {*}
+   */
+  getModerations(moderationID: string) {
+    if(moderationID) {
+      return this.prisma.moderation.findFirst({
+        where: {
+          moderation_id: moderationID
+        }
+      })
+    }
+
+    return this.prisma.moderation.findMany()
   }
 }

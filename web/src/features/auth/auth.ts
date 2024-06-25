@@ -59,8 +59,6 @@ const handleAuth = () => {
       },
     });
 
-    // console.log(data);
-
     if (!data.activateUser.user.name && !data.activateUser.user.email) return;
 
     login(e, email, password);

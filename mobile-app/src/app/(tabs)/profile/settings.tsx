@@ -44,6 +44,9 @@ const settings = () => {
       <View className="p-2">
         <Button variant='destructive' onPress={handlelogout} label='Выход с аккаунта' />
       </View>
+      <View>
+        <Button variant='destructive' onPress={handlelogout} label='Выход с аккаунта' />
+      </View>
     </View>
   );
 };

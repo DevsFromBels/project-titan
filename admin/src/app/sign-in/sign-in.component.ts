@@ -79,7 +79,7 @@ export class SignInComponent implements OnDestroy, OnInit {
         if (isAuthenticated) {
           this.router.navigate(['/users']);
         }
-        console.log(isAuthenticated);
+        // console.log(isAuthenticated);
       });
 
     this.userService.initUser$();
