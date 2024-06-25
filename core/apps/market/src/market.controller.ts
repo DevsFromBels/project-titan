@@ -154,10 +154,8 @@ export class MarketController {
     return this.marketService.getTopProductsByViews();
   }
 
-  @Get('/moderations')
-  async getModerations(@Query('id') moderationID: string) {
-
-
-    return this.marketService.getModerations(moderationID)
+  @Get("/moderations")
+  async getModerations(@Query("id") moderationID: string) {
+    return this.marketService.getModerations(moderationID);
   }
 }

@@ -17,16 +17,18 @@
         <th>Роль</th>
         <th>Создан</th>
         <th>Блoкировка</th>
+        <th>Удаленине</th>
       </tr>
       @for (user of users; track user.id) {
       <tr class="text-center">
-        <td class="cursor-pointer underline" routerLink="{{ user.id }}">
+        <td class="cursor-pointer underline" routerLink="/user/{{ user.id }}">
           {{ user.name }}
         </td>
         <td>{{ user.email }}</td>
         <td>{{ user.role }}</td>
-        <td>{{ datePipe.transform(user.createdAt, 'dd.MM.yyyy HH:mm') }}</td>
-        <td><button class="bg-red-700 px-4 py-2 rounded-xl text-white hover:bg-red-900">Заблокировать</button></td>
+        <td>{{ datePipe.transform(user.createdAt, 'dd.MM.yyyy, HH:mm') }}</td>
+        <td><button class="bg-gray-700 px-4 py-2 rounded-xl text-white hover:bg-gray-900">Заблокировать</button></td>
+        <td><button class="bg-red-700 px-4 py-2 rounded-xl text-white hover:bg-red-900">Удалить пользователя</button></td>
       </tr>
       }
     </table>
