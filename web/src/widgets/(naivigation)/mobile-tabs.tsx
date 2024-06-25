@@ -75,7 +75,7 @@ const MobileTabs = (user: IMobileTabs) => {
                   {tm("notifications")}
                 </Link>
                 <Link
-                  href={`${user.id}/subscriptions`}
+                  href={`/profile/${user.id}/subscriptions`}
                   className="p-2 flex gap-2 items-center"
                 >
                   <Contact />

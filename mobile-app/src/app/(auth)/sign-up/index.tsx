@@ -1,8 +1,12 @@
 import { Input } from "@/components/ui/Input";
+import { ACTIVATE_USER } from "@/graphql/actions/activation.action";
+import { LOGIN_USER } from "@/graphql/actions/login.action";
 import { REGISTER_USER } from "@/graphql/actions/register.action";
 import { i18n } from "@/localization/i18n";
 import { useMutation } from "@apollo/client";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
+import { MoveLeft } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
 import {
   View,
@@ -12,10 +16,6 @@ import {
   TextInput,
   ActivityIndicator,
 } from "react-native";
-import { ACTIVATE_USER } from "@/graphql/actions/activation.action";
-import { LOGIN_USER } from "@/graphql/actions/login.action";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { MoveLeft } from "lucide-react-native";
 import { OtpInput } from "react-native-otp-entry";
 
 const index = () => {
@@ -160,6 +160,7 @@ const index = () => {
               numberOfDigits={6}
               focusColor="grey"
               focusStickBlinkingDuration={500}
+              theme={{ pinCodeTextStyle: { color: "white" } }}
               onTextChange={setOtp}
             />
           </View>
@@ -215,4 +216,3 @@ const index = () => {
   );
 };
 export default index;
-

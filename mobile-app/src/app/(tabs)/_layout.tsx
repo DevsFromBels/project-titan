@@ -1,7 +1,9 @@
-import { Link, Tabs, router } from "expo-router";
-import { SafeAreaView, Text } from "react-native";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
+import { GET_SETTIGNS } from "@/graphql/actions/settings/get-settings";
 import { i18n } from "@/localization/i18n";
+import { IGetSettings } from "@/types/settings.types";
+import { useQuery } from "@apollo/client";
+import { Link, Tabs, router } from "expo-router";
 import {
   Home,
   Plus,
@@ -10,9 +12,7 @@ import {
   Settings,
   Search,
 } from "lucide-react-native";
-import { GET_SETTIGNS } from "@/graphql/actions/settings/get-settings";
-import { IGetSettings } from "@/types/settings.types";
-import { useQuery } from "@apollo/client";
+import { SafeAreaView, Text } from "react-native";
 
 const TabsLayout = () => {
   const { loading, data } = useQuery<IGetSettings>(GET_SETTIGNS, {
@@ -89,7 +89,7 @@ const TabsLayout = () => {
             title: `${i18n.t("profile")}`,
             tabBarIcon: () => (
               <Avatar className="w-[30px] h-[30px] rounded-full">
-                <AvatarImage src={profileImage}  width={30} height={30}/>
+                <AvatarImage src={profileImage} width={30} height={30} />
                 <AvatarFallback>
                   {data?.getSettings.userSettings.name
                     .slice(0, 2)

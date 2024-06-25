@@ -14,6 +14,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import Script from "next/script";
 import { generateGlobalLD } from "@/shared/seo/global-page";
+import { Toaster } from "@/shared/components/ui/sonner";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -96,7 +97,7 @@ export default async function RootLayout({
                 <DetectNavigation />
                 {children}
               </main>
-
+              <Toaster />
               <WannaMobileWidget />
             </ThemeProvider>
           </NextIntlClientProvider>

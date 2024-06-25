@@ -119,10 +119,22 @@ const market = () => {
         >
           <Picker.Item label="Все" value="" />
           <Picker.Item label="Веб-Сайт" value="Веб-Сайт" />
-          <Picker.Item label="Социальная сеть (telegram)" value="Социальная сеть (telegram)" />
-          <Picker.Item label="Социальная сеть (whatsapp)" value="Социальная сеть (whatsapp)" />
-          <Picker.Item label="Социальная сеть (instagram)" value="Социальная сеть (instagram)" />
-          <Picker.Item label="Социальная сеть (twitter)" value="Социальная сеть (twitter)" />
+          <Picker.Item
+            label="Социальная сеть (telegram)"
+            value="Социальная сеть (telegram)"
+          />
+          <Picker.Item
+            label="Социальная сеть (whatsapp)"
+            value="Социальная сеть (whatsapp)"
+          />
+          <Picker.Item
+            label="Социальная сеть (instagram)"
+            value="Социальная сеть (instagram)"
+          />
+          <Picker.Item
+            label="Социальная сеть (twitter)"
+            value="Социальная сеть (twitter)"
+          />
         </Picker>
       </View>
       <View className="grid grid-cols-1 overflow-y-auto overflow-hidden">
@@ -145,7 +157,7 @@ const market = () => {
                     Название: {e.name}
                   </Text>
                   <Text className="w-[200px] text-ellipsis overflow-hidden text-white">
-                    Цена за показ: {formatPrice(e.price_for_show)} BYR за показ
+                    Цена за показ: {formatPrice(e.price_for_show)} BYN за показ
                   </Text>
                 </View>
                 <Button

@@ -6,11 +6,14 @@ import { MyLoaderComponent } from '../../components/my-loader/my-loader.componen
 import { User } from '../../types/user.type';
 import { GetAllUsersProfiles } from '../../graphql/user-profiles.action';
 import { UserService } from '../services/user/user.service';
+import { MySidebarComponent } from '../../components/my-sidebar/my-sidebar.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [RouterLink, MyLoaderComponent],
+  imports: [RouterLink, MyLoaderComponent, MySidebarComponent],
+  providers: [DatePipe],
   templateUrl: './users.component.html',
 })
 export class UsersComponent implements OnInit, OnDestroy {
@@ -22,18 +25,24 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   private static readonly LIMIT = '20';
   private static readonly PAGE = 0;
-  private static readonly ERROR_MESSAGE = 'An error occurred while fetching user profiles.';
+  private static readonly ERROR_MESSAGE =
+    'An error occurred while fetching user profiles.';
 
-  constructor(private apollo: Apollo, private userService: UserService, private router: Router) {}
+  constructor(
+    private apollo: Apollo,
+    private userService: UserService,
+    private router: Router,
+    public datePipe: DatePipe
+  ) {}
 
   ngOnInit(): void {
-    this.isAuthenticatedSubscription = this.userService.isAuthenticated$().subscribe(
-      (isAuthenticated) => {
+    this.isAuthenticatedSubscription = this.userService
+      .isAuthenticated$()
+      .subscribe((isAuthenticated) => {
         if (!isAuthenticated) {
           this.router.navigate(['/']);
         }
-      }
-    );
+      });
 
     this.fetchUserProfiles();
   }
