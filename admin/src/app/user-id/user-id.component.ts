@@ -4,6 +4,7 @@ import { MySidebarComponent } from '../../components/my-sidebar/my-sidebar.compo
 import { Subscription } from 'rxjs';
 import { Apollo } from 'apollo-angular';
 import { getProfileQuery } from '../../graphql/getProfile.action';
+import { DatePipe } from '@angular/common';
 
 export interface Profile {
   info: string
@@ -25,6 +26,7 @@ export interface User {
   selector: 'app-user-id',
   standalone: true,
   imports: [MySidebarComponent],
+  providers: [DatePipe],
   templateUrl: './user-id.component.html',
 })
 export class UserIDComponent implements OnInit {
@@ -33,7 +35,7 @@ export class UserIDComponent implements OnInit {
   loading = true
   private querySubscription?: Subscription;
 
-  constructor(private route: ActivatedRoute, private router: Router, private apollo: Apollo) {}
+  constructor(private route: ActivatedRoute, private router: Router, private apollo: Apollo, public datePipe: DatePipe) {}
 
   ngOnInit(): void {
       this.userID = this.route.snapshot.paramMap.get('id') || "";

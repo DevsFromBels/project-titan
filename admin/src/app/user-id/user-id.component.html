@@ -1,12 +1,22 @@
 <div class="flex">
   <app-my-sidebar></app-my-sidebar>
-  <div>
+  <div class="w-full flex flex-col items-center gap-2 mt-4">
     <img src="https://avatars-api.titanproject.top{{user.avatar_url}}" width="200px" height="200px"/>
-    <p>{{user.user.name}}</p>
-    <p>{{user.info}}</p>
-    <p>{{user.isPublic}}</p>
-    <p>{{user.user.role}}</p>
-    <p>{{user.user.email}}</p>
-    <p>{{user.user.createdAt}}</p>
+    <h1 class="text-center">Данные пользователя</h1>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center mx-auto">
+      <div class="col-span-1 p-4 border rounded-xl bg-white shadow-md">
+        <p>Имя пользователя: {{user.user.name}}</p>
+        <p>Информация: {{!user.info ? 'отсутсвует' : user.info}}</p>
+      </div>
+      <div class="col-span-1 p-4 border rounded-xl bg-white shadow-md">
+        <p>Почта: {{user.user.email}}</p>
+        <p>Роль: {{user.user.role}}</p>
+      </div>
+      <div class="col-span-1 p-4 border rounded-xl bg-white shadow-md">
+        <p>Приватный аккаунт: {{user.isPublic? 'Нет' : 'Да'}}</p>
+        <p>Зарегистрирован в: {{ datePipe.transform(user.user.createdAt, 'dd.MM.yyyy, HH:mm') }}</p>
+      </div>
+    </div>
+
   </div>
 </div>
