@@ -18,22 +18,22 @@ const _layout = () => {
         <Drawer.Screen
           name="index"
           options={{
-            drawerLabel: "Profile",
-            title: "Profile",
+            drawerLabel: "Профиль",
+            title: "Профиль",
           }}
         />
         <Drawer.Screen
           name="settings"
           options={{
-            drawerLabel: "Settings",
-            title: "Settings",
+            drawerLabel: "Настройки",
+            title: "Настройки",
           }}
         />
         <Drawer.Screen
-          name="notification"
+          name="subscription"
           options={{
-            drawerLabel: "Notification",
-            title: "Notification",
+            drawerLabel: "Подписки",
+            title: "Подписки",
           }}
         />
       </Drawer>

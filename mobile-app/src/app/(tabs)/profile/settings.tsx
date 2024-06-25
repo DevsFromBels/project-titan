@@ -41,17 +41,7 @@ const settings = () => {
         email={data?.userSettings.email}
         role={data?.userSettings.role}
       />
-      <View className="border rounded-xl mt-5 p-4 flex flex-col gap-2 border-white">
-        <View className="flex gap-2 flex-row">
-          <Fingerprint color='white' />
-          <Text className='text-xl text-white'>Security</Text>
-        </View>
-        <View>
-          <Text className='text-white text-xl'>Is Profile Public</Text>
-          <View>{data?.profileSettings.isPublic ? true : false}</View>
-        </View>
-      </View>
-      <View>
+      <View className="p-2">
         <Button variant='destructive' onPress={handlelogout} label='Выход с аккаунта' />
       </View>
     </View>

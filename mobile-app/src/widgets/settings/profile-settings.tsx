@@ -52,7 +52,7 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
   };
 
   return (
-    <View className="border rounded-xl mt-5 p-4 flex flex-col gap-2 border-white">
+    <View className="border rounded-xl mt-5 p-2 flex flex-col gap-2 border-white m-2">
       <View className="flex gap-2 flex-row">
         <SlidersHorizontal color="white" />
         <Text className="text-xl text-white">{i18n.t("block_name")}</Text>
@@ -61,7 +61,7 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
         {!editingInfo &&
           updatedInfo?.settingsUpdateUserInfo?.profileSettings.info && (
             <View className="flex justify-between p-2 gap-2">
-              <Text className="text-white">
+              <Text className="text-white text-xl">
                 {updatedInfo.settingsUpdateUserInfo.profileSettings.info}
               </Text>
               <Button label="Edit" onPress={handleEditInfo} />
@@ -71,7 +71,7 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
           info &&
           !updatedInfo?.settingsUpdateUserInfo?.profileSettings.info && (
             <View className="flex justify-between p-2 gap-2">
-              <Text className="text-white">{info}</Text>
+              <Text className="text-white text-xl">{info}</Text>
               <Button label="Edit" onPress={handleEditInfo} />
             </View>
           )}
@@ -102,11 +102,11 @@ const ProfileSettingsWidget = ({ info, address }: IProfileSettingsWidget) => {
         {!editingInfo &&
           !info &&
           !updatedInfo?.settingsUpdateUserInfo?.profileSettings.info && (
-            <View className="p-5">
+            <View className="p-2">
               <Text className="text-white text-xl">{i18n.t("info")}</Text>
               <Button
-                label="Add info"
-                className="w-[120px]"
+                label="Добавить информацию"
+                className="w-[120px] m-2"
                 onPress={() => setEditingInfo(true)}
               />
             </View>

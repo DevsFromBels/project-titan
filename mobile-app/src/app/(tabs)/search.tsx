@@ -38,7 +38,7 @@ const Search = () => {
         style={styles.input}
         onChangeText={setSearchResult}
         value={searchResult}
-        placeholder="Search"
+        placeholder="Поиск"
       />
       {data.searchProfile && (
         <FlatList
