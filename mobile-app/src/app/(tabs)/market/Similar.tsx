@@ -1,3 +1,6 @@
+import { IGetMarket } from ".";
+import { MarketPostArray } from "@/types/market.types";
+import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -7,9 +10,6 @@ import {
   ActivityIndicator,
   ScrollView,
 } from "react-native";
-import { MarketPostArray } from "@/types/market.types";
-import { router } from "expo-router";
-import { IGetMarket } from ".";
 
 async function getSimilarProducts(post_id: string): Promise<IGetMarket> {
   const res: IGetMarket = await fetch(

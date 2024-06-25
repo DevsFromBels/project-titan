@@ -31,7 +31,6 @@ const Notification = () => {
         const data = await response.json();
         setSubs(data);
         setPostLoading(false);
-        console.log(data);
       };
 
       fetchSubscriptions();
@@ -45,7 +44,7 @@ const Notification = () => {
   if (!subs.length) {
     return (
       <View className="flex flex-col justify-center items-center bg-[#121111] h-screen gap-2">
-        <DiamondMinus size='90' color={"white"} />
+        <DiamondMinus size="90" color={"white"} />
         <Text className="text-white font-bold text-2xl">
           У вас пока нет подписок.
         </Text>
@@ -54,8 +53,10 @@ const Notification = () => {
   }
 
   return (
-    <View className="bg-[#121111] h-full w-screen flex justify-center items-center">
-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
+    <View className="bg-[#121111] h-full w-screen flex justify-start items-start ">
+      <View
+        style={{ flexDirection: "row", flexWrap: "wrap", gap: 10, margin: 10 }}
+      >
         {subs.map((e) => (
           <React.Fragment key={e.content_id}>
             <Pressable
@@ -106,6 +107,6 @@ const Notification = () => {
       </View>
     </View>
   );
-};
+}
 
 export default Notification;

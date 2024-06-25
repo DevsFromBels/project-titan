@@ -160,7 +160,7 @@ export default function TabSearchScreen() {
               onPress={() => {
                 setImage("");
               }}
-              className="w-[250px]"
+              className="w-[250px] p-2"
             >
               <MoveLeft color="white" />
             </Pressable>

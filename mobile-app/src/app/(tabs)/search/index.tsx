@@ -1,3 +1,7 @@
+import { SEARCH_PROFILE } from "@/graphql/actions/search.action";
+import { useQuery } from "@apollo/client";
+import { useDebounce } from "@uidotdev/usehooks";
+import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -6,10 +10,8 @@ import {
   FlatList,
   StyleSheet,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
-import { SEARCH_PROFILE } from "@/graphql/actions/search.action";
-import { useQuery } from "@apollo/client";
-import { useDebounce } from "@uidotdev/usehooks";
 
 const Search = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +27,7 @@ const Search = () => {
 
   if (loading)
     return (
-      <View className='bg-[#121111] h-screen w-screen flex justify-center items-center'>
+      <View className="bg-[#121111] h-screen w-screen flex justify-center items-center">
         <ActivityIndicator color="white" size="large" />
       </View>
     );
@@ -45,7 +47,13 @@ const Search = () => {
           data={data.searchProfile.users || []}
           renderItem={({ item }) => (
             <View style={styles.itemContainer}>
-              <Text style={styles.text}>{item.name}</Text>
+              <TouchableOpacity
+                onPress={() =>
+                  router.replace(`/${data.searchProfile.users.id}`)
+                }
+              >
+                <Text style={styles.text}>{item.name}</Text>
+              </TouchableOpacity>
             </View>
           )}
           keyExtractor={(item) => item.id.toString()}

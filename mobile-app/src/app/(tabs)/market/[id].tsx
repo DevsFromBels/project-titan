@@ -1,5 +1,6 @@
 import { IGetMarket, Item } from ".";
 import SimilarProducts from "./Similar";
+import useUser from "@/hooks/use-user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useGlobalSearchParams } from "expo-router";
 import { Bell, BellRing } from "lucide-react-native";
@@ -25,11 +26,12 @@ async function getDataById(id?: string) {
 }
 
 const MarketItem = () => {
+  const { user, loading } = useUser();
   const glob = useGlobalSearchParams<{ id?: string }>();
   const [data, setData] = useState<IGetMarket | null>(null);
   const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [subscribed, setSubscribed] = useState<boolean>();
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   const id = glob.id;
 
@@ -56,6 +58,19 @@ const MarketItem = () => {
     return parseFloat(formattedPrice).toString();
   };
 
+  const checkSub = async () => {
+    try {
+      const response = await fetch(
+        `https://market-api.titanproject.top/get-user-subscriptions?token=${user?.id}`
+      );
+      const data = await response.json();
+      const isSubscribed = data.some((item: Item) => item.content_id === id);
+      setIsSubscribed(isSubscribed);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   const handelSubscriptions = async () => {
     try {
       const res = await fetch(
@@ -69,12 +84,16 @@ const MarketItem = () => {
         }
       );
       if (res.ok) {
-        setSubscribed(true);
+        setIsSubscribed(true);
       }
     } catch (error) {
       console.error("Error:", error);
     }
   };
+
+  useEffect(() => {
+    checkSub();
+  }, []);
 
   if (isLoading) {
     return (
@@ -120,14 +139,14 @@ const MarketItem = () => {
         <View className="w-screen flex justify-center items-center">
           <Pressable
             className={
-              subscribed
+              isSubscribed
                 ? "w-[300px] h-[50px] flex justify-center items-center bg-gray-700 rounded-3xl gap-2 flex-row"
                 : "w-[300px] h-[50px] flex justify-center items-center bg-white rounded-3xl gap-2 flex-row"
             }
             onPress={handelSubscriptions}
           >
-            {subscribed ? <BellRing color="black" /> : <Bell color="black" />}
-            {subscribed ? (
+            {isSubscribed ? <BellRing color="black" /> : <Bell color="black" />}
+            {isSubscribed ? (
               <Text className="text-black">Вы подписаны</Text>
             ) : (
               <Text className="text-black">Подписаться</Text>
@@ -139,7 +158,7 @@ const MarketItem = () => {
             Название: {data.name}
           </Text>
           <Text className="text-ellipsis text-xl overflow-hidden text-white">
-            Цена за показ: {formatPrice(data.price_for_show)} BYR
+            Цена за показ: {formatPrice(data.price_for_show)} BYN
           </Text>
           <Text className="text-ellipsis text-xl overflow-hidden text-white">
             Создатель: {data.user_id}
