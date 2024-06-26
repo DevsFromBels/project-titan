@@ -54,4 +54,9 @@ export class UserByEmail {
   user: GetUserByName | any;
 }
 
+@ObjectType()
+export class DeleteUserResponse {
+  message: string;
+}
+
 

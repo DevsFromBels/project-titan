@@ -6,8 +6,12 @@ import Link from "next/link";
 export default function ProfileMarketContent({ user_id }: { user_id: string }) {
   const marketContent = use(getUserMarketAPI(user_id));
 
-  if (!marketContent) {
-    return <h1>У пользователя нет товаров на рынке</h1>;
+  if (!marketContent.length) {
+    return (
+      <div className="w-[98%] max-w-[98%] m-auto border p-4 rounded-xl">
+        <h1>У пользователя нет товаров на рынке</h1>
+      </div>
+    );
   }
 
   return (

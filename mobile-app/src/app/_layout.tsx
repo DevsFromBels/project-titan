@@ -1,18 +1,17 @@
-import ApolloProviderClient from "@/Provider/ApolloProvider";
-import { useApolloClientDevTools } from "@dev-plugins/apollo-client";
 import "../styles/globals.css";
-import { Slot, Stack, router } from "expo-router";
-import { ApolloClient, InMemoryCache } from "@apollo/client";
-import { StatusBar } from "expo-status-bar";
-import { ActivityIndicator, View } from "react-native";
+import ApolloProviderClient from "@/Provider/ApolloProvider";
 import useUser from "@/hooks/use-user";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { useApolloClientDevTools } from "@dev-plugins/apollo-client";
+import { Slot, Stack, router } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
 
 const client = new ApolloClient({
   uri: process.env.EXPO_PUBLIC_SERVER_URI,
   cache: new InMemoryCache(),
 });
-
 
 const Layout = () => {
   useApolloClientDevTools(client);

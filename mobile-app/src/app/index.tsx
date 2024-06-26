@@ -1,6 +1,6 @@
-import { View, Image, Pressable, Text, ActivityIndicator } from "react-native";
-import { router } from "expo-router";
 import { i18n } from "@/localization/i18n";
+import { router } from "expo-router";
+import { View, Image, Pressable, Text, ActivityIndicator } from "react-native";
 
 export default function index() {
   return (

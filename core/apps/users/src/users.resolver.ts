@@ -2,6 +2,7 @@ import { Args, Mutation, Resolver, Query, Context } from "@nestjs/graphql";
 import { UsersService } from "./users.service";
 import {
   ActivationResponse,
+  DeleteUserResponse,
   LoginResponse,
   LogoutResponse,
   RegisterResponse,
@@ -11,10 +12,11 @@ import { ActivationDto, RegisterDto } from "./dto/user.dto";
 import {
   BadGatewayException,
   BadRequestException,
+  Post,
   UseGuards,
 } from "@nestjs/common";
 import { AuthGuard } from "./guards/auth.guard";
-import { GetUserByName } from "./entities/user.entity";
+import { DeleteUser, GetUserByName } from "./entities/user.entity";
 
 @Resolver("User")
 export class UsersResolver {
@@ -63,6 +65,11 @@ export class UsersResolver {
   @UseGuards(AuthGuard)
   async LogOutUser(@Context() context: { req: Request }) {
     return this.userService.Logout(context.req);
+  }
+
+  @Mutation(() => DeleteUserResponse)
+  async DeleteUser(userID: string) {
+    return this.userService.deleteUser(userID)
   }
 
   @Query(() => GetUserByName)

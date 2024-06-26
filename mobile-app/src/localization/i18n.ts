@@ -33,7 +33,7 @@ const translations = {
     menu: "Меню",
     about: "О себе",
     notification: "Уведомления",
-    block_name: 'Настройки пользователя',
+    block_name: 'Настройки профиля',
     address: 'Адрес',
     info: 'Мы ничего не знаем о этом пользователе',
     verifyOtp: 'Подтвердить OTP',
