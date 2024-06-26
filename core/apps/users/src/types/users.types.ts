@@ -56,6 +56,7 @@ export class UserByEmail {
 
 @ObjectType()
 export class DeleteUserResponse {
+  @Field()
   message: string;
 }
 

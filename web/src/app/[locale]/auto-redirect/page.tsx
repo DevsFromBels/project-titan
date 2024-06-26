@@ -14,7 +14,7 @@ const Page = () => {
   const content_id = searchParams.get('content_id')
   const redirect_url = searchParams.get('redirect_url')
 
-  if(!redirect_url) redirect('/')
+  if(!redirect_url) redirect('/') // https://titanproject.top/auto-redirect?user=sh1woo&content_id=bc85e7bd-a722-448d-a773-1e572f8c1c20&redirect_url=https://t.me/sh1woo
 
   useEffect(() => {
     const getUserIP = async () => {
