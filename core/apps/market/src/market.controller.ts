@@ -47,7 +47,8 @@ export class MarketController {
     @Query("price_peer_show") pricePeerShow: string,
     @Query("total_shows") totalShows: string,
     @Query("link") link: string,
-    @Query("category") category: string
+    @Query("category") category: string,
+    @Query("region") region: string
   ) {
     const data = await req.file();
     const fileName = `${uuidv7()}${extname(data.filename)}`;
@@ -76,7 +77,8 @@ export class MarketController {
         pricePeerShow,
         totalShows,
         link,
-        category
+        category,
+        region
       );
 
       return reply.status(200).send(product);
@@ -157,5 +159,14 @@ export class MarketController {
   @Get("/moderations")
   async getModerations(@Query("id") moderationID: string) {
     return this.marketService.getModerations(moderationID);
+  }
+
+  @Get("/addShows") //https://market-api.titanproject.top/addShows?user_id=sh1woo&content_id=bc85e7bd-a722-448d-a773-1e572f8c1c20
+  async addShows(
+    @Query("user_id") user_id: string,
+    @Query("content_id") content_id: string,
+    @Query("ip") ip: string
+  ) {
+    return this.marketService.addCurrentShow(user_id, content_id, ip);
   }
 }

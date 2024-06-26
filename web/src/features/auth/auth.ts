@@ -6,12 +6,14 @@ import Cookies from "js-cookie";
 import { updateTokens } from "./updateTokens";
 import { useRegistrationStore } from "../store/register.store";
 import { REGISTER_USER } from "../graphql/actions/register.action";
+import { useState } from "react";
 
 const handleAuth = () => {
   const [signIn, { loading: signInLoading }] = useMutation(LOGIN_USER);
   const [signUp, { loading: signUpLoading }] = useMutation(REGISTER_USER);
   const [confirmOTP, { loading: OTPLoading }] = useMutation(ACTIVATE_USER);
   const { name, email, password, token, otp, setToken, setOtpDialog } = useRegistrationStore();
+  const [SignInErrorMessage, setSignInErrorMessage] = useState<string>()
   const router = useRouter();
 
   const login = async (
@@ -21,15 +23,15 @@ const handleAuth = () => {
   ) => {
     const res = await signIn({ variables: { email, password } });
 
-    if (res.data.login.error) return;
+    if (res.data.login.error) return setSignInErrorMessage("Неверный логин или пароль");
 
     Cookies.set("refresh_token", res.data.login.refreshToken, {
-      domain: ".titanproject.top",
-      // domain: "localhost",
+      // domain: ".titanproject.top",
+      domain: "localhost",
     });
     Cookies.set("access_token", res.data.login.accessToken, {
-      domain: ".titanproject.top",
-      // domain: "localhost",
+      // domain: ".titanproject.top",
+      domain: "localhost",
     });
 
     updateTokens();
@@ -37,7 +39,7 @@ const handleAuth = () => {
   };
 
   const register = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    // e.preventDefault();
 
     const res = await signUp({ variables: { name, email, password } });
 
@@ -72,6 +74,7 @@ const handleAuth = () => {
     signUpLoading,
     confirmRegister,
     OTPLoading,
+    SignInErrorMessage
   };
 };
 

@@ -34,7 +34,8 @@ export class MarketService {
     price_per_show: string,
     total_shows: string,
     link: string,
-    category: string
+    category: string,
+    region: string
   ) {
     const user = await this.prisma.user.findFirst({
       where: {
@@ -54,8 +55,8 @@ export class MarketService {
       return new BadRequestException("Price not found");
     }
 
-    if(!link) {
-      return new BadRequestException("Link is not found")
+    if (!link) {
+      return new BadRequestException("Link is not found");
     }
 
     return await this.prisma.moderation.create({
@@ -66,9 +67,10 @@ export class MarketService {
         user_id: userID,
         price_for_show: parseFloat(price_per_show),
         category: category,
-        total_shows: parseInt(total_shows)
-      }
-    })
+        total_shows: parseInt(total_shows),
+        region: region,
+      },
+    });
 
     // return await this.prisma.market.create({
     //   data: {
@@ -239,14 +241,84 @@ export class MarketService {
    * @returns {*}
    */
   getModerations(moderationID: string) {
-    if(moderationID) {
+    if (moderationID) {
       return this.prisma.moderation.findFirst({
         where: {
-          moderation_id: moderationID
-        }
-      })
+          moderation_id: moderationID,
+        },
+      });
     }
 
-    return this.prisma.moderation.findMany()
+    return this.prisma.moderation.findMany();
   }
+
+  async addCurrentShow(user: string, content_id: string, ip: string) {
+    const currentUser = await this.prisma.user.findFirst({
+      where: {
+        id: user,
+      },
+    });
+  
+    if (!currentUser) {
+      throw new BadRequestException("User not found");
+    }
+  
+    const currentPost = await this.prisma.market.findFirst({
+      where: {
+        content_id: content_id,
+      },
+    });
+  
+    if (!currentPost) {
+      throw new BadRequestException("Post not found");
+    }
+  
+    const adView = await this.prisma.adView.findFirst({
+      where: {
+        ipAddress: ip,
+        market: {
+          content_id: content_id,
+        },
+      },
+    });
+  
+    if (!adView) {
+      await this.prisma.adView.create({
+        data: {
+          ipAddress: ip,
+          market: {
+            connect: {
+              content_id: content_id,
+            },
+          },
+        },
+      });
+  
+      await this.prisma.market.update({
+        where: {
+          content_id: content_id,
+        },
+        data: {
+          current_shows: {
+            increment: 1,
+          },
+        },
+      });
+  
+      const updatedPost = await this.prisma.market.findFirst({
+        where: {
+          content_id: content_id,
+        },
+      });
+  
+      if (updatedPost.current_shows >= updatedPost.total_shows) {
+        await this.prisma.market.delete({
+          where: {
+            content_id: content_id,
+          },
+        });
+      }
+    }
+  }
+  
 }

@@ -1,26 +1,25 @@
 "use client";
 
-import CenterLoader from '@/widgets/center-loader/center-loader'
-import QRCodeSignIn from '@/shared/components/maleculas/qr-code-sign-in'
-import useUser from '@/shared/hooks/use-user'
-import { Button } from '@/shared/components/ui/button'
-import { handleAuth } from '@/features/auth/auth'
-import { Input } from '@/shared/components/ui/input'
-import { redirect } from 'next/navigation'
-import { useState } from 'react'
-import { useTheme } from 'next-themes'
-import AnimatedGridPattern from '@/shared/components/ui/animated-grid-pattern';
-import { cn } from '@/shared/lib/utils';
-
+import CenterLoader from "@/widgets/center-loader/center-loader";
+import QRCodeSignIn from "@/shared/components/maleculas/qr-code-sign-in";
+import useUser from "@/shared/hooks/use-user";
+import { Button } from "@/shared/components/ui/button";
+import { handleAuth } from "@/features/auth/auth";
+import { Input } from "@/shared/components/ui/input";
+import { redirect } from "next/navigation";
+import { useState } from "react";
+import { useTheme } from "next-themes";
+import AnimatedGridPattern from "@/shared/components/ui/animated-grid-pattern";
+import { cn } from "@/shared/lib/utils";
 
 const SignInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login, signInLoading } = handleAuth();
+  const { login, signInLoading, SignInErrorMessage } = handleAuth();
   const { theme } = useTheme();
-  const qrcode_url = '12345'
+  const qrcode_url = "12345";
   const user = useUser();
-  
+
   if (user.loading || signInLoading) {
     return <CenterLoader />;
   }
@@ -58,14 +57,14 @@ const SignInPage = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          {SignInErrorMessage && (
+            <p className="text-red-600 text-[12px]">{SignInErrorMessage}</p>
+          )}
           <Button type="submit">Войти</Button>
         </form>
         {/* <QRCodeSignIn url={qrcode_url} theme={theme}/> */}
       </div>
-      <AnimatedGridPattern
-      maxOpacity={0.4}
-      className='z-10 blur-[3px]'
-      />
+      <AnimatedGridPattern maxOpacity={0.4} className="z-10 blur-[3px]" />
     </div>
   );
 };

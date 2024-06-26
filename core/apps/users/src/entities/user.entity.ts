@@ -32,3 +32,9 @@ export class GetUserByName {
   @Field()
   avatar: string;
 }
+
+@ObjectType()
+export class DeleteUser {
+  @Field()
+  message: string;
+}
