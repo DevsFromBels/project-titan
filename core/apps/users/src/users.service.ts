@@ -302,14 +302,55 @@ export class UsersService {
    * @returns {unknown}
    */
   async deleteUser(userID: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userID,
+      },
+      include: {
+        avatar: true,
+        profile: true,
+        userSubscriptions: true,
+      },
+    });
+  
+    if (!user) {
+      throw new BadRequestException("User not found");
+    }
+  
+    // Удаляем связанные записи из таблицы UserSubscriptions
+    await this.prisma.userSubscriptions.deleteMany({
+      where: {
+        userId: userID,
+      },
+    });
+  
+    // Удаляем связанные записи из таблицы Profile
+    await this.prisma.profile.deleteMany({
+      where: {
+        userId: userID,
+      },
+    });
+  
+    if (user.avatar) {
+      await this.prisma.avatars.delete({
+        where: {
+          id: user.avatar.id,
+        },
+      });
+    }
+  
     await this.prisma.user.delete({
       where: {
-        id: userID
-      }
-    })
-
+        id: userID,
+      },
+    });
+  
     return {
-      message: 'User Deleted'
-    }
+      message: 'User Deleted',
+    };
   }
+  
+  
+  
+  
 }
