@@ -318,7 +318,17 @@ export class MarketService {
           },
         });
       }
+
+      await this.prisma.user.update({
+        where: {
+          id: currentUser.id,
+        },
+        data: {
+          balance: {
+            increment: 0.015,
+          },
+        },
+      });
     }
   }
-  
 }
