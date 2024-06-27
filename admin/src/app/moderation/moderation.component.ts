@@ -23,11 +23,27 @@ export interface ModerationData {
 export class ModerationComponent {
   public moderationData!: ModerationData[];
 
-  constructor(private moderationService: ModerationService) { }
+  constructor(private moderationService: ModerationService) {}
 
   ngOnInit(): void {
-    this.moderationService.getModerationData().subscribe(data => {
+    this.getModerationData();
+  }
+
+  getModerationData(): void {
+    this.moderationService.getModerationData().subscribe((data) => {
       this.moderationData = data;
+    });
+  }
+
+  acceptProduct(contentId: string): void {
+    this.moderationService.acceptProduct(contentId).subscribe(() => {
+      this.getModerationData();
+    });
+  }
+
+  rejectProduct(contentId: string): void {
+    this.moderationService.rejectProduct(contentId).subscribe(() => {
+      this.getModerationData();
     });
   }
 }
