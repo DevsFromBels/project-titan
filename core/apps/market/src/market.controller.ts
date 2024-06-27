@@ -93,9 +93,9 @@ export class MarketController {
     }
   }
 
-  @Put("/accept")
+  @Post("/accept")
   async acceptProduct(@Query("contentId") contentId: string) {
-    return await this.marketService.acceptProduct(contentId);
+    return await this.marketService.transferAcceptedProduct(contentId);
   }
 
   @Delete("/reject")

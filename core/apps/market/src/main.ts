@@ -13,7 +13,7 @@ async function bootstrap() {
     new FastifyAdapter()
   );
   app.enableCors({
-    origin: ['https://admin.titanproject.top', 'https://titanproject.top', 'https://iframe-api.titanproject.top'],
+    origin: '*',
     credentials: true,
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'accesstoken', 'refreshtoken'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

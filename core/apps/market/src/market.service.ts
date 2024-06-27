@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { PrismaService } from "../../../prisma/prisma.service";
 import { Market } from "@prisma/client";
 import { MarketIdService } from "./market-id/market-id.service";
@@ -252,31 +256,48 @@ export class MarketService {
     return this.prisma.moderation.findMany();
   }
 
-  async acceptProduct(contentId: string) {
-    const product = await this.prisma.market.findUnique({
+  async transferAcceptedProduct(contentId: string) {
+    const moderation = await this.prisma.moderation.findUnique({
       where: {
-        content_id: contentId,
+        moderation_id: contentId,
       },
     });
 
-    if (!product) {
+    if (!moderation) {
       throw new NotFoundException("Product not found");
     }
 
-    return await this.prisma.market.update({
+    const marketData = {
+      content_id: contentId,
+      content: moderation.text,
+      name: moderation.photo,
+      link: moderation.link,
+      user_id: moderation.user_id,
+      price_for_show: moderation.price_for_show,
+      total_shows: moderation.total_shows,
+      current_shows: 0,
+      category: moderation.category,
+      status: "APPROVED",
+      region: moderation.region,
+    };
+
+    const createdMarket = await this.prisma.market.create({
+      data: marketData,
+    });
+
+    await this.prisma.moderation.delete({
       where: {
-        content_id: contentId,
-      },
-      data: {
-        status: "APPROVED",
+        moderation_id: contentId,
       },
     });
+
+    return createdMarket;
   }
 
   async rejectProduct(contentId: string) {
-    const product = await this.prisma.market.findUnique({
+    const product = await this.prisma.moderation.findUnique({
       where: {
-        content_id: contentId,
+        moderation_id: contentId,
       },
     });
 
@@ -284,9 +305,9 @@ export class MarketService {
       throw new NotFoundException("Product not found");
     }
 
-    return await this.prisma.market.delete({
+    return await this.prisma.moderation.delete({
       where: {
-        content_id: contentId,
+        moderation_id: contentId,
       },
     });
   }
