@@ -5,7 +5,7 @@ import { i18n } from "@/localization/i18n";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { Link, router } from "expo-router";
-import { Pencil } from "lucide-react-native";
+import { MoveLeft, Pencil } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -47,7 +47,7 @@ async function getData(user_id: string) {
   return res;
 }
 
-const ProfileMainBlockWidget = ({
+const ProfileSearch = ({
   id,
   image,
   username,
@@ -105,9 +105,9 @@ const ProfileMainBlockWidget = ({
 
     const data = new FormData();
 
-    data.append("file", {
+    data.append("image", {
       uri: imageProfile,
-      type: "image/jpeg",
+      type: "image/png",
       name: "profile-image",
     });
     try {
@@ -144,6 +144,16 @@ const ProfileMainBlockWidget = ({
 
   return (
     <SafeAreaView className="h-screen w-screen bg-[#121111]">
+      <View className="absolute h-screen w-screen flex p-2">
+        <Pressable
+          onPress={() => {
+            router.replace("/search");
+          }}
+          className="w-[250px] p-2"
+        >
+          <MoveLeft color="white" />
+        </Pressable>
+      </View>
       <View className="relative w-screen flex flex-col justify-center items-center h-[200px] gap-2 bg-black">
         <View className="flex items-start z-10 select-none mt-4">
           <Image
@@ -154,22 +164,6 @@ const ProfileMainBlockWidget = ({
             }}
             className="relative rounded-full"
           />
-          <Pressable
-            className="bg-white text-black rounded-xl"
-            style={{
-              position: "absolute",
-              right: 0,
-              bottom: 0,
-              width: 100,
-              height: 30,
-              left: 60,
-            }}
-            onPress={pickImage}
-          >
-            <Text className="flex text-center" style={{ paddingTop: 4 }}>
-              {i18n.t("edit")} <Pencil width={15} height={15} color="black" />
-            </Text>
-          </Pressable>
         </View>
         <Text className="font-medium text-2xl text-white">{username}</Text>
       </View>
@@ -254,7 +248,7 @@ const ProfileMainBlockWidget = ({
                           {e.name}
                         </Text>
                         <Text style={{ color: "#fff", fontSize: 14 }}>
-                          Показов: {e.current_shows} / {e.total_shows}
+                          Осталось показов: {e.current_shows} / {e.total_shows}
                         </Text>
                       </View>
                     </View>
@@ -269,4 +263,4 @@ const ProfileMainBlockWidget = ({
   );
 };
 
-export default ProfileMainBlockWidget;
+export default ProfileSearch;

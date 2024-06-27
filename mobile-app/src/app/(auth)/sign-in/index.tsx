@@ -4,7 +4,7 @@ import { i18n } from "@/localization/i18n";
 import { useMutation } from "@apollo/client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Link, router } from "expo-router";
-import { MoveLeft } from "lucide-react-native";
+import { Eye, EyeOff, MoveLeft } from "lucide-react-native";
 import { useState, useCallback } from "react";
 import {
   View,
@@ -20,29 +20,13 @@ const SignInPage = () => {
   const [password, setPassword] = useState("");
   const [errorNot, setErrorNot] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [usernameError, setUsernameError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-  const back = "!/assets/back.png";
   const [login, { data, loading, error }] = useMutation(LOGIN_USER);
 
   const loginHandler = useCallback(async (email: string, password: string) => {
-    if (email.trim().length === 0 || password.trim().length === 0) {
-      if (email.trim().length === 0) {
-        setUsernameError("Email is required");
-        setErrorNot("Email is required");
-        setPasswordError(" ");
-      } else if (password.trim().length === 0) {
-        setPasswordError("Password is required");
-        setErrorNot("Password is required");
-        setUsernameError(" ");
-      }
-      return;
-    }
-    setIsLoading(true);
-    setUsernameError("");
-    setPasswordError("");
-
     try {
       const { data } = await login({
         variables: {
@@ -55,7 +39,7 @@ const SignInPage = () => {
       router.replace("/(tabs)");
       setIsLoading(false);
     } catch (err) {
-      setErrorNot("An error occurred. Please try again.");
+      setErrorNot("Неверный пароль или почта");
       setIsLoading(false);
     }
   }, []);
@@ -79,25 +63,45 @@ const SignInPage = () => {
           <MoveLeft color="white" />
         </TouchableOpacity>
       </View>
-
       <View className="flex items-center justify-center pb-[200] gap-3 w-screen h-screen bg-[#121111]">
         <Text className="text-white flex flex-col mt-10 text-3xl text-center">
           {i18n.t("signin")}
         </Text>
-        {errorNot && <Text className="text-red-500">{errorNot}</Text>}
-        <Input
-          className="w-[350]"
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-        />
-        <Input
-          className="w-[350]"
-          placeholder="Password"
-          value={password}
-          secureTextEntry={true}
-          onChangeText={setPassword}
-        />
+        {errorNot && (
+          <Text className="text-red-500 text-2xl mb-1">{errorNot}</Text>
+        )}
+        <View className="w-[350] mb-2">
+          {emailError && (
+            <Text className="text-red-500 text-sm mb-1">{emailError}</Text>
+          )}
+          <Input
+            className="w-[350]"
+            placeholder="Электронная почта"
+            value={email}
+            onChangeText={setEmail}
+          />
+        </View>
+        <View className="w-[350] mb-2">
+          {passwordError && (
+            <Text className="text-red-500 text-sm mb-1">{passwordError}</Text>
+          )}
+          <View className="flex-row items-center gap-2 w-[360]">
+            <Input
+              style={{ width: 290 }}
+              placeholder="Пароль"
+              secureTextEntry={!showPassword}
+              value={password}
+              onChangeText={setPassword}
+            />
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+              {showPassword ? (
+                <EyeOff className="absolute" size="50" color={"white"} />
+              ) : (
+                <Eye className="absolute" size="50" color={"white"} />
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
       <View className="flex justify-end items-center pb-5 absolute h-screen w-screen">
         <Pressable

@@ -7,7 +7,7 @@ import { router } from "expo-router";
 import React from "react";
 import { SafeAreaView, View, Text, Image, ScrollView } from "react-native";
 
-export default function TabProfileScreen() {
+const TabProfileScreen = () => {
   try {
     const { loading, data } = useQuery<IGetSettings>(GET_SETTIGNS, {
       variables: {},
@@ -37,4 +37,6 @@ export default function TabProfileScreen() {
   } catch (error) {
     console.error(error);
   }
-}
+};
+
+export default TabProfileScreen;

@@ -13,6 +13,7 @@ const _layout = () => {
           headerTitleStyle: { color: "white" },
           drawerStyle: { backgroundColor: "#121111" },
           headerStyle: { backgroundColor: "#121111" },
+          unmountOnBlur: true,
         }}
       >
         <Drawer.Screen

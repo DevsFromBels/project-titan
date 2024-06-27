@@ -1,21 +1,26 @@
 import { Skeleton } from "@/components/ui/Skeleton";
 import { GET_PROFILE } from "@/graphql/actions/profile/getProfile.action";
-import { GET_SETTIGNS } from "@/graphql/actions/settings/get-settings";
-import { IUseProfile } from "@/hooks/use-profile";
 import useUser from "@/hooks/use-user";
-import { IGetSettings } from "@/types/settings.types";
-import ProfileMainBlockWidget from "@/widgets/profile/profile-main-block";
+import ProfileSearch from "@/widgets/profile/profile-search";
 import { useQuery } from "@apollo/client";
 import { router, useGlobalSearchParams } from "expo-router";
+import { MoveLeft } from "lucide-react-native";
 import React from "react";
-import { SafeAreaView, View, Text, Image, ScrollView } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  Image,
+  ScrollView,
+  Pressable,
+} from "react-native";
 
 export default function TabProfileScreen() {
   const id = useGlobalSearchParams<{ id: string }>();
   try {
     const { loading, data } = useQuery(GET_PROFILE, {
       variables: {
-        userName: id,
+        userName: id.id,
       },
     });
 
@@ -28,12 +33,12 @@ export default function TabProfileScreen() {
     return (
       <SafeAreaView className="h-screen">
         <ScrollView className="overflow-y-auto overflow-hidden max-h-full">
-          <ProfileMainBlockWidget
+          <ProfileSearch
             image={data.profile.avatar_url}
-            username={data.profile.userSettings.name}
-            id={data.profile.userSettings.id}
-            info={data.profile.profileSettings.info}
-            registerDateString={data.profile.userSettings.createdAt}
+            username={data.profile.user.name}
+            id={data.profile.user.id}
+            info={data.profile.info}
+            registerDateString={data.profile.user.createdAt}
           />
         </ScrollView>
       </SafeAreaView>

@@ -1,9 +1,11 @@
 import { IGetMarket, Item } from ".";
 import SimilarProducts from "./Similar";
 import useUser from "@/hooks/use-user";
+import { MarketPost, MarketPostArray } from "@/types/market.types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useGlobalSearchParams } from "expo-router";
-import { Bell, BellRing } from "lucide-react-native";
+import * as Linking from "expo-linking";
+import { router, useGlobalSearchParams } from "expo-router";
+import { Bell, BellRing, MoveLeft, ShareIcon } from "lucide-react-native";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -12,6 +14,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Pressable,
+  Share,
 } from "react-native";
 
 async function getDataById(id?: string) {
@@ -21,18 +24,17 @@ async function getDataById(id?: string) {
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }
-  const data: IGetMarket = await res.json();
+  const data: MarketPostArray = await res.json();
   return data;
 }
 
 const MarketItem = () => {
   const { user, loading } = useUser();
   const glob = useGlobalSearchParams<{ id?: string }>();
-  const [data, setData] = useState<IGetMarket | null>(null);
+  const [data, setData] = useState<MarketPost>([]);
   const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubscribed, setIsSubscribed] = useState(false);
-
   const id = glob.id;
 
   if (typeof id === "undefined") {
@@ -46,6 +48,7 @@ const MarketItem = () => {
       setData(data);
       setIsLoading(false);
     };
+    checkSub();
     fetchData();
   }, [id]);
 
@@ -53,19 +56,22 @@ const MarketItem = () => {
     setImageError(true);
   };
 
-  const formatPrice = (price: number) => {
-    const formattedPrice = price.toFixed(2);
-    return parseFloat(formattedPrice).toString();
-  };
-
   const checkSub = async () => {
     try {
       const response = await fetch(
         `https://market-api.titanproject.top/get-user-subscriptions?token=${user?.id}`
       );
+      if (!response.ok) {
+        const data = await response.json();
+        return;
+      }
       const data = await response.json();
-      const isSubscribed = data.some((item: Item) => item.content_id === id);
-      setIsSubscribed(isSubscribed);
+      if (Array.isArray(data)) {
+        const isSubscribed = data.some((item: Item) => item.content_id === id);
+        setIsSubscribed(isSubscribed);
+      } else {
+        console.error("Error: Data is not an array");
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -91,9 +97,17 @@ const MarketItem = () => {
     }
   };
 
-  useEffect(() => {
-    checkSub();
-  }, []);
+  const handleShare = async () => {
+    try {
+      const result = await Share.share({
+        message: `https://titanproject.top/market/${id}
+Титановая Реклама`,
+      });
+      console.log(result);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -126,9 +140,19 @@ const MarketItem = () => {
       contentContainerStyle={{ flexGrow: 1 }}
     >
       <View className="w-full break-all flex flex-col gap-2 p-2">
+        <View className="flex p-2">
+          <Pressable
+            onPress={() => {
+              router.replace("/market");
+            }}
+            className="w-[250px] p-2"
+          >
+            <MoveLeft color="white" />
+          </Pressable>
+        </View>
         <View className="w-full h-[300px]" style={{ height: 300 }}>
           <Image
-            className="w-full h-full object-cover rounded"
+            className="w-full h-full object-cover rounded-xl"
             alt="Image"
             source={{
               uri: `https://market-api.titanproject.top${data.content}`,
@@ -136,7 +160,7 @@ const MarketItem = () => {
             onError={handleImageError}
           />
         </View>
-        <View className="w-screen flex justify-center items-center">
+        <View className="w-screen flex justify-center items-center flex-row gap-5">
           <Pressable
             className={
               isSubscribed
@@ -152,19 +176,19 @@ const MarketItem = () => {
               <Text className="text-black">Подписаться</Text>
             )}
           </Pressable>
+          <Pressable onPress={handleShare}>
+            <ShareIcon size="40" color="white" />
+          </Pressable>
         </View>
         <View className="flex flex-col gap-2 p-2">
           <Text className=" text-ellipsis text-xl overflow-hidden text-white">
             Название: {data.name}
           </Text>
           <Text className="text-ellipsis text-xl overflow-hidden text-white">
-            Цена за показ: {formatPrice(data.price_for_show)} BYN
-          </Text>
-          <Text className="text-ellipsis text-xl overflow-hidden text-white">
             Создатель: {data.user_id}
           </Text>
           <Text className="text-ellipsis text-xl overflow-hidden text-white">
-            Всего показов: {data.current_shows} / {data.total_shows}
+            Показов: {data.current_shows} / {data.total_shows}
           </Text>
           {data.category && (
             <Text className="text-ellipsis text-xl overflow-hidden text-white">
