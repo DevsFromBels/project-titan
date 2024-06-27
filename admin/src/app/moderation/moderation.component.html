@@ -2,7 +2,7 @@
   <app-my-sidebar></app-my-sidebar>
   @if(moderationData.length) {
 
-  <table class="w-full flex-col">
+  <table class="w-full flex-col gap-2">
     <thead>
       <tr class="text-start">
         <th>ID</th>
@@ -28,7 +28,6 @@
             width="200px"
             height="200px"
             alt="Photo"
-            width="50"
           />
         </td>
         <td>{{ item.text }}</td>
@@ -39,10 +38,20 @@
         <td>{{ item.total_shows }}</td>
         <td>{{ item.region }}</td>
         <td>
-          <button class="p-2 border rounded-xl text-green-600">Принять</button>
+          <button
+            class="p-2 border rounded-xl text-green-600"
+            (click)="acceptProduct(item.moderation_id)"
+          >
+            Принять
+          </button>
         </td>
         <td>
-          <button class="p-2 border rounded-xl text-red-600">Отклонить</button>
+          <button
+            class="p-2 border rounded-xl text-red-600"
+            (click)="rejectProduct(item.moderation_id)"
+          >
+            Отклонить
+          </button>
         </td>
       </tr>
       }

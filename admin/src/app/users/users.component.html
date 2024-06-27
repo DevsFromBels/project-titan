@@ -16,7 +16,6 @@
       <th>Почта</th>
       <th>Роль</th>
       <th>Создан</th>
-      <th>Блoкировка</th>
       <th>Удаленине</th>
     </tr>
     @for (user of users; track user.id) {
@@ -27,13 +26,6 @@
       <td>{{ user.email }}</td>
       <td>{{ user.role }}</td>
       <td>{{ datePipe.transform(user.createdAt, "dd.MM.yyyy, HH:mm") }}</td>
-      <td>
-        <button
-          class="bg-gray-700 px-4 py-2 rounded-xl text-white hover:bg-gray-900"
-        >
-          Заблокировать
-        </button>
-      </td>
       <td>
         <button
           (click)="handleDelete(user.id)"
