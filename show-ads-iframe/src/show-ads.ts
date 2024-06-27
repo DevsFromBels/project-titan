@@ -21,11 +21,11 @@ export class ShowAds extends LitElement {
   @property() token?: string;
   @property() type?: string;
 
-  static styles = css`
-  .ad-block {
-    cursor: pointer;
-  }
-`;
+  static override styles = css`
+    .ad-block {
+      cursor: pointer;
+    }
+  `;
 
   constructor() {
     super();
@@ -51,14 +51,14 @@ export class ShowAds extends LitElement {
   private _currentSubscription: Subscription | null = null;
   private _intervalId: number | null = null;
 
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback();
     if (this.type === "single") {
       this._startInterval();
     }
   }
 
-  disconnectedCallback() {
+  override disconnectedCallback() {
     super.disconnectedCallback();
     if (this._intervalId) {
       clearInterval(this._intervalId);
@@ -103,11 +103,15 @@ export class ShowAds extends LitElement {
     }, 2000);
   }
 
-  private goToLinkPage(content_id: string) {
-    window.location.href = `https://titanproject.top/market/${content_id}`;
+  goToLinkPage(
+    user_id: string,
+    content_id: string,
+    redirect_url: string
+  ) {
+    window.location.href = `https://titanproject.top/auto-redirect?user=${user_id}&content_id=${content_id}&redirect_url=${redirect_url}`;
   }
 
-  protected render() {
+  protected override render() {
     if (this.type === "single") {
       return this._productTask.render({
         pending: () => html`Single post loading`,
@@ -146,22 +150,26 @@ export class ShowAds extends LitElement {
     return html`
       <div
         class="ad-block"
-        @click="${() => this.goToLinkPage(subscription.content_id)}"
+        @click="${() =>
+          this.goToLinkPage(
+            subscription.user_id,
+            subscription.content_id,
+            subscription.link
+          )}"
         style="position: relative; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;"
       >
         <div>
           <img
             src=${`https://market-api.titanproject.top` + subscription.content}
-            style="width: 100%; height: 100%; border-radius: 10px;"
+            style="width: 200px; height: 200px; border-radius: 10px;"
             alt=""
           />
         </div>
         <div
           style="position: absolute; border-radius: 2px; width: 100%; display: flex; flex-direction: column; bottom: 0; left: 0; background-color: #00000090;"
         >
-          <div style="padding: 10px;">
+          <div style="padding: 10px; border-radius: 10px;">
             <h3>${subscription.name}</h3>
-            <p>Цена за показ: ${subscription.price_for_show}</p>
           </div>
         </div>
       </div>
@@ -181,7 +189,7 @@ export class ShowAds extends LitElement {
           <img
             src=${`https://market-api.titanproject.top` +
             (this._currentSubscription.content || "")}
-            style="max-width: 100%; max-height: 100%;"
+            style="width: 200px; height: 200px;"
             alt=""
           />
         </div>

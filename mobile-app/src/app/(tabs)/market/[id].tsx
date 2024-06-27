@@ -35,6 +35,7 @@ const MarketItem = () => {
   const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubscribed, setIsSubscribed] = useState(false);
+
   const id = glob.id;
 
   if (typeof id === "undefined") {
@@ -72,6 +73,19 @@ const MarketItem = () => {
       } else {
         console.error("Error: Data is not an array");
       }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const checkSub = async () => {
+    try {
+      const response = await fetch(
+        `https://market-api.titanproject.top/get-user-subscriptions?token=${user?.id}`
+      );
+      const data = await response.json();
+      const isSubscribed = data.some((item: Item) => item.content_id === id);
+      setIsSubscribed(isSubscribed);
     } catch (error) {
       console.error("Error:", error);
     }
