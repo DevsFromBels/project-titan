@@ -9,4 +9,5 @@ export interface MarketPost {
   price_for_show: number;
   total_shows: number;
   current_shows: number;
+  category: string;
 }

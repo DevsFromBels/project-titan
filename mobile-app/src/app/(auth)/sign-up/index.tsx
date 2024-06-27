@@ -6,7 +6,7 @@ import { i18n } from "@/localization/i18n";
 import { useMutation } from "@apollo/client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
-import { MoveLeft } from "lucide-react-native";
+import { Eye, EyeOff, MoveLeft } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
 import {
   View,
@@ -30,6 +30,7 @@ const index = () => {
   const [otp, setOtp] = useState("");
   const [activationToken, setActivationToken] = useState("");
   const [showOTPInput, setShowOTPInput] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [register, { data, loading, error }] = useMutation(REGISTER_USER);
   const [activateUser] = useMutation(ACTIVATE_USER);
@@ -37,29 +38,6 @@ const index = () => {
 
   const registerHandler = useCallback(
     async (name: string, email: string, password: string) => {
-      if (
-        name.trim().length === 0 ||
-        email.trim().length === 0 ||
-        password.trim().length === 0
-      ) {
-        if (email.trim().length === 0) {
-          setEmailError("Email is required");
-          setErrorNot("Email is required");
-          setPasswordError(" ");
-          setUsernameError(" ");
-        } else if (password.trim().length === 0) {
-          setPasswordError("Password is required");
-          setErrorNot("Password is required");
-          setUsernameError(" ");
-          setEmailError(" ");
-        } else if (name.trim().length === 0) {
-          setEmailError("Email is required");
-          setErrorNot("Email is required");
-          setPasswordError(" ");
-          setUsernameError(" ");
-        }
-        return;
-      }
       setIsLoading(true);
       setUsernameError("");
       setPasswordError("");
@@ -76,43 +54,45 @@ const index = () => {
         });
         setActivationToken(data.register.activation_token);
         setIsLoading(false);
-      } catch (err) {
-        console.error(err);
-        setErrorNot("An error occurred. Please try again.");
+      } catch (err: any) {
+        setShowOTPInput(false);
+        setEmailError("Этот email уже используется");
+        if (
+          err.message &&
+          err.message.includes(
+            "[ApolloError: User allready exists with this email]"
+          )
+        ) {
+        } else {
+          setErrorNot("An error occurred. Please try again.");
+        }
         setIsLoading(false);
       }
     },
     []
   );
 
-  const handleSignUpPress = useCallback(() => {
-    registerHandler(name, email, password);
+  const handleSignUpPress = useCallback(async () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (name.trim().length === 0) {
+      setUsernameError("Имя обязательно для заполнения");
+    }
+    if (!emailRegex.test(email)) {
+      setEmailError("Неверный формат электронной почты");
+    }
+    if (password.trim().length < 8) {
+      setPasswordError("Пароль должен содержать не менее 8 символов");
+    }
+
     if (
       name.trim().length === 0 ||
-      email.trim().length === 0 ||
-      password.trim().length === 0
-    ) {
-      if (email.trim().length === 0) {
-        setEmailError("Email is required");
-        setErrorNot("Email is required");
-        setPasswordError(" ");
-        setUsernameError(" ");
-        setShowOTPInput(false);
-      } else if (password.trim().length === 0) {
-        setPasswordError("Password is required");
-        setErrorNot("Password is required");
-        setUsernameError(" ");
-        setEmailError(" ");
-        setShowOTPInput(false);
-      } else if (name.trim().length === 0) {
-        setEmailError("Email is required");
-        setErrorNot("Email is required");
-        setPasswordError(" ");
-        setUsernameError(" ");
-        setShowOTPInput(false);
-      }
+      !emailRegex.test(email) ||
+      password.trim().length < 8
+    )
       return;
-    }
+
+    registerHandler(name, email, password);
     setShowOTPInput(true);
   }, [name, email, password, registerHandler]);
 
@@ -174,7 +154,10 @@ const index = () => {
           </View>
         </View>
       )}
-      <View className="w-[40] bg-[#121111] m-5">
+      <View
+        className="w-[40] bg-[#121111] m-5 z-20"
+        style={{ position: "absolute", zIndex: 20 }}
+      >
         <TouchableOpacity onPress={() => router.replace("/")}>
           <MoveLeft color="white" />
         </TouchableOpacity>
@@ -183,26 +166,49 @@ const index = () => {
         <Text className="text-white flex flex-col mt-10 text-3xl text-center">
           {i18n.t("signup")}
         </Text>
-        {errorNot && <Text className="text-red-500  text-2xl">{errorNot}</Text>}
-        <Input
-          className="w-[350]"
-          placeholder="Name"
-          value={name}
-          onChangeText={setName}
-        />
-        <Input
-          className="w-[350]"
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-        />
-        <Input
-          className="w-[350]"
-          placeholder="Password"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
+        <View className="w-[350] mb-2">
+          {usernameError && (
+            <Text className="text-red-500 text-sm mb-1">{usernameError}</Text>
+          )}
+          <Input
+            className="w-[350]"
+            placeholder="Имя"
+            value={name}
+            onChangeText={setName}
+          />
+        </View>
+        <View className="w-[350] mb-2">
+          {emailError && (
+            <Text className="text-red-500 text-sm mb-1">{emailError}</Text>
+          )}
+          <Input
+            className="w-[350]"
+            placeholder="Электронная почта"
+            value={email}
+            onChangeText={setEmail}
+          />
+        </View>
+        <View className="w-[350] mb-2">
+          {passwordError && (
+            <Text className="text-red-500 text-sm mb-1">{passwordError}</Text>
+          )}
+          <View className="flex-row items-center gap-2">
+            <Input
+              style={{ width: 290 }}
+              placeholder="Пароль"
+              secureTextEntry={!showPassword}
+              value={password}
+              onChangeText={setPassword}
+            />
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+              {showPassword ? (
+                <EyeOff className="absolute" size="50" color={"white"} />
+              ) : (
+                <Eye className="absolute" size="50" color={"white"} />
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
       <View className="flex justify-end items-center pb-5 absolute h-full w-screen">
         <Pressable

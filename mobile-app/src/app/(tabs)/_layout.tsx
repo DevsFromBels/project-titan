@@ -42,6 +42,7 @@ const TabsLayout = () => {
             bottom: 0,
             zIndex: 1000,
           },
+          unmountOnBlur: true
         }}
       >
         <Tabs.Screen
