@@ -23,7 +23,8 @@ const settings = () => {
 
   const handlelogout = async () => {
     try {
-      await AsyncStorage.clear();
+      await AsyncStorage.removeItem('access_token');
+      await AsyncStorage.removeItem('refresh_token');
       router.replace("/");
     } catch (error) {
       console.error(error);

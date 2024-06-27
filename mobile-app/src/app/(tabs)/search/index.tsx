@@ -31,6 +31,7 @@ const Search = () => {
         <ActivityIndicator color="white" size="large" />
       </View>
     );
+
   if (error) return <Text>Error :</Text>;
 
   return (
@@ -48,9 +49,9 @@ const Search = () => {
           renderItem={({ item }) => (
             <View style={styles.itemContainer}>
               <TouchableOpacity
-                onPress={() =>
-                  router.replace(`/${data.searchProfile.users.id}`)
-                }
+                onPress={() => {
+                  router.replace(`/search/${item.id}`);
+                }}
               >
                 <Text style={styles.text}>{item.name}</Text>
               </TouchableOpacity>

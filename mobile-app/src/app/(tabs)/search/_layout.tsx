@@ -10,7 +10,7 @@ const _layout = () => {
         name="[id]"
         options={{
           headerShadowVisible: false,
-          headerTitle: "",
+          headerShown: false,
           headerStyle: { backgroundColor: "#121111" },
           contentStyle: { backgroundColor: "#121111" },
           headerTintColor: "white",

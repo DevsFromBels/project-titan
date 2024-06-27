@@ -66,13 +66,14 @@ const market = () => {
     fetchData();
   }, [page, selectedSocialNetwork]);
 
+  useEffect(() => {
+    setPage(1);
+    setData(null);
+  }, []);
+  
+
   const handleImageError = (contentId: string) => {
     setImageErrors((prevErrors) => [...prevErrors, contentId]);
-  };
-
-  const formatPrice = (price: number) => {
-    const formattedPrice = price.toFixed(2);
-    return parseFloat(formattedPrice).toString();
   };
 
   const loadMoreData = () => {
@@ -153,11 +154,11 @@ const market = () => {
                   />
                 </View>
                 <View className="flex flex-col gap-2 p-2">
-                  <Text className="w-[200px] max-h-[100px] text-ellipsis overflow-hidden text-white">
+                  <Text className="w-[200px] max-h-[100px] text-ellipsis text-xl overflow-hidden text-white">
                     Название: {e.name}
                   </Text>
-                  <Text className="w-[200px] text-ellipsis overflow-hidden text-white">
-                    Цена за показ: {formatPrice(e.price_for_show)} BYN за показ
+                  <Text className="text-ellipsis text-xl overflow-hidden text-white">
+                    Показов: {e.current_shows} / {e.total_shows}
                   </Text>
                 </View>
                 <Button
