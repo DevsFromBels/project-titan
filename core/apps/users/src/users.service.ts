@@ -308,6 +308,7 @@ export class UsersService {
       },
       include: {
         avatar: true,
+        profile: true,
       },
     });
   
@@ -323,6 +324,14 @@ export class UsersService {
       });
     }
   
+    if (user.profile) {
+      await this.prisma.profile.delete({
+        where: {
+          userId: user.id,
+        },
+      });
+    }
+  
     await this.prisma.user.delete({
       where: {
         id: userID,
@@ -333,5 +342,6 @@ export class UsersService {
       message: 'User Deleted',
     };
   }
+  
   
 }
