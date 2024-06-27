@@ -4,7 +4,6 @@ import useUser from "@/hooks/use-user";
 import ProfileSearch from "@/widgets/profile/profile-search";
 import { useQuery } from "@apollo/client";
 import { router, useGlobalSearchParams } from "expo-router";
-import { MoveLeft } from "lucide-react-native";
 import React from "react";
 import {
   SafeAreaView,

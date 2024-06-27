@@ -1,6 +1,5 @@
 import { Stack } from "expo-router";
 import React from "react";
-import { BaseAnimationBuilder } from "react-native-reanimated";
 
 const _layout = () => {
   return (
