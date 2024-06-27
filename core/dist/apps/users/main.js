@@ -122,7 +122,7 @@ exports.EmailModule = EmailModule = __decorate([
                         },
                     },
                     defaults: {
-                        from: "TITAN Finance",
+                        from: "TITAN Project",
                     },
                     template: {
                         dir: (0, path_1.resolve)(__dirname, `${process.cwd()}/email-templates`),
@@ -207,7 +207,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.User = void 0;
+exports.DeleteUser = exports.GetUserByName = exports.User = void 0;
 const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 let User = class User {
 };
@@ -239,6 +239,34 @@ __decorate([
 exports.User = User = __decorate([
     (0, graphql_1.ObjectType)()
 ], User);
+let GetUserByName = class GetUserByName {
+};
+exports.GetUserByName = GetUserByName;
+__decorate([
+    (0, graphql_1.Field)(),
+    __metadata("design:type", String)
+], GetUserByName.prototype, "name", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    __metadata("design:type", String)
+], GetUserByName.prototype, "email", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    __metadata("design:type", String)
+], GetUserByName.prototype, "avatar", void 0);
+exports.GetUserByName = GetUserByName = __decorate([
+    (0, graphql_1.ObjectType)()
+], GetUserByName);
+let DeleteUser = class DeleteUser {
+};
+exports.DeleteUser = DeleteUser;
+__decorate([
+    (0, graphql_1.Field)(),
+    __metadata("design:type", String)
+], DeleteUser.prototype, "message", void 0);
+exports.DeleteUser = DeleteUser = __decorate([
+    (0, graphql_1.ObjectType)()
+], DeleteUser);
 
 
 /***/ }),
@@ -348,9 +376,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a, _b;
+var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.LogoutResponse = exports.LoginResponse = exports.ActivationResponse = exports.RegisterResponse = exports.ErrorType = void 0;
+exports.DeleteUserResponse = exports.UserByEmail = exports.LogoutResponse = exports.LoginResponse = exports.ActivationResponse = exports.RegisterResponse = exports.ErrorType = void 0;
 const graphql_1 = __webpack_require__(/*! @nestjs/graphql */ "@nestjs/graphql");
 const user_entity_1 = __webpack_require__(/*! ../entities/user.entity */ "./apps/users/src/entities/user.entity.ts");
 let ErrorType = class ErrorType {
@@ -427,6 +455,23 @@ __decorate([
 exports.LogoutResponse = LogoutResponse = __decorate([
     (0, graphql_1.ObjectType)()
 ], LogoutResponse);
+class UserByEmail {
+}
+exports.UserByEmail = UserByEmail;
+__decorate([
+    (0, graphql_1.Field)(() => user_entity_1.GetUserByName),
+    __metadata("design:type", Object)
+], UserByEmail.prototype, "user", void 0);
+let DeleteUserResponse = class DeleteUserResponse {
+};
+exports.DeleteUserResponse = DeleteUserResponse;
+__decorate([
+    (0, graphql_1.Field)(),
+    __metadata("design:type", String)
+], DeleteUserResponse.prototype, "message", void 0);
+exports.DeleteUserResponse = DeleteUserResponse = __decorate([
+    (0, graphql_1.ObjectType)()
+], DeleteUserResponse);
 
 
 /***/ }),
@@ -514,6 +559,7 @@ const users_types_1 = __webpack_require__(/*! ./types/users.types */ "./apps/use
 const user_dto_1 = __webpack_require__(/*! ./dto/user.dto */ "./apps/users/src/dto/user.dto.ts");
 const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
 const auth_guard_1 = __webpack_require__(/*! ./guards/auth.guard */ "./apps/users/src/guards/auth.guard.ts");
+const user_entity_1 = __webpack_require__(/*! ./entities/user.entity */ "./apps/users/src/entities/user.entity.ts");
 let UsersResolver = class UsersResolver {
     constructor(userService) {
         this.userService = userService;
@@ -526,7 +572,7 @@ let UsersResolver = class UsersResolver {
         return { activation_token };
     }
     async activateUser(activationDto, context) {
-        return await this.userService.actiivateUser(activationDto, context.res);
+        return await this.userService.activateUser(activationDto, context.res);
     }
     async login(email, password) {
         return await this.userService.Login({ email, password });
@@ -536,6 +582,12 @@ let UsersResolver = class UsersResolver {
     }
     async LogOutUser(context) {
         return this.userService.Logout(context.req);
+    }
+    async DeleteUser(userID) {
+        return this.userService.deleteUser(userID);
+    }
+    async getUserByName(email) {
+        return this.userService.getUserByEmail(email);
     }
 };
 exports.UsersResolver = UsersResolver;
@@ -579,6 +631,20 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UsersResolver.prototype, "LogOutUser", null);
+__decorate([
+    (0, graphql_1.Mutation)(() => users_types_1.DeleteUserResponse),
+    __param(0, (0, graphql_1.Args)("userID")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UsersResolver.prototype, "DeleteUser", null);
+__decorate([
+    (0, graphql_1.Query)(() => user_entity_1.GetUserByName),
+    __param(0, (0, graphql_1.Args)("email")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UsersResolver.prototype, "getUserByName", null);
 exports.UsersResolver = UsersResolver = __decorate([
     (0, graphql_1.Resolver)("User"),
     __metadata("design:paramtypes", [typeof (_a = typeof users_service_1.UsersService !== "undefined" && users_service_1.UsersService) === "function" ? _a : Object])
@@ -594,11 +660,34 @@ exports.UsersResolver = UsersResolver = __decorate([
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
 };
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
@@ -611,7 +700,7 @@ const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
 const jwt_1 = __webpack_require__(/*! @nestjs/jwt */ "@nestjs/jwt");
 const prisma_service_1 = __webpack_require__(/*! ../../../prisma/prisma.service */ "./prisma/prisma.service.ts");
 const email_service_1 = __webpack_require__(/*! ./email/email.service */ "./apps/users/src/email/email.service.ts");
-const bcrypt = __webpack_require__(/*! bcrypt */ "bcrypt");
+const bcrypt = __importStar(__webpack_require__(/*! bcrypt */ "bcrypt"));
 const sendToken_1 = __webpack_require__(/*! ./utils/sendToken */ "./apps/users/src/utils/sendToken.ts");
 let UsersService = class UsersService {
     constructor(jwtService, prisma, configService, emailService) {
@@ -619,6 +708,26 @@ let UsersService = class UsersService {
         this.prisma = prisma;
         this.configService = configService;
         this.emailService = emailService;
+    }
+    async getUserByEmail(email) {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                email: email,
+            },
+        });
+        if (!user) {
+            throw new common_1.BadRequestException("User not found");
+        }
+        const avatar = await this.prisma.avatars.findFirst({
+            where: {
+                userId: user.id
+            }
+        });
+        return {
+            name: user.name,
+            email: user.email,
+            avatar: avatar.url
+        };
     }
     async register(registerDto, response) {
         const { name, email, password } = registerDto;
@@ -641,7 +750,7 @@ let UsersService = class UsersService {
             throw new common_1.BadRequestException("User already exist with this username!");
         }
         if (isEmailExists) {
-            throw new common_1.BadRequestException("User allready exists with this email");
+            throw new common_1.BadRequestException("User already exists with this email");
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = {
@@ -674,7 +783,7 @@ let UsersService = class UsersService {
         });
         return { token, activationCode };
     }
-    async actiivateUser(activationDto, response) {
+    async activateUser(activationDto, response) {
         const { activationToken, activationCode } = activationDto;
         const newUser = this.jwtService.verify(activationToken, {
             secret: this.configService.get("ACTIVATION_SECRET"),
@@ -688,7 +797,7 @@ let UsersService = class UsersService {
         const existName = await this.prisma.user.findUnique({
             where: {
                 name,
-            }
+            },
         });
         const existUser = await this.prisma.user.findUnique({
             where: {
@@ -714,15 +823,14 @@ let UsersService = class UsersService {
             data: {
                 info: "",
                 isPublic: true,
-                userId: user.id
-            }
+                userId: user.id,
+            },
         });
         const avatar = this.prisma.avatars.create({
             data: {
-                public: true,
                 url: "",
-                userId: user.id
-            }
+                userId: user.id,
+            },
         });
         return { user, response, profile, avatar };
     }
@@ -766,6 +874,16 @@ let UsersService = class UsersService {
     }
     async comparePassword(password, hashedPassword) {
         return await bcrypt.compare(password, hashedPassword);
+    }
+    async deleteUser(userID) {
+        await this.prisma.user.delete({
+            where: {
+                id: userID
+            }
+        });
+        return {
+            message: 'User Deleted'
+        };
     }
 };
 exports.UsersService = UsersService;

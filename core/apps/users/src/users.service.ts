@@ -293,6 +293,14 @@ export class UsersService {
     return await bcrypt.compare(password, hashedPassword);
   }
 
+
+  /**
+   * Delete user from data get's and server db data
+   *
+   * @async
+   * @param {string} userID
+   * @returns {unknown}
+   */
   async deleteUser(userID: string) {
     await this.prisma.user.delete({
       where: {

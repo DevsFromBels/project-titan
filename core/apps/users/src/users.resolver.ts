@@ -68,7 +68,7 @@ export class UsersResolver {
   }
 
   @Mutation(() => DeleteUserResponse)
-  async DeleteUser(userID: string) {
+  async DeleteUser(@Args("userID") userID: string) {
     return this.userService.deleteUser(userID)
   }
 
