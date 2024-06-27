@@ -292,4 +292,16 @@ export class UsersService {
   ): Promise<boolean> {
     return await bcrypt.compare(password, hashedPassword);
   }
+
+  async deleteUser(userID: string) {
+    await this.prisma.user.delete({
+      where: {
+        id: userID
+      }
+    })
+
+    return {
+      message: 'User Deleted'
+    }
+  }
 }

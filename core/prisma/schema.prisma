@@ -43,9 +43,11 @@ model User {
   profileId         String?             @unique
   role              Role                @default(User)
   createdAt         DateTime
+  balance           Int                 @default(0)
   notifications     Notification[]
   userSubscriptions UserSubscriptions[]
 }
+
 
 model Market {
   content_id        String              @id @default(uuid())
@@ -57,7 +59,19 @@ model Market {
   total_shows       Int
   current_shows     Int
   category          String?
+  region            String?
+  adViews           AdView[]
   userSubscriptions UserSubscriptions[]
+}
+
+model AdView {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  ipAddress   String
+  marketId    String
+  market      Market   @relation(fields: [marketId], references: [content_id])
+
+  @@unique([ipAddress, marketId])
 }
 
 model Moderation {
@@ -69,6 +83,7 @@ model Moderation {
   price_for_show Float
   category       String?
   total_shows    Int
+  region          String
 }
 
 model Notification {

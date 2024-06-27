@@ -1,13 +1,13 @@
-import { IGetMarket } from "@/app/(tabs)/market";
 import { DateOptionsWithMonth } from "@/constants/date-output";
 import { graphqlClient } from "@/graphql/gql.setup";
 import { i18n } from "@/localization/i18n";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { Pencil } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
+  ScrollView,
   View,
   Text,
   Image,
@@ -143,7 +143,7 @@ const ProfileMainBlockWidget = ({
   }
 
   return (
-    <SafeAreaView className="h-screen w-screen bg-[#121111]">
+    <ScrollView className="h-screen w-screen bg-[#121111]">
       <View className="relative w-screen flex flex-col justify-center items-center h-[200px] gap-2 bg-black">
         <View className="flex items-start z-10 select-none mt-4">
           <Image
@@ -208,7 +208,7 @@ const ProfileMainBlockWidget = ({
               </Text>
             </View>
           )}
-          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10, paddingBottom: 100 }}>
             {dataMarket?.map((e) => (
               <React.Fragment key={e.content_id}>
                 {!imageErrors.includes(e.content_id) && (
@@ -265,7 +265,7 @@ const ProfileMainBlockWidget = ({
           </View>
         </View>
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 
