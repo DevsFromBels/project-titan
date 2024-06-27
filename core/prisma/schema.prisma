@@ -59,6 +59,7 @@ model Market {
   total_shows       Int
   current_shows     Int
   category          String?
+  status            String              @default("PENDING")
   region            String?
   adViews           AdView[]
   userSubscriptions UserSubscriptions[]

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../../prisma/prisma.service";
 import { Market } from "@prisma/client";
 import { MarketIdService } from "./market-id/market-id.service";
@@ -252,27 +252,66 @@ export class MarketService {
     return this.prisma.moderation.findMany();
   }
 
+  async acceptProduct(contentId: string) {
+    const product = await this.prisma.market.findUnique({
+      where: {
+        content_id: contentId,
+      },
+    });
+
+    if (!product) {
+      throw new NotFoundException("Product not found");
+    }
+
+    return await this.prisma.market.update({
+      where: {
+        content_id: contentId,
+      },
+      data: {
+        status: "APPROVED",
+      },
+    });
+  }
+
+  async rejectProduct(contentId: string) {
+    const product = await this.prisma.market.findUnique({
+      where: {
+        content_id: contentId,
+      },
+    });
+
+    if (!product) {
+      throw new NotFoundException("Product not found");
+    }
+
+    return await this.prisma.market.delete({
+      where: {
+        content_id: contentId,
+      },
+    });
+  }
+
   async addCurrentShow(user: string, content_id: string, ip: string) {
     const currentUser = await this.prisma.user.findFirst({
       where: {
         id: user,
       },
     });
-  
+
     if (!currentUser) {
       throw new BadRequestException("User not found");
     }
-  
+
     const currentPost = await this.prisma.market.findFirst({
       where: {
         content_id: content_id,
       },
     });
-  
+
     if (!currentPost) {
       throw new BadRequestException("Post not found");
     }
-  
+
     const adView = await this.prisma.adView.findFirst({
       where: {
         ipAddress: ip,
@@ -281,7 +320,7 @@ export class MarketService {
         },
       },
     });
-  
+
     if (!adView) {
       await this.prisma.adView.create({
         data: {
@@ -293,7 +332,7 @@ export class MarketService {
           },
         },
       });
-  
+
       await this.prisma.market.update({
         where: {
           content_id: content_id,
@@ -304,13 +343,13 @@ export class MarketService {
           },
         },
       });
-  
+
       const updatedPost = await this.prisma.market.findFirst({
         where: {
           content_id: content_id,
         },
       });
-  
+
       if (updatedPost.current_shows >= updatedPost.total_shows) {
         await this.prisma.market.delete({
           where: {
@@ -320,5 +359,4 @@ export class MarketService {
       }
     }
   }
-  
 }

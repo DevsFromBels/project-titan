@@ -49,9 +49,7 @@ export class UserService {
   }
 
   isAuthenticated$(): Observable<boolean> {
-    return this.user$.pipe(
-      map((user) => this.isUserAuthenticated(user))
-    );
+    return this.user$.pipe(map((user) => this.isUserAuthenticated(user)));
   }
 
   private isUserAuthenticated(user: User | null): boolean {
@@ -75,6 +73,31 @@ export class UserService {
   private isUserValid(user: User | null): boolean {
     return !!user && !!user.email && user.role === 'User';
   }
+
+  deleteUser$(userID: string): Observable<{ message: string }> {
+    return this.apollo
+      .mutate<Data>({
+        mutation: DeleteUser,
+        variables: {
+          userID,
+        },
+      })
+      .pipe(map((result) => result!.data!.deleteUser));
+  }
+}
+
+const DeleteUser = gql`
+  mutation DeleteUser($userID: String!) {
+    DeleteUser(userID: $userID) {
+      message
+    }
+  }
+`;
+
+interface Data {
+  deleteUser: {
+    message: string;
+  };
 }
 
 const GetLoggedInUser = gql`
