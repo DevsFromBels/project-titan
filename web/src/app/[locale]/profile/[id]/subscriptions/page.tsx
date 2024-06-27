@@ -30,7 +30,7 @@ type SubscriptionItem = {
 };
 
 const formatPrice = (price: number) => {
-  return price.toFixed(6) + " BYR";
+  return price.toFixed(6) + " BYN";
 };
 
 const Page = () => {
@@ -138,7 +138,7 @@ const Page = () => {
             <div className="absolute bottom-0 left-0 right-0 p-2 bg-black bg-opacity-50 text-white rounded-b-lg">
               <p className="text-sm font-semibold truncate">{post.name}</p>
               <p className="text-sm truncate">
-                {formatPrice(post.price_for_show)} BYR за показ
+                {formatPrice(post.price_for_show)} BYN за показ
               </p>
               <p className="text-xs">
                 {post.current_shows} / {post.total_shows} показов

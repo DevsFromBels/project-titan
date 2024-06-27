@@ -75,7 +75,7 @@ export default function Page({ params }: PageProps) {
           alt=""
         />
         <h1 className="text-lg">{marketPost.name}</h1>
-        <p>Цена за показ: {formatPrice(marketPost.price_for_show)} BYR</p>
+        <p>Цена за показ: {formatPrice(marketPost.price_for_show)} BYN</p>
         <p>
           Категория: {marketPost.category}
         </p>

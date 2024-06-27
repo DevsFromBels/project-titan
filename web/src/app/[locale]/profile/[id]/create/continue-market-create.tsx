@@ -22,13 +22,8 @@ interface IContinueMarketCreate {
 
 const schema = z.object({
   name: z.string().min(6, "Название должно быть не менее 6 символов"),
-  totalShows: z
-    .string()
-    .regex(/^[0-9]{1,6}$/, "Количество показов должно быть от 5 до 100000")
-    .transform((value) => Number(value)),
   webSiteLink: z.string().url({ message: "Неверный формат URL" }),
   category: z.string().nonempty("Выберите категорию"),
-  region: z.string().nonempty("Выберите регион"),
 });
 
 const ContinueMarketCreate = ({ croppedImage }: IContinueMarketCreate) => {
@@ -38,6 +33,7 @@ const ContinueMarketCreate = ({ croppedImage }: IContinueMarketCreate) => {
   const [category, setCategory] = useState("");
   const [region, setRegion] = useState("");
   const router = useRouter();
+  const [price, setPrice] = useState(0);
 
   const {
     register: createPost,
@@ -47,12 +43,15 @@ const ContinueMarketCreate = ({ croppedImage }: IContinueMarketCreate) => {
     resolver: zodResolver(schema),
   });
 
-  const handleSubmit = async () => {
-    // event.preventDefault();
-    const price_per_show = `${100 / +totalShows}`;
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+    const price_per_show = `${0.02 * +totalShows}`;
+    console.log(price_per_show);
+    console.log(totalShows);
     const formData = new FormData();
     const res = await fetch(croppedImage);
     const photo = await res.blob();
+    // console.log('workds')
     formData.append("photo", photo);
 
     const accessToken = Cookies.get("access_token");
@@ -89,10 +88,7 @@ const ContinueMarketCreate = ({ croppedImage }: IContinueMarketCreate) => {
         alt="Preview"
         className="mb-2 rounded-lg w-[300px] h-[300px]"
       />
-      <form
-        onSubmit={validateSubmit(handleSubmit)}
-        className="flex flex-col gap-2 w-[300px]"
-      >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2 w-[300px]">
         <div className="flex flex-col gap-1">
           <Input
             {...createPost("name")}
@@ -108,17 +104,19 @@ const ContinueMarketCreate = ({ croppedImage }: IContinueMarketCreate) => {
         </div>
         <div className="flex flex-col gap-1">
           <Input
-            {...createPost("totalShows")}
             value={totalShows}
-            onChange={(e) => setTotalShows(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              const number = parseInt(value, 10);
+              if (isNaN(number) || number > 100000) {
+                return;
+              }
+              setTotalShows(value);
+              setPrice(0.02 * Number(value));
+            }}
             type="text"
             placeholder="Колличество показов"
           />
-          {errors.totalShows && (
-            <p className="text-red-600 text-[12px]">
-              {errors?.totalShows?.message as string}
-            </p>
-          )}
         </div>
         <div className="flex flex-col gap-1">
           <Input
@@ -135,9 +133,7 @@ const ContinueMarketCreate = ({ croppedImage }: IContinueMarketCreate) => {
           )}
         </div>
         <div className="flex flex-col gap-1">
-          <Select
-            onValueChange={(value) => setCategory(value)}
-          >
+          <Select onValueChange={(value) => setCategory(value)}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Выбирете категорию" />
             </SelectTrigger>
@@ -161,10 +157,7 @@ const ContinueMarketCreate = ({ croppedImage }: IContinueMarketCreate) => {
             </SelectContent>
           </Select>
         </div>
-        <Select
-          onValueChange={(value) => setRegion(value)}
-          {...createPost("region")}
-        >
+        <Select onValueChange={(value) => setRegion(value)}>
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Выбирете Регион" />
           </SelectTrigger>
@@ -177,7 +170,7 @@ const ContinueMarketCreate = ({ croppedImage }: IContinueMarketCreate) => {
             <SelectItem value="UZ">Узбекистан</SelectItem>
           </SelectContent>
         </Select>
-        <Button type="submit">Создать рекламу</Button>
+        <Button type="submit">Купить рекламу за {price.toFixed(2)} BYN</Button>
       </form>
     </div>
   );
