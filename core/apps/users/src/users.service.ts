@@ -309,6 +309,7 @@ export class UsersService {
       include: {
         avatar: true,
         profile: true,
+        userSubscriptions: true,
       },
     });
   
@@ -316,18 +317,24 @@ export class UsersService {
       throw new BadRequestException("User not found");
     }
   
+    // Удаляем связанные записи из таблицы UserSubscriptions
+    await this.prisma.userSubscriptions.deleteMany({
+      where: {
+        userId: userID,
+      },
+    });
+  
+    // Удаляем связанные записи из таблицы Profile
+    await this.prisma.profile.deleteMany({
+      where: {
+        userId: userID,
+      },
+    });
+  
     if (user.avatar) {
       await this.prisma.avatars.delete({
         where: {
           id: user.avatar.id,
-        },
-      });
-    }
-  
-    if (user.profile) {
-      await this.prisma.profile.delete({
-        where: {
-          userId: user.id,
         },
       });
     }
@@ -342,6 +349,8 @@ export class UsersService {
       message: 'User Deleted',
     };
   }
+  
+  
   
   
 }
