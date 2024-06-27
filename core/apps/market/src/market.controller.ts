@@ -93,12 +93,12 @@ export class MarketController {
     }
   }
 
-  @Put("accept/:contentId")
+  @Put("/accept")
   async acceptProduct(@Query("contentId") contentId: string) {
     return await this.marketService.acceptProduct(contentId);
   }
 
-  @Delete("reject/:contentId")
+  @Delete("/reject")
   async rejectProduct(@Query("contentId") contentId: string) {
     return await this.marketService.rejectProduct(contentId);
   }
