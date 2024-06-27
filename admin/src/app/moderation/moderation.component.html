@@ -1,7 +1,71 @@
 <div class="flex">
   <app-my-sidebar></app-my-sidebar>
+  @if(moderationData.length) {
+
+  <table class="w-full flex-col">
+    <thead>
+      <tr class="text-start">
+        <th>ID</th>
+        <th>Фото</th>
+        <th>Текст</th>
+        <th>Ссылка</th>
+        <th>ID пользователя</th>
+        <th>Цена за показ</th>
+        <th>Категория</th>
+        <th>Общее количество показов</th>
+        <th>Регион</th>
+        <th>Принять</th>
+        <th>Отклонить</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of moderationData; track item.moderation_id) {
+      <tr class="text-center">
+        <td>{{ item.moderation_id }}</td>
+        <td>
+          <img
+            src="https://market-api.titanproject.top{{ item.photo }}"
+            width="200px"
+            height="200px"
+            alt="Photo"
+            width="50"
+          />
+        </td>
+        <td>{{ item.text }}</td>
+        <td><a href="{{ item.link }}">Посмотреть</a></td>
+        <td>{{ item.user_id }}</td>
+        <td>{{ item.price_for_show }}</td>
+        <td>{{ item.category }}</td>
+        <td>{{ item.total_shows }}</td>
+        <td>{{ item.region }}</td>
+        <td>
+          <button class="p-2 border rounded-xl text-green-600">Принять</button>
+        </td>
+        <td>
+          <button class="p-2 border rounded-xl text-red-600">Отклонить</button>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+  } @else {
   <div class="flex flex-col gap-3 justify-center items-center w-full">
-    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-slash"><circle cx="12" cy="12" r="10"/><line x1="9" x2="15" y1="15" y2="9"/></svg>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="50"
+      height="50"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="lucide lucide-circle-slash"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <line x1="9" x2="15" y1="15" y2="9" />
+    </svg>
     <h2>Нет постов на модерации</h2>
   </div>
+  }
 </div>
