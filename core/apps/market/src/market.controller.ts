@@ -5,6 +5,8 @@ import {
   Req,
   Res,
   Query,
+  Put,
+  Delete,
   UseGuards,
 } from "@nestjs/common";
 import { pipeline } from "stream";
@@ -89,6 +91,16 @@ export class MarketController {
         reply.status(500).send(err.message);
       }
     }
+  }
+
+  @Put("accept/:contentId")
+  async acceptProduct(@Query("contentId") contentId: string) {
+    return await this.marketService.acceptProduct(contentId);
+  }
+
+  @Delete("reject/:contentId")
+  async rejectProduct(@Query("contentId") contentId: string) {
+    return await this.marketService.rejectProduct(contentId);
   }
 
   /**

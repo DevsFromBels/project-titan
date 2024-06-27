@@ -8,31 +8,44 @@
   </div>
 </div>
 } @else {
-  <div class="flex">
-    <app-my-sidebar></app-my-sidebar>
-    <table class="w-full h-full flex-col">
-      <tr class="text-start">
-        <th>Имя пользователя</th>
-        <th>Почта</th>
-        <th>Роль</th>
-        <th>Создан</th>
-        <th>Блoкировка</th>
-        <th>Удаленине</th>
-      </tr>
-      @for (user of users; track user.id) {
-      <tr class="text-center">
-        <td class="cursor-pointer underline" routerLink="/user/{{ user.id }}">
-          {{ user.name }}
-        </td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.role }}</td>
-        <td>{{ datePipe.transform(user.createdAt, 'dd.MM.yyyy, HH:mm') }}</td>
-        <td><button class="bg-gray-700 px-4 py-2 rounded-xl text-white hover:bg-gray-900">Заблокировать</button></td>
-        <td><button class="bg-red-700 px-4 py-2 rounded-xl text-white hover:bg-red-900">Удалить пользователя</button></td>
-      </tr>
-      }
-    </table>
-  </div>
+<div class="flex">
+  <app-my-sidebar></app-my-sidebar>
+  <table class="w-full h-full flex-col">
+    <tr class="text-start">
+      <th>Имя пользователя</th>
+      <th>Почта</th>
+      <th>Роль</th>
+      <th>Создан</th>
+      <th>Блoкировка</th>
+      <th>Удаленине</th>
+    </tr>
+    @for (user of users; track user.id) {
+    <tr class="text-center">
+      <td class="cursor-pointer underline" routerLink="/user/{{ user.id }}">
+        {{ user.name }}
+      </td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.role }}</td>
+      <td>{{ datePipe.transform(user.createdAt, "dd.MM.yyyy, HH:mm") }}</td>
+      <td>
+        <button
+          class="bg-gray-700 px-4 py-2 rounded-xl text-white hover:bg-gray-900"
+        >
+          Заблокировать
+        </button>
+      </td>
+      <td>
+        <button
+          (click)="handleDelete(user.id)"
+          class="bg-red-700 px-4 py-2 rounded-xl text-white hover:bg-red-900"
+        >
+          Удалить пользователя
+        </button>
+      </td>
+    </tr>
+    }
+  </table>
+</div>
 } @if (errorMessage) {
 <h2>{{ errorMessage }}</h2>
 }

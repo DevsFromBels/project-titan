@@ -84,6 +84,13 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.loading = false;
   }
 
+  handleDelete(userID: string): void {
+    this.userService.deleteUser$(userID).subscribe((result) => {
+      console.log(result.message);
+      this.users = this.users.filter((user) => user.id !== userID);
+    });
+  }
+
   private unsubscribeQuerySubscription(): void {
     if (this.querySubscription) {
       this.querySubscription.unsubscribe();
